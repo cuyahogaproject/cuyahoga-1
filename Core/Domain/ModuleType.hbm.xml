@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
+	<class name="Cuyahoga.Core.Domain.ModuleType, Cuyahoga.Core" table="cuyahoga_moduletype">
+	
+		<cache usage="read-write" />
+		
+		<id name="ModuleTypeId" column="moduletypeid" type="Int32" unsaved-value="-1">
+			<generator class="native">
+				<param name="sequence">cm_module_moduletypeid_seq</param>
+			</generator>
+		</id>
+		
+		<property name="Name" column="name" type="String" length="100" not-null="true" />
+		<property name="AssemblyName" column="assemblyname" type="String" length="100" not-null="true" />
+		<property name="ClassName" column="classname" type="String" length="255" not-null="true" />
+		<property name="Path" column="path" type="String" length="255" not-null="true" />
+		<property name="EditPath" column="editpath" type="String" length="255" />
+		<property name="AutoActivate" column="autoactivate" type="Boolean" not-null="true" />
+		<bag name="ModuleSettings" table="cuyahoga_modulesetting" lazy="true" cascade="all" order-by="FriendlyName">
+			<key column="moduletypeid" />
+			<composite-element class="Cuyahoga.Core.Domain.ModuleSetting, Cuyahoga.Core">
+				<parent name="ModuleType" />
+				<property name="Name" column="name" type="String" length="50" />
+				<property name="FriendlyName" column="friendlyname" type="String" length="50" />
+				<property name="SettingDataType" column="settingdatatype" type="String" length="100" />
+				<property name="IsCustomType" column="iscustomtype" type="Boolean" />
+				<property name="IsRequired" column="isrequired" type="Boolean" />
+			</composite-element>
+		</bag>
+		<bag name="ModuleServices" table="cuyahoga_moduleservice" lazy="true" cascade="all">
+			<key column="moduletypeid" />
+			<composite-element class="Cuyahoga.Core.Domain.ModuleService, Cuyahoga.Core">
+				<parent name="ModuleType" />
+				<property name="ServiceKey" column="servicekey" type="string" length="50" not-null="true" />
+				<property name="ServiceType" column="servicetype" type="string" length="255" not-null="true" />
+				<property name="ClassType" column="classtype" type="string" length="255" not-null="true" />
+				<property name="Lifestyle" column="lifestyle" type="string" length="10" />
+			</composite-element>
+		</bag>
+	</class>
+</hibernate-mapping>

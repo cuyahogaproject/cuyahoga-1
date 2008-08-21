@@ -1,0 +1,336 @@
+Cuyahoga release notes
+===========================================================================
+1.5.2 - 2008-02-20
+===========================================================================
+Cuyahoga 1.5.2 is a maintenance release, especially targeted at Mono 
+compatibility. Cuyahoga now builds and runs on Mono-1.2.6 with xsp2.
+Check out Readme-mono.txt the distribution for mono-specific instructions.
+
+Improvements:
+- Temp dir for the TransactionalFileService is configurable in 
+  properties.config (used by Downloads module).
+
+Bug fixes:
+- Resolved issue with Mono compatibility. (CUY-138)
+
+===========================================================================
+1.5.1 - 2008-02-14
+===========================================================================
+Cuyahoga 1.5.1 is a maintenance release that includes bug fixes and uses
+new versions of external libraries.
+
+A special note for people using custom modules that use NHibernate and 
+don't ship with Cuyahoga: this release is not a drop-in replacement! 
+
+Cuyahoga 1.5.1 uses NHibernate 1.2.0 to make it possible for module 
+developers to use new features of NHibernate like generics. NHibernate 
+1.2.0 breaks existing modules that use NHibernate 1.0.x. Before upgrading
+Cuyahoga to 1.5.1, you have to make sure that your modules are compatible 
+with NHibernate 1.2.0. See http://www.hibernate.org/407.html for the 
+migration guide. 
+
+If you're not interested in the new features of NHibernate and have no
+stability issues with Cuyahoga 1.5.0, it's probably wise to stay on 1.5.0.
+
+New features:
+- Swedish translations for modules and core.
+
+Improvements:
+- Modules are now loaded all at once at application startup. The previous
+  construction with lazy loading appeared to be a little unstable under
+  high load. (CUY-142)
+- Modules that are not used can be deactivated, so they won't be loaded
+  at startup. (CUY-142)
+- Added link to add new child node in the node tree on the left, so people
+  won't have to look for ages to find the button on the bottom of the 
+  screen. (CUY-143)
+- It's possible to have content placeholders in user controls that
+  are placed in the templates.
+
+Bug fixes:
+- Fixed issue with template management when a wrong path was entered.
+  (CUY-93)
+- Removed empty link in template for Admin when not logged in as admin.
+  (CUY-110)
+- Fixed issue with duplicate cultures in culture list. (CUY-125, CUY-129)
+- Fixed bug with custom settings that we're not visible after selecting
+  a module with no custom settings. (CUY-126)
+- Fixed deleting a section that is attached to a template. (CUY-133)
+- Fixed possible issues with url rewriting when Cuyahoga runs at the root
+  web site. (CUY-135)
+- Fixed issue with cultures in the site edit page. (CUY-136)
+- Fixed problems with RemoteContent module not updating the content 
+  properly. (CUY-141)
+
+Libraries:
+- Upgraded NHibernate to 1.2.0
+- Upgraded Castle to 1.0 RC3
+- Upgraded log4net to 1.2.10
+- Upgraded Npgsql to 1.0.1
+- Upgraded FCKeditor to 2.5.1
+
+Thanks to everybody that contributed to this release!
+
+===========================================================================
+1.5.0 - 2007-02-11
+===========================================================================
+Cuyahoga 1.5.0 is the first release that is completely for the .NET 2.0 
+framework. It contains a major architectural overhaul that forms the
+foundation for the Cuyahoga 2.0 release.
+
+New features:
+- Flash module (contributed by Gabe Varela).
+- Forum module (contributed by Patrick Gahan and Steen Rabol).
+- Sitemap module (in core modules).
+- Meta tags (keywords and description) at site and node level.
+
+Improvements:
+- New foundation also delivers better performance.
+- Articles module supports paging and can show expired (archived) items.
+- Moved Articles and RemoteContent modules to their own projects
+  to allow separate development and faster improvements. (CUY-119)
+- Generated HTML is XHTML 1.0 transitional. (CUY-85)
+- Generic email functionality with templates (User module) (CUY-61)
+- Improved LanguageSwitcher module that has multiple display options
+  (dropdown, text and flag images). (CUY-89)
+- Categories in the Articles module are now linked to a specific site. 
+  (CUY-97)
+- Contributed translations for French, Spanish, Italian and German.
+  (CUY-98, CUY-109, CUY-124)
+- Rebuild NAnt buildscripts. Now every project has its own build scripts.
+  Based on NHibernate/Castle build scripts. (CUY-95, CUY-104)
+- Ability for modules to validate their settings.
+- Cultures in the culture dropdownlists are sorted alphabetically. 
+  (CUY-108)
+- URL rewriting is more efficient now. (CUY-118)
+
+Bugfixes:
+- Issue with page request duration timer. (CUY-70)
+- Menus properly show and hide items. (CUY-73, CUY-115)
+- Wrong casing of column name in Section mapping file. (CUY-74)
+- Invalid short description generated when a page name contains non-
+  alphanumeric characters. (CUY-82)
+- Unable to delete roles. (CUY-83)
+- Downloads module doesn't handle invalid directory settings properly. 
+  (CUY-106)
+- Rebuilding the complete search index failed because some modules were
+  not loaded yet. (CUY-112)
+- Module settings didn't show up in some cases. (CUY-113)
+- Calendar control showed wrong Spanish characters. (CUY-114)
+- Changed datatype for statichtml content to ntext. (CUY-116)
+
+Libraries:
+- Using Castle Windsor IoC container with the NHibernateIntegration and
+  AutomaticTransaction facilities.
+- Upgraded NHibernate to 1.0.4
+- Upgraded Npgsql to 1.0
+- Upgraded FCKeditor to 2.3.2
+
+===========================================================================
+1.0.1 - 2007-01-05
+===========================================================================
+New features:
+- SMTP authentication
+
+Bugfixes:
+- Fixed FCKeditor security issue.
+- Fixed deleting of roles.
+- Short description generator now only generates valid characters.
+
+===========================================================================
+1.0.0 - 2005-12-30
+===========================================================================
+New features:
+- Search input module. A search input box that can be connected to the 
+  existing search module. This module makes it possible to have a global
+  search box with creating a section with this module and attaching the
+  section to a template.
+  
+Improvements:
+- Allow modules to insert their own stylesheets. 
+  BREAKING CHANGE: In custom template controls 
+    <link id="CssStyleSheet" rel="stylesheet" type="text/css" runat="server" />
+  must to be replaced with
+    <asp:literal id="Stylesheets" runat="server" />.
+- Added option to installer to create a basic sample site.
+- It's possible to attach sections to templates from the section edit page.
+- Better error messages in the module administration pages for StaticHtml
+  and Articles.
+- Added option in web.config to redirect to the login page when a user
+  has no access to a particular node (also to prevent nasty error messages
+  when a login session times out):
+    <add setting="RedirectToLoginWhenAccessDenied" value="true" /> 
+    <!-- true/false, customErrors must be enabled -->
+- Upgraded to NHibernate 1.0.1.
+
+Bugfixes:
+- Fixed error message when sending an email fails during registration.
+- Fixed confirmation messages while creating new users and nodes.
+- Fixed issue with attaching a section to a node (search-related).
+- Fixed issue with large text fields in MySQL.
+
+===========================================================================
+0.9.1 - 2005-11-13
+===========================================================================
+New features:
+- Module connections. A module can implement two interfaces, 
+  IActionConsumer and IActionProvider. This allows connecting of different
+  sections across pages.
+- Sections in templates. Before, a section was always related to a node 
+  (page) in the site hierarchy. From now, it's possible to define 
+  stand-alone sections or detach existing sections from a node. When
+  editing template properties, it's now possible to attach a stand-alone 
+  section to a placeholder in the template. The section appears on every 
+  page that uses the template.
+  
+Improvements:
+- Upgraded to NHibernate 1.0.0.0.
+- Removed special mapping files for Mono because dynamic proxies work on
+  Mono.
+- Removed references from the Web project to NHibernate.
+
+Bugfixes:
+- Nodes set to an external url, can be reverted back to 'normal' nodes.
+- Fixed issue with empty custom menus that caused an exception.
+
+===========================================================================
+0.9.0 - 2005-10-05
+===========================================================================
+New features:
+- Added a web based installer that installs or upgrades the database at the
+  first run.
+- Added a module installer. If a module has a specific directory structure
+  with database scripts, you can now install, upgrade or uninstall modules
+  from the site administration.
+
+Improvements:
+- Support for .NET 2.0 and SQL Server 2005
+- The User module can be configured to show or hide links to registration,
+  reset password and edit profile pages.
+- The RemoteContent module is able to read feeds that have dates that 
+  differ slightly from the format that .NET accepts.
+- It is possible to show the number of downloads to end-users.
+- Better error handling with invalid urls.
+- Added sort options for Articles.
+- Navigating from the site administration to the actual site and 
+  vice-versa is much improved.
+- When omitting publishing dates for articles, default dates are issued.
+- Cleaned up database installation scripts.
+- Upgraded NHibernate to 1.0 RC3.
+- Upgraded FCKEditor to 2.0.
+
+Bug fixes:
+- Fixed issues with stalling downloads in the Downloads module. Resuming
+  downloads is also supported now.
+- Fixed issue on Mono with retrieving the server host url. Thanks to Thomas
+  Danzl.
+- Fixed bug with nodes that link to external pages where the target setting
+  was not respected.
+- Fixed bug with pager control in the Articles module administration.
+- The RSS feeds now validate in the feed validator.
+- Fixed issue in the RemoteContent module with feed items without
+  publication dates.
+- Fixed issues with node and section positioning.
+- Fixed some issues with the calendar control and non-english languages.
+  There might still be some issues left because the language scripts that
+  come with the calendar are not entirely complete for every language.
+
+===========================================================================
+0.8.2 - 2005-07-20
+===========================================================================
+Improvements:
+- Added support for alternative urls (https, different ports). Thanks to
+  Tomislav Tustonic for the heads up.
+- A node can now serve as a link to an external page or site.
+
+Bugfixes:
+- Fixed issues with NHibernate second level cache that caused a nasty delay
+  when adding or removing nodes and sections.
+
+===========================================================================
+0.8.1 - 2005-06-29
+===========================================================================
+Improvements:
+- The downloads module is a little more user-friendly.
+- Overall stability is increased due to testing under heavy load.
+
+Bugfixes:
+- Attaching multiple NHibernate sessions to the same object or collection
+  causes an exception.
+- If the first request after a server restart is an RSS feed, an exception
+  is thrown at this first request.
+- Displaying unknown filetypes in the Downloads module fails.
+- The order of the files in the Downloads module changes after downloading
+  a file.
+- RSS feed failure on Mono.
+
+===========================================================================
+0.8.0 - 2005-06-11
+===========================================================================
+New features:
+- RemoteContent module. This module consumes external RSS feeds and 
+  displays the content. Currently only RSS 2.0 is supported.
+- Downloads module. Publish files on the web site that are available as
+  download for site visitors. The permissions (allowed roles) can be set
+  per file.
+- Timezone support for logged-in users. All display dates are adjusted to
+  the timezone of the user.
+  
+Improvements:
+- Friendly readable urls (configurable per site).
+- Security settings of nodes can be propagated to child nodes and sections.
+- Allow persisten logins.
+
+Bugfixes:
+- Edit hyperlinks show up when the user only has view access.
+- Deleting nodes fails when they are in a custom menu.
+- Removing nodes leaves the order of the nodes in an inconsistent state. 
+
+
+===========================================================================
+0.7.0.1 - 2005-04-04
+===========================================================================
+- Fixed bug when registering a new user (LastLogin should be NULL, but was 
+  DateTime.MinValue).
+- Fixed bug in PostgreSQL create script (showtitle in section).
+
+
+===========================================================================
+0.7.0 - 2005-03-29
+===========================================================================
+New features:
+
+- Custom menus. You can now add custom menu's to every placeholder in the 
+  template. The menu items point to existing nodes in the site. Visibility
+  of nodes in the regular navigation/menu's can be turned off.
+- Site aliases. A site has a default url that consists of the host and the 
+  application name. A new feature was added to map alternative url's to the
+  site, or a specific node in the site.
+
+Improvements:
+- All related template controls, stylesheets and images  are 
+  now grouped in subdirectories in the Templates directory. The default 
+  installation comes with two subdirectories, 'Default' and 'Classic'. Css 
+  files always have to be in the Css subdirectory (for example, 
+  'Templates/Default/Css').
+  BREAKING CHANGE FOR EXISTING USERS: The path of the Template controls
+  is now split into a base path (for example 'Templates/Default') and the 
+  name of the template control ('CuyahogaNew.ascx'). After upgrading, 
+  reorganize your physical files just like the default files and then go
+  to the template adminstration and correct the values for the base path,
+  template control and css.
+- Templates can be changed any time now, even if there are sections 
+  attached. Cuyahoga displays a warning when sections belong to a
+  placeholder that is not found in the selected template.
+- Support for MySQL 4.0 (was 4.1 and above).
+- The site url doesn't care anymore about casing or trailing slashes.
+  
+Bugfixes:
+- When there are ModuleSettings in the database that can not be found as
+  a type, Cuyhoga throws an exception instead of returning null (and 
+  causing a lot of misunderstanding).
+- The calendar control now handles all regional settings for dates.
+- Converted all table and column names to lowercase, because of errors
+  with MySQL on Linux. It's more consistent now too.
+  
+Thanks to Ayende Rahien, Richard Bourque and sleuth for the heads up.

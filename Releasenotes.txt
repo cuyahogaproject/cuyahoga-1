@@ -7,8 +7,6 @@ Cuyahoga release notes
 
 Features added for everyday use:
 
-
-
 Additions:
 
 - Admin: You can take offline a page (and related child pages), showing a special template (definited in site admin): admin can take offline temporarly 
@@ -21,6 +19,7 @@ Additions:
 - Edit Template: edit html code of template ascx and css (this require special permission on server's folder)
 - Admin: Duplicate a Node
 - Admin: Preview the page, opening a new window, without std admin links
+- A Sitemap handler for Google sitemap spec.
 
 MISSING
 - test db scripts for db upgrade

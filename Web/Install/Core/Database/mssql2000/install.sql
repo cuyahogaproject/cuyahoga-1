@@ -88,6 +88,7 @@ go
 CREATE TABLE cuyahoga_site(
 siteid int identity(1,1) NOT NULL CONSTRAINT PK_site PRIMARY KEY,
 templateid int NULL,
+offlinetemplateid int NULL, -- added for v1.6.0
 roleid int NOT NULL,
 name nvarchar(100) NOT NULL,
 homeurl nvarchar(100) NOT NULL,
@@ -113,6 +114,7 @@ shortdescription nvarchar(255) NOT NULL,
 position int DEFAULT 0 NOT NULL,
 culture nvarchar(8) NOT NULL,
 showinnavigation bit NOT NULL,
+status int DEFAULT 0 NOT NULL,	 -- added for v.1.6.0
 linkurl nvarchar(255) NULL,
 linktarget int NULL,
 metakeywords nvarchar(500) NULL,
@@ -262,6 +264,15 @@ ADD CONSTRAINT FK_site_template_templateid
 FOREIGN KEY (templateid) REFERENCES cuyahoga_template (templateid)
 go
 
+/* added for v1.6.0 */
+
+ALTER TABLE cuyahoga_site
+ADD CONSTRAINT FK_site_template_offlinetemplateid
+FOREIGN KEY (offlinetemplateid) REFERENCES cuyahoga_template (templateid)
+go
+
+/* added for v1.6.0 */
+
 
 ALTER TABLE cuyahoga_node
 ADD CONSTRAINT FK_node_node_parentnodeid 
@@ -391,7 +402,9 @@ INSERT INTO cuyahoga_template (templateid, [name], basepath, templatecontrol, cs
 INSERT INTO cuyahoga_template (templateid, [name], basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (2, 'Cuyahoga Standard', 'Templates/Classic', 'CuyahogaStandard.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365')
 INSERT INTO cuyahoga_template (templateid, [name], basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (3, 'Cuyahoga New', 'Templates/Default', 'CuyahogaNew.ascx', 'red-new.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365')
 INSERT INTO cuyahoga_template (templateid, [name], basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (4, 'Another Red', 'Templates/AnotherRed', 'Cuyahoga.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365')
-
+/* added for v1.6.0 */
+INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (5, 'Offline', 'Templates/AnotherRed', 'Offline.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
+/* added for v1.6.0 */
 GO
 
 SET IDENTITY_INSERT cuyahoga_template OFF
@@ -399,5 +412,5 @@ SET IDENTITY_INSERT cuyahoga_template OFF
 GO
 
 
-INSERT INTO cuyahoga_version (assembly, major, minor, patch) VALUES ('Cuyahoga.Core', 1, 5, 2)
+INSERT INTO cuyahoga_version (assembly, major, minor, patch) VALUES ('Cuyahoga.Core', 1, 6, 0)
 GO

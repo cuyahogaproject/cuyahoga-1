@@ -47,6 +47,10 @@
 								is the placeholder where the content of&nbsp;general pages&nbsp;is inserted)</em></td>
 					</tr>
 					<tr>
+						<td style="WIDTH: 100px">Off-line Template</td>
+						<td><asp:dropdownlist id="ddlOfflinePageTemplate" runat="server" autopostback="False"></asp:dropdownlist></td>
+					</tr>											
+					<tr>
 						<td>Culture</td>
 						<td><asp:dropdownlist id="ddlCultures" runat="server"></asp:dropdownlist></td>
 					</tr>

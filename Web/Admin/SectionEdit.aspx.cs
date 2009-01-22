@@ -38,6 +38,11 @@ namespace Cuyahoga.Web.Admin
 		protected HyperLink hplNewConnection;
 		protected Repeater rptConnections;
 		protected PlaceHolder plcCustomSettings;
+
+        // added for 1.6.0
+        protected Button btnSaveTop;
+        protected Button btnBackTop;
+        // added for 1.6.0
 	
 		private void Page_Load(object sender, EventArgs e)
 		{
@@ -396,6 +401,11 @@ namespace Cuyahoga.Web.Admin
 			this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
 			this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
 			this.Load += new System.EventHandler(this.Page_Load);
+
+            // added for 1.6.0
+            this.btnSaveTop.Click += new System.EventHandler( this.btnSave_Click );
+            this.btnBackTop.Click += new System.EventHandler( this.btnBack_Click );
+            // added for 1.6.0
 
 		}
 		#endregion

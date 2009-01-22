@@ -39,6 +39,7 @@ namespace Cuyahoga.Web.Admin
 		protected RequiredFieldValidator rfvSiteUrl;
 		protected TextBox txtMetaDescription;
 		protected TextBox txtMetaKeywords;
+        protected DropDownList ddlOfflinePageTemplate;
 
 		/// <summary>
 		/// Constructor.
@@ -93,29 +94,38 @@ namespace Cuyahoga.Web.Admin
 			this.txtMetaKeywords.Text = this._activeSite.MetaKeywords;
 		}
 
-		private void BindTemplates()
-		{
-			IList templates = this._templateService.GetAllTemplates();
-			// Insert option for no template
-			Template emptyTemplate = new Template();
-			emptyTemplate.Id = -1;
-			emptyTemplate.Name = "No template";
-			templates.Insert(0, emptyTemplate);
+        private void BindTemplates()
+        {
+            IList templates = this._templateService.GetAllTemplates();
+            // Insert option for no template
+            Template emptyTemplate = new Template();
+            emptyTemplate.Id = -1;
+            emptyTemplate.Name = "No template";
+            templates.Insert(0, emptyTemplate);
 
-			// Bind
-			this.ddlTemplates.DataSource = templates;
-			this.ddlTemplates.DataValueField = "Id";
-			this.ddlTemplates.DataTextField = "Name";
-			this.ddlTemplates.DataBind();
-			if (this._activeSite.DefaultTemplate != null)
-			{
-				ddlTemplates.Items.FindByValue(this._activeSite.DefaultTemplate.Id.ToString()).Selected = true;
-				BindPlaceholders();
-			}
-			this.ddlTemplates.Visible = true;
-		}
+            // Bind
+            this.ddlTemplates.DataSource = templates;
+            this.ddlTemplates.DataValueField = "Id";
+            this.ddlTemplates.DataTextField = "Name";
+            this.ddlTemplates.DataBind();
+            if (this._activeSite.DefaultTemplate != null)
+            {
+                ddlTemplates.Items.FindByValue(this._activeSite.DefaultTemplate.Id.ToString()).Selected = true;
+                BindPlaceholders();
+            }
+            this.ddlTemplates.Visible = true;
+            ddlOfflinePageTemplate.DataSource = templates;
+            ddlOfflinePageTemplate.DataValueField = "Id";
+            ddlOfflinePageTemplate.DataTextField = "Name";
+            ddlOfflinePageTemplate.DataBind();
+            if (_activeSite.OfflineTemplate != null)
+            {
+                ddlOfflinePageTemplate.Items.FindByValue(_activeSite.OfflineTemplate.Id.ToString()).Selected = true;
+            }
 
-		private void BindPlaceholders()
+        }
+
+	    private void BindPlaceholders()
 		{
 			// Try to find the placeholder in the selected template.
 			if (this.ddlTemplates.SelectedIndex > 0)
@@ -231,6 +241,18 @@ namespace Cuyahoga.Web.Admin
 					this._activeSite.DefaultTemplate = null;
 					this._activeSite.DefaultPlaceholder = null;
 				}
+                // marcot 180607
+                if (ddlOfflinePageTemplate.SelectedValue != "-1")
+                {
+                    int offlineTemplateId = Int32.Parse(ddlOfflinePageTemplate.SelectedValue);
+                    Template offlinetemplate = _templateService.GetTemplateById(offlineTemplateId);
+                    _activeSite.OfflineTemplate = offlinetemplate;
+                }
+                else if (ddlOfflinePageTemplate.SelectedValue == "-1")
+                {
+                    _activeSite.OfflineTemplate = null;
+                }
+                // marcot 180607
 				this._activeSite.DefaultCulture = this.ddlCultures.SelectedValue;
 				int defaultRoleId = Int32.Parse(this.ddlRoles.SelectedValue);
 				this._activeSite.DefaultRole = this._userService.GetRoleById(defaultRoleId);

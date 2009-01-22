@@ -20,8 +20,17 @@
 			</script>
 			<p>Manage the properties of the node (page). Use the buttons on the bottom
 			of the page to save or delete the page or to add a new child node underneath this node.</p>
+			<div>
+			    <asp:button id="btnSave2" runat="server" text="Save"></asp:button>
+			    <asp:button id="btnCancel2" runat="server" causesvalidation="False" text="Cancel"></asp:button>
+			    <asp:button id="btnNew2" runat="server" text="Add new child"></asp:button>
+			    <asp:Button ID="btnDuplicate2" runat="server" Text="Duplicate" OnClick="btnDuplicate_Click"></asp:Button>
+			    <asp:button id="btnOffline2" runat="server" causesvalidation="False" text="Take Offline"></asp:button>
+			    <asp:button id="btnDelete2" runat="server" causesvalidation="False" text="Delete"></asp:button>			    
+			    <input type="button" ID="btnPreview2" runat="server" Value="Preview" />
+			</div>
 			<div class="group">
-				<h4>General</h4>
+				<h4>General</h4>				
 				<table>
 					<tr>
 						<td style="WIDTH: 100px">Node title</td>
@@ -37,6 +46,10 @@
 					<tr>
 						<td>Parent node</td>
 						<td><asp:label id="lblParentNode" runat="server"></asp:label></td>
+					</tr>
+					<tr>
+						<td>Status</td>
+						<td><asp:label id="lblStatus" runat="server"></asp:label></td>
 					</tr>
 					<tr>
 						<td>Position</td>
@@ -157,6 +170,7 @@
 										runat="server">Move down</asp:hyperlink>
 								</td>
 								<td>
+									<asp:hyperlink id="hplAdmin" runat="server">Admin</asp:hyperlink>
 									<asp:hyperlink id="hplEdit" runat="server">Edit</asp:hyperlink>
 									<asp:linkbutton id="lbtDetach" runat="server" causesvalidation="False" commandname="Detach" commandargument='<%# DataBinder.Eval(Container.DataItem, "Id") %>'>Detach</asp:linkbutton>
 									<asp:linkbutton id="lbtDelete" runat="server" causesvalidation="False" commandname="Delete" commandargument='<%# DataBinder.Eval(Container.DataItem, "Id") %>'>Delete</asp:linkbutton>
@@ -193,7 +207,15 @@
 				<br/>
 				<asp:checkbox id="chkPropagateToSections" runat="server" text="Propagate security settings to sections"></asp:checkbox><br/>
 				<asp:checkbox id="chkPropagateToChildNodes" runat="server" text="Propagate security settings to child nodes"></asp:checkbox></div>
-			<div><asp:button id="btnSave" runat="server" text="Save"></asp:button><asp:button id="btnCancel" runat="server" causesvalidation="False" text="Cancel"></asp:button><asp:button id="btnNew" runat="server" text="Add new child"></asp:button><asp:button id="btnDelete" runat="server" causesvalidation="False" text="Delete"></asp:button></div>
+			<div>
+			    <asp:button id="btnSave" runat="server" text="Save"></asp:button>
+			    <asp:button id="btnCancel" runat="server" causesvalidation="False" text="Cancel"></asp:button>
+			    <asp:button id="btnNew" runat="server" text="Add new child"></asp:button>
+			    <asp:Button ID="btnDuplicate" runat="server" Text="Duplicate" OnClick="btnDuplicate_Click"></asp:Button>
+			    <asp:button id="btnOffline" runat="server" causesvalidation="False" text="Take Offline"></asp:button>
+			    <asp:button id="btnDelete" runat="server" causesvalidation="False" text="Delete"></asp:button>
+			    <input type="button" ID="btnPreview" runat="server" Value="Preview" />
+			</div>
 		</form>
 	</body>
 </html>

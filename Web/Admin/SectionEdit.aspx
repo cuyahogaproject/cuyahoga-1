@@ -10,6 +10,10 @@
 	</head>
 	<body ms_positioning="FlowLayout">
 		<form id="Form1" method="post" runat="server">
+			<div style="padding-top:13px;">
+				<asp:button id="btnSaveTop" runat="server" text="Save"></asp:button>
+				<asp:button id="btnBackTop" runat="server" text="Back" causesvalidation="False"></asp:button>
+			</div>		
 			<div class="group">
 				<h4>General</h4>
 				<table>

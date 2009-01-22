@@ -59,7 +59,21 @@ namespace Cuyahoga.Web.Admin
 		protected System.Web.UI.WebControls.TextBox txtTitle;
 		protected System.Web.UI.WebControls.TextBox txtMetaDescription;
 		protected System.Web.UI.WebControls.TextBox txtMetaKeywords;
-	
+
+        // added for v1.6.0
+        protected System.Web.UI.WebControls.Button btnOffline;
+	    protected Label lblStatus;
+	    protected System.Web.UI.WebControls.Button btnSave2;
+	    protected System.Web.UI.WebControls.Button btnCancel2;
+	    protected System.Web.UI.WebControls.Button btnNew2;
+	    protected System.Web.UI.WebControls.Button btnOffline2;
+	    protected System.Web.UI.WebControls.Button btnDelete2;
+        protected Button btnDuplicate;
+        protected Button btnDuplicate2;
+        protected System.Web.UI.HtmlControls.HtmlInputButton btnPreview;
+        protected System.Web.UI.HtmlControls.HtmlInputButton btnPreview2;
+        // added for v1.6.0
+
 		private void Page_Load(object sender, System.EventArgs e)
 		{
 			this.Title = "Edit node";
@@ -128,6 +142,20 @@ namespace Cuyahoga.Web.Admin
 			{
 				BindPositionButtonsVisibility();
 			}
+
+            // added for v1.6.0
+            btnDuplicate.Attributes.Add( "onclick", "return confirm('Duplicate node?')" );
+            btnDuplicate2.Attributes.Add( "onclick", "return confirm('Duplicate node?')" );
+
+            if (ActiveNode != null)
+            {
+                string onclickstring = "window.open('{0}?preview=on');";
+                onclickstring = string.Format(onclickstring, UrlHelper.GetUrlFromNode(ActiveNode));
+                btnPreview.Attributes.Add("onclick", onclickstring);
+                btnPreview2.Attributes.Add( "onclick", onclickstring );
+            }
+            // added for v1.6.0
+
 		}
 
 		private void BindNodeControls()
@@ -157,6 +185,32 @@ namespace Cuyahoga.Web.Admin
 			btnNew.Visible = (this.ActiveNode.Id > 0);
 			btnDelete.Visible = (this.ActiveNode.Id > 0);
 			btnDelete.Attributes.Add("onclick", "return confirmDeleteNode();");
+
+            // added for v1.6.0 -- leave space for future implementation of new statuses
+            if (ActiveNode.Id > 0)
+            {
+		        switch ((NodeStatus)ActiveNode.Status)
+		        {
+                    case NodeStatus.Online:
+                        btnOffline.Text = "Take Offline";
+                        lblStatus.Text = "Online";
+		                break;
+
+                    case NodeStatus.Offline:
+                        btnOffline.Text = "Bring online";
+                        lblStatus.Text = "<strong>Offline</strong>";
+		                break;
+
+                    default:
+		                btnOffline.Enabled = false;
+		                break;
+    		            
+		        }
+                btnOffline2.Text = btnOffline.Text; // replicate text on top button
+            }
+            else btnOffline.Visible = false;
+            // added for v1.6.0
+
 		}
 
 		private void BindCultures()
@@ -360,9 +414,20 @@ namespace Cuyahoga.Web.Admin
 			this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
 			this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
 			this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            this.btnOffline.Click += new EventHandler( btnOffline_Click );
+
+            // # added for v1.6.0
+            btnSave2.Click += new EventHandler(this.btnSave_Click);
+            btnCancel2.Click += new EventHandler( this.btnCancel_Click );
+            btnNew2.Click += new EventHandler( this.btnNew_Click );
+            btnOffline2.Click += new EventHandler( this.btnOffline_Click );
+            btnDelete2.Click += new EventHandler( this.btnDelete_Click );
+            // # added for v1.6.0
+
 			this.Load += new System.EventHandler(this.Page_Load);
 
 		}
+
 		#endregion
 
 		private void btnSave_Click(object sender, System.EventArgs e)
@@ -429,6 +494,49 @@ namespace Cuyahoga.Web.Admin
 				Context.Response.Redirect("Default.aspx");
 			}
 		}
+
+        /// <summary>
+        /// Handles the Click event of the btnOffline control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        void btnOffline_Click( object sender, EventArgs e )
+        {
+
+            if (ActiveNode.Status != (int) NodeStatus.Online && ActiveNode.Status != ( int ) NodeStatus.Offline )
+            {
+                ShowError("Actual node status is not recognized.");
+                return;
+            }
+
+            if (ActiveNode.Site.OfflineTemplate == null)
+            {
+                ShowError( "It is not possibile to take node offline, because no Offline templase was selected on site edit page." );
+                return;
+            }
+
+            ActiveNode.Status = (int) ( ActiveNode.Status == (int) NodeStatus.Online ? NodeStatus.Offline : NodeStatus.Online );
+
+            try
+            {
+                SaveNode();
+
+                BindNodeControls();
+
+                if( ActiveNode.Status == (int) NodeStatus.Online )
+                    ShowMessage("Node is now online.");
+                else
+                    ShowMessage("Node is now offline.");
+                
+            }
+			catch (Exception ex)
+			{
+				this.ShowError(ex.Message);
+				log.Error("Error while changing node status.", ex);
+			}
+
+        }
+
 
 		private void ddlTemplates_SelectedIndexChanged(object sender, System.EventArgs e)
 		{
@@ -504,6 +612,27 @@ namespace Cuyahoga.Web.Admin
 				BaseTemplate templateControl = (BaseTemplate)this.LoadControl(UrlHelper.GetApplicationPath() + this.ActiveNode.Template.Path);
 				Label lblNotFound = (Label)e.Item.FindControl("lblNotFound");
 				lblNotFound.Visible = (templateControl.Containers[section.PlaceholderId] == null);
+
+                // added for 1.6.0
+                HyperLink hplAdmin = ( HyperLink ) e.Item.FindControl( "hplAdmin" );
+                if( hplAdmin != null )
+                {
+                    if( section.ModuleType.EditPath != null && section.ModuleType.EditPath != string.Empty )
+                    {
+                        hplAdmin.NavigateUrl = String.Format(
+                            "{0}?NodeId={1}&SectionId={2}"
+                            , UrlHelper.GetApplicationPath() + section.ModuleType.EditPath
+                            , section.Node.Id
+                            , section.Id );
+                        hplAdmin.Visible = true;
+                    }
+                    else
+                    {
+                        hplAdmin.Visible = false;
+                    }
+                }
+                // added for 1.6.0
+
 			}
 		}
 
@@ -653,5 +782,125 @@ namespace Cuyahoga.Web.Admin
 			this.pnlTemplate.Visible = ! this.chkLink.Checked;
 			this.pnlSections.Visible = ! this.chkLink.Checked;
 		}
+
+        // added for v1.6.0
+        /// <summary>
+        /// Handles the Click event of the btnDuplicate control.
+        /// </summary>
+        /// <param name="sender">The source of the event.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        protected void btnDuplicate_Click( object sender, EventArgs e )
+        {
+            try
+            {
+                if( ActiveNode == null )
+                {
+                    ShowError( "btnDuplicate_Click:: non starting node found." );
+                    return;
+                }
+
+                Node node = new Node();
+                node.ParentNode = ActiveNode.ParentNode;
+                node.Site = ActiveNode.Site;
+                node.Title = "Copy of " + ActiveNode.Title;
+                node.Template = ActiveNode.Template;
+                node.Culture = ActiveNode.Culture;                
+                node.LinkUrl = ActiveNode.LinkUrl;
+                node.MetaDescription = ActiveNode.MetaDescription;
+                node.MetaKeywords = ActiveNode.MetaKeywords;
+                node.LinkTarget = ActiveNode.LinkTarget;                
+                node.ShowInNavigation = ActiveNode.ShowInNavigation;
+
+                node.CreateShortDescription();
+
+                foreach( NodePermission np in ActiveNode.NodePermissions )
+                {
+                    NodePermission npNew = new NodePermission();
+                    npNew.Node = node;
+                    npNew.Role = np.Role;
+                    npNew.ViewAllowed = np.ViewAllowed;
+                    npNew.EditAllowed = np.EditAllowed;
+                    node.NodePermissions.Add( npNew );
+                }
+
+                IList rootNodes = base.CoreRepository.GetRootNodes( node.Site );
+                node.CalculateNewPosition( rootNodes );
+
+                base.CoreRepository.SaveObject( node );
+
+                CopySectionsFromNode( ActiveNode, node );
+
+                base.CoreRepository.ClearQueryCache( "Nodes" );
+
+                Context.Response.Redirect(String.Format( "NodeEdit.aspx?NodeId={0}&message=Node has been duplicated.", node.Id ) );
+
+            }
+            catch( Exception ee )
+            {
+                ShowException( ee );
+            }
+        }
+
+        /// <summary>
+        /// Copies the sections from node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="nodeTarget">The node target.</param>
+        private void CopySectionsFromNode( Node node, Node nodeTarget )
+        {
+            foreach( Section section in node.Sections )
+            {
+                Section newsection = new Section();
+
+                newsection.Node = nodeTarget;
+
+                newsection.CacheDuration = section.CacheDuration;
+
+                foreach( DictionaryEntry sectionconnection in section.Connections )
+                {
+                    newsection.Connections.Add( sectionconnection.Key, sectionconnection.Value );
+                }
+
+                newsection.ModuleType = section.ModuleType;
+                newsection.PlaceholderId = section.PlaceholderId;
+                newsection.Position = section.Position;
+
+                // copy module settings
+                foreach( DictionaryEntry sectionitem in section.Settings )
+                {
+                    newsection.Settings.Add( sectionitem.Key, sectionitem.Value );
+                }
+                // newsection.Settings = section.Settings;
+
+                if( section.ModuleType.Name.ToLower() == "html" )
+                {
+                }
+
+                newsection.ShowTitle = section.ShowTitle;
+                newsection.Title = section.Title;
+
+                newsection.CopyRolesFromNode();
+                newsection.CalculateNewPosition();
+
+                //nodeTarget.Sections.Add(newsection);
+
+                base.CoreRepository.SaveObject( newsection );
+
+                //foreach (SectionPermission sp in section.SectionPermissions)
+                //{
+                //    SectionPermission secperm = new SectionPermission();
+                //    secperm.Role = sp.Role;
+                //    secperm.Section = newsection;
+                //    secperm.EditAllowed = sp.EditAllowed;
+                //    secperm.ViewAllowed = sp.ViewAllowed;
+                //    newsection.SectionPermissions.Add(secperm);
+                //}
+            }
+        }
+
+
+
+
+        // added for v1.6.0
 	}
 }

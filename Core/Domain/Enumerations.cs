@@ -82,4 +82,14 @@ namespace Cuyahoga.Core.Domain
 		/// </summary>
 		MySQL
 	}
+
+    // added for v1.6.0
+    public enum NodeStatus
+    {
+        Online = 0,
+        Offline = 1,
+        PermanentRedirect = 2 // TODO: add http status code 301
+    }
+    // added for v1.6.0
+
 }

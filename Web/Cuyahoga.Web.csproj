@@ -1,7 +1,7 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD158F08-6E8F-4234-B3F6-A5402C8E34CC}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -27,6 +27,7 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -197,6 +198,10 @@
     </Compile>
     <Compile Include="Admin\TemplateEdit.aspx.cs">
       <DependentUpon>TemplateEdit.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Admin\TemplateEditor.aspx.cs">
+      <DependentUpon>TemplateEditor.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\TemplatePreview.aspx.cs">
@@ -434,6 +439,7 @@
     <Content Include="Admin\TemplateEdit.aspx">
       <SubType>Form</SubType>
     </Content>
+    <Content Include="Admin\TemplateEditor.aspx" />
     <Content Include="Admin\TemplatePreview.aspx">
       <SubType>Form</SubType>
     </Content>
@@ -916,6 +922,7 @@
     <Content Include="Support\JsCalendar\lang\calendar-sv.js" />
     <Content Include="Support\JsCalendar\lang\calendar-tr.js" />
     <Content Include="Support\JsCalendar\lang\calendar-zh.js" />
+    <Content Include="Templates\AnotherRed\Offline.ascx" />
     <Content Include="Templates\AnotherRed\Css\red.css" />
     <Content Include="Templates\AnotherRed\Cuyahoga.ascx" />
     <Content Include="Templates\AnotherRed\Images\bg-body.gif" />
@@ -995,6 +1002,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\TemplateEdit.aspx.resx">
       <DependentUpon>TemplateEdit.aspx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Admin\TemplateEditor.aspx.resx">
+      <DependentUpon>TemplateEditor.aspx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\TemplatePreview.aspx.resx">
       <DependentUpon>TemplatePreview.aspx.cs</DependentUpon>
@@ -1089,6 +1099,7 @@
     <None Include="Install\Core\Database\mssql2000\1.0.0.sql" />
     <None Include="Install\Core\Database\mssql2000\1.5.1.sql" />
     <None Include="Install\Core\Database\mssql2000\1.5.2.sql" />
+    <None Include="Install\Core\Database\mssql2000\1.6.0.sql" />
     <None Include="Install\Core\Database\mssql2000\install.sql" />
     <None Include="Install\Core\Database\mysql\0.8.2.sql" />
     <None Include="Install\Core\Database\mysql\0.9.0.sql" />
@@ -1157,6 +1168,10 @@ xcopy /s /y "$(SolutionDir)"lib\Castle.Facilities.NHibernateIntegration.dll "$(T
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

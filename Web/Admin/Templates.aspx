@@ -26,8 +26,14 @@
 						<tr>
 							<td><%# DataBinder.Eval(Container.DataItem, "Name") %></td>
 							<td><%# DataBinder.Eval(Container.DataItem, "BasePath") %></td>
-							<td><%# DataBinder.Eval(Container.DataItem, "TemplateControl") %></td>
-							<td><%# DataBinder.Eval(Container.DataItem, "Css") %></td>
+							<td>
+							    <%# DataBinder.Eval(Container.DataItem, "TemplateControl") %>
+							    <a href="TemplateEditor.aspx?file=<%# DataBinder.Eval(Container.DataItem, "BasePath").ToString() + "/" + DataBinder.Eval(Container.DataItem, "TemplateControl").ToString() %>">[Edit]</a>
+							</td>
+							<td>
+							    <%# DataBinder.Eval(Container.DataItem, "Css") %>
+							    <a href="TemplateEditor.aspx?file=<%# DataBinder.Eval(Container.DataItem, "BasePath").ToString() + "/css/" + DataBinder.Eval(Container.DataItem, "Css").ToString() %>">[Edit]</a>
+							</td>
 							<td>
 								<asp:hyperlink id="hplEdit" runat="server">Edit</asp:hyperlink>
 							</td>

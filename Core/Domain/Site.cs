@@ -21,8 +21,11 @@ namespace Cuyahoga.Core.Domain
 		private Role _defaultRole;
 		private IList _rootNodes;
 		private DateTime _updateTimestamp;
+	    // # added for v1.6.0
+        private Template _offlineTemplate;
+        // # added for v1.6.0
 
-		#region properties
+	    #region properties
 
 		/// <summary>
 		/// Property Id (int)
@@ -68,6 +71,20 @@ namespace Cuyahoga.Core.Domain
 			get { return this._defaultTemplate; }
 			set { this._defaultTemplate = value; }
 		}
+
+        // # added for v1.6.0
+        public virtual Template OfflineTemplate
+        {
+            get
+            {
+                return this._offlineTemplate;
+            }
+            set
+            {
+                this._offlineTemplate = value;
+            }
+        }
+        // # added for v1.6.0
 
 		/// <summary>
 		/// The default role for registered users.

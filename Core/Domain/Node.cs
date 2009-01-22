@@ -29,8 +29,11 @@ namespace Cuyahoga.Core.Domain
 		private string _metaKeywords;
 		private string _metaDescription;
 		private DateTime _updateTimestamp;
-
-		#region properties
+        // added for 1.6.0
+	    private int _status;
+        // added for 1.6.0
+            
+	    #region properties
 
 		/// <summary>
 		/// Property Id (int)
@@ -91,6 +94,26 @@ namespace Cuyahoga.Core.Domain
 			get { return this._showInNavigation; }
 			set { this._showInNavigation = value; }
 		}
+
+        // added for 1.6.0
+        /// <summary>
+        /// Gets or sets a value indicating whether this instance is offline.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is offline; otherwise, <c>false</c>.
+        /// </value>
+        public virtual int Status
+		{
+            get
+            {
+                return this._status;
+            }
+            set
+            {
+                this._status = value;
+            }
+		}
+        // added for 1.6.0
 
 		/// <summary>
 		/// Link to external url.

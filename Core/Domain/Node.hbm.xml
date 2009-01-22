@@ -25,6 +25,10 @@
 		<many-to-one name="ParentNode" class="Cuyahoga.Core.Domain.Node, Cuyahoga.Core" column="parentnodeid" not-null="false" />
 		<many-to-one name="Template" class="Cuyahoga.Core.Domain.Template, Cuyahoga.Core" column="templateid" not-null="false" />
 		
+    <!-- added for v1.6.0 -->
+    <property name="Status" column="status" type="Int32" />
+    <!-- added for v1.6.0 -->
+    
 		<bag name="ChildNodes" cascade="delete" inverse="true" order-by="position asc" lazy="true">
 			<cache usage="read-write" />
 			<key column="parentnodeid" />

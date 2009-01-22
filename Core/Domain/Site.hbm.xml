@@ -22,9 +22,11 @@
 		<property name="MetaDescription" column="metadescription" type="String" length="500" />
 		
 		<many-to-one name="DefaultTemplate" class="Cuyahoga.Core.Domain.Template, Cuyahoga.Core" column="templateid" not-null="false" outer-join="false" />
-		<many-to-one name="DefaultRole" class="Cuyahoga.Core.Domain.Role, Cuyahoga.Core" column="roleid" not-null="true" outer-join="true" />
-		
-		<bag name="RootNodes" cascade="none" where="parentnodeid is null" order-by="position asc" lazy="true">
+    <!--  # added for v1.6.0 -->
+    <many-to-one name="OfflineTemplate" class="Cuyahoga.Core.Domain.Template, Cuyahoga.Core" column="offlinetemplateid" not-null="false" outer-join="false" />
+    <!--  # added for v1.6.0 -->
+    <many-to-one name="DefaultRole" class="Cuyahoga.Core.Domain.Role, Cuyahoga.Core" column="roleid" not-null="true" outer-join="true" />
+    <bag name="RootNodes" cascade="none" where="parentnodeid is null" order-by="position asc" lazy="true">
 			<key column="siteid" />
 			<one-to-many class="Cuyahoga.Core.Domain.Node, Cuyahoga.Core" /> 
 		</bag>

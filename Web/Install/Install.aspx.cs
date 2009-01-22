@@ -167,6 +167,9 @@ namespace Cuyahoga.Web.Install
 		{
 			User adminUser = (User) this._commonDao.GetObjectById(typeof(User), 1);
 			Template defaultTemplate = this._commonDao.GetObjectByDescription(typeof(Template), "Name", "Another Red") as Template;
+            // added for v1.6.0
+            Template offlineemplate = this._commonDao.GetObjectByDescription( typeof( Template ), "Name", "Offline" ) as Template;
+            // added for v1.6.0
 			Role defaultAuthenticatedRole = this._commonDao.GetObjectByDescription(typeof(Role), "Name", "Authenticated user") as Role;
 
 			// Site
@@ -177,6 +180,9 @@ namespace Cuyahoga.Web.Install
 			site.UseFriendlyUrls = true;
 			site.DefaultCulture = "en-US";
 			site.DefaultTemplate = defaultTemplate;
+            // added for v1.6.0
+            site.OfflineTemplate = offlineemplate;
+            // added for v1.6.0
 			site.DefaultPlaceholder = "maincontent";
 			site.DefaultRole = defaultAuthenticatedRole;
 			this._commonDao.SaveOrUpdateObject(site);

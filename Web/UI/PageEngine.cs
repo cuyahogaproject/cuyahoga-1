@@ -140,17 +140,17 @@ namespace Cuyahoga.Web.UI
 		/// <param name="content"></param>
 		public void RegisterMetaTag(string name, string content)
 		{
-			if (content != null && content.Length > 0)
+			if (!string.IsNullOrEmpty(content))
 			{
 				this._metaTags[name] = content;
 			}
 		}
 
-		/// <summary>
-		/// Load the content and the template as early as possible, so everything is in place before 
-		/// modules handle their own ASP.NET lifecycle events.
-		/// </summary>
-		/// <param name="obj"></param>
+        /// <summary>
+        /// Load the content and the template as early as possible, so everything is in place before
+        /// modules handle their own ASP.NET lifecycle events.
+        /// </summary>
+        /// <param name="e">An <see cref="T:System.EventArgs"/> that contains the event data.</param>
 		protected override void OnInit(EventArgs e)
 		{		
 			// Load the current site
@@ -260,6 +260,28 @@ namespace Cuyahoga.Web.UI
 
 		private void LoadContent()
 		{
+//
+            PageEngine page = ( PageEngine ) Page;
+            bool isAdmin = ( ( page.CuyahogaUser != null && page.CuyahogaUser.HasPermission( AccessLevel.Administrator ) ) );
+
+            // # added for v1.6.0
+            if ( ActiveNode.Site.OfflineTemplate != null) // check if an Offline template was selected
+            {
+
+		        // check if any parent is offline
+                if (_activeNode.Level >= 1 && !isAdmin) // from the 2nd level
+                {
+                    if (IsAnyParentOffline(_activeNode, 1))
+                    {
+                        _activeNode.Template = _currentSite.OfflineTemplate;
+                        ActiveNode.Status = (int) NodeStatus.Offline; // lo mettiamo off-line
+                    }
+                }
+
+            }
+            // # added for v1.6.0
+
+
 			// ===== Load templates  =====
 
 			string appRoot = UrlHelper.GetApplicationPath();
@@ -290,41 +312,85 @@ namespace Cuyahoga.Web.UI
 				{
 					RegisterMetaTag("description", ActiveNode.Site.MetaDescription);
 				}
-				// Load sections that are related to the template
-				foreach (DictionaryEntry sectionEntry in this.ActiveNode.Template.Sections)
-				{
-					string placeholder = sectionEntry.Key.ToString();
-					Section section = sectionEntry.Value as Section;
-					if (section != null)
-					{
-						BaseModuleControl moduleControl = CreateModuleControlForSection(section);
-						if (moduleControl != null)
-						{
-							((PlaceHolder)this._templateControl.Containers[placeholder]).Controls.Add(moduleControl);
-						}
-					}
-				}
+
+
+
+                // # added for v1.6.0
+                if( ActiveNode.Status == ( int ) NodeStatus.Online || (ActiveNode.Status == ( int ) NodeStatus.Offline && isAdmin) ) 
+                {
+                // # added for v1.6.0
+
+				    // Load sections that are related to the template
+				    foreach (DictionaryEntry sectionEntry in this.ActiveNode.Template.Sections)
+				    {
+					    string placeholder = sectionEntry.Key.ToString();
+					    Section section = sectionEntry.Value as Section;
+					    if (section != null)
+					    {
+						    BaseModuleControl moduleControl = CreateModuleControlForSection(section);
+						    if (moduleControl != null)
+						    {
+							    ((PlaceHolder)this._templateControl.Containers[placeholder]).Controls.Add(moduleControl);
+						    }
+					    }
+				    }
+
+                // # added for v1.6.0
+                }
+                // # added for v1.6.0
 			}
 			else
 			{
 				throw new Exception("No template associated with the current Node.");
 			}
 
-			// ===== Load sections and modules =====
-			foreach (Section section in this._activeNode.Sections)
-			{
-				BaseModuleControl moduleControl = CreateModuleControlForSection(section);
-				if (moduleControl != null)
-				{
-					((PlaceHolder)this._templateControl.Containers[section.PlaceholderId]).Controls.Add(moduleControl);
-				}
-			}
+            // # added for v1.6.0
+            if( ActiveNode.Status == ( int ) NodeStatus.Online || ( ActiveNode.Status == ( int ) NodeStatus.Offline && isAdmin ) ) 
+            {
+            // # added for v1.6.0
 
-			this.Controls.AddAt(0, this._templateControl);
+                // ===== Load sections and modules =====
+                foreach (Section section in this._activeNode.Sections)
+                {
+                    BaseModuleControl moduleControl = CreateModuleControlForSection(section);
+                    if (moduleControl != null)
+                    {
+                        ((PlaceHolder) this._templateControl.Containers[section.PlaceholderId]).Controls.Add(
+                            moduleControl);
+                    }
+                }
+            
+            // # added for v1.6.0
+            }
+            // # added for v1.6.0
+
+		    this.Controls.AddAt(0, this._templateControl);
 			// remove html that was in the original page (Default.aspx)
 			for (int i = this.Controls.Count -1; i < 0; i --)
 				this.Controls.RemoveAt(i);
 		}
+
+        /// <summary>
+        /// Determines whether [is any parent offline] [the specified node].
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="minLevel">The min level.</param>
+        /// <returns>
+        /// 	<c>true</c> if [is any parent offline] [the specified node]; otherwise, <c>false</c>.
+        /// </returns>
+        private bool IsAnyParentOffline( Node node, int minLevel )
+        {
+            if( node.ParentNode == null || node.ParentNode.Level < minLevel )
+                return (node.Status == (int)NodeStatus.Offline); //false;
+
+            if( (node.ParentNode.Status == (int)NodeStatus.Offline) && node.ParentNode.Level >= minLevel )
+            {
+                return true;
+            }
+
+            return IsAnyParentOffline( node.ParentNode, minLevel );
+        }
+
 
 		private BaseModuleControl CreateModuleControlForSection(Section section)
 		{

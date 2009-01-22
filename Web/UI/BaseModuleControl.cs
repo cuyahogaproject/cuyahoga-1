@@ -99,9 +99,16 @@ namespace Cuyahoga.Web.UI
 				writer.Write(String.Format("<a href=\"{0}\"><img src=\"{1}\" alt=\"RSS-2.0\"/></a>", 
 					UrlHelper.GetRssUrlFromSection(this._module.Section) + this._module.ModulePathInfo, UrlHelper.GetApplicationPath() + "Images/feed-icon.png"));
 			}
+
+            // added for 1.6.0
+            bool bPreview = ( Request.QueryString[ "preview" ] == null ? false : ( Request.QueryString[ "preview" ].ToString() == "on" ) );
+            // added for 1.6.0
+
 			// Edit button
 			User cuyahogaUser = this.Page.User.Identity as User;
-			if (cuyahogaUser != null)
+
+			// if (cuyahogaUser != null)
+            if( cuyahogaUser != null && !bPreview ) // modified for 1.6.0
 			{
 				if (this._module.Section.ModuleType.EditPath != null
 					&& cuyahogaUser.CanEdit(this._module.Section))

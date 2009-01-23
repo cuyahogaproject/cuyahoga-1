@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8" ?> 
+<?xml version="1.0" encoding="utf-8" ?>
 <hibernate-mapping xmlns="urn:nhibernate-mapping-2.2">
 	<class name="Cuyahoga.Core.Domain.Node, Cuyahoga.Core" table="cuyahoga_node">
-		
+
 		<cache usage="read-write" />
 
 		<id name="Id" column="nodeid" type="Int32" unsaved-value="-1">
@@ -10,7 +10,7 @@
 			</generator>
 		</id>
 		<timestamp name="UpdateTimestamp" column="updatetimestamp" />
-		
+
 		<property name="Title" column="title" type="String" length="255" />
 		<property name="ShortDescription" column="shortdescription" type="String" length="255" unique="true" />
 		<property name="Position" column="position" type="Int32" />
@@ -24,15 +24,15 @@
 		<many-to-one name="Site" class="Cuyahoga.Core.Domain.Site, Cuyahoga.Core" column="siteid" not-null="false" />
 		<many-to-one name="ParentNode" class="Cuyahoga.Core.Domain.Node, Cuyahoga.Core" column="parentnodeid" not-null="false" />
 		<many-to-one name="Template" class="Cuyahoga.Core.Domain.Template, Cuyahoga.Core" column="templateid" not-null="false" />
-		
-    <!-- added for v1.6.0 -->
-    <property name="Status" column="status" type="Int32" />
-    <!-- added for v1.6.0 -->
-    
+
+		<!-- added for v1.6.0 -->
+		<property name="Status" column="status" type="Int32" />
+		<!-- added for v1.6.0 -->
+
 		<bag name="ChildNodes" cascade="delete" inverse="true" order-by="position asc" lazy="true">
 			<cache usage="read-write" />
 			<key column="parentnodeid" />
-			<one-to-many class="Cuyahoga.Core.Domain.Node, Cuyahoga.Core" /> 
+			<one-to-many class="Cuyahoga.Core.Domain.Node, Cuyahoga.Core" />
 		</bag>
 		<bag name="Sections" cascade="none" inverse="true" lazy="true" order-by="position">
 			<cache usage="read-write" />
@@ -49,6 +49,6 @@
 				<many-to-one name="Role" class="Cuyahoga.Core.Domain.Role, Cuyahoga.Core" column="roleid" cascade="none" />
 			</composite-element>
 		</bag>
-		
+
 	</class>
 </hibernate-mapping>

@@ -20,7 +20,7 @@ namespace Cuyahoga.Web.HttpHandlers
     /// </summary>
     public class SitemapHandler : IHttpHandler, IRequiresSessionState
     {
-        private static readonly ILog log = LogManager.GetLogger(typeof (PageHandler));
+		private static readonly ILog log = LogManager.GetLogger(typeof(SitemapHandler));
         private string _baseSiteURL = "";
 
         private double _defaultPagePriority;

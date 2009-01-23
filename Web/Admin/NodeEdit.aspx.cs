@@ -316,6 +316,7 @@ namespace Cuyahoga.Web.Admin
 		private void SaveNode()
 		{
 			base.CoreRepository.ClearQueryCache("Nodes");
+			base.CoreRepository.ClearCollectionCache("Cuyahoga.Core.Domain.Node.ChildNodes");
 
 			if (this.ActiveNode.Id > 0)
 			{
@@ -813,7 +814,7 @@ namespace Cuyahoga.Web.Admin
 
                 node.CreateShortDescription();
 
-                foreach( NodePermission np in ActiveNode.NodePermissions )
+            	foreach( NodePermission np in ActiveNode.NodePermissions )
                 {
                     NodePermission npNew = new NodePermission();
                     npNew.Node = node;
@@ -823,14 +824,16 @@ namespace Cuyahoga.Web.Admin
                     node.NodePermissions.Add( npNew );
                 }
 
-                IList rootNodes = base.CoreRepository.GetRootNodes( node.Site );
-                node.CalculateNewPosition( rootNodes );
+            	IList rootNodes = base.CoreRepository.GetRootNodes( node.Site );
+            	node.CalculateNewPosition( rootNodes );
+            	ActiveNode.ChildNodes.Add(node);
 
-                base.CoreRepository.SaveObject( node );
+            	base.CoreRepository.SaveObject( node );
 
-                CopySectionsFromNode( ActiveNode, node );
+            	CopySectionsFromNode( ActiveNode, node );
 
-                base.CoreRepository.ClearQueryCache( "Nodes" );
+            	base.CoreRepository.ClearQueryCache( "Nodes" );
+				base.CoreRepository.ClearCollectionCache("Cuyahoga.Core.Domain.Node.ChildNodes");
 
                 Context.Response.Redirect(String.Format( "NodeEdit.aspx?NodeId={0}&message=Node has been duplicated.", node.Id ) );
 

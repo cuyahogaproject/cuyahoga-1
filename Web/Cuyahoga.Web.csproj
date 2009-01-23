@@ -1,7 +1,7 @@
 ﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{DD158F08-6E8F-4234-B3F6-A5402C8E34CC}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
@@ -230,6 +230,7 @@
       <DependentUpon>Users.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="HttpHandlers\SitemapHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1099,7 +1100,6 @@
     <None Include="Install\Core\Database\mssql2000\1.0.0.sql" />
     <None Include="Install\Core\Database\mssql2000\1.5.1.sql" />
     <None Include="Install\Core\Database\mssql2000\1.5.2.sql" />
-    <None Include="Install\Core\Database\mssql2000\1.6.0.sql" />
     <None Include="Install\Core\Database\mssql2000\install.sql" />
     <None Include="Install\Core\Database\mysql\0.8.2.sql" />
     <None Include="Install\Core\Database\mysql\0.9.0.sql" />
@@ -1143,8 +1143,6 @@
     <Content Include="Support\FCKeditor\editor\filemanager\Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="index\" />
-    <Folder Include="log\" />
     <Folder Include="Modules\" />
     <Folder Include="UserFiles\File\" />
     <Folder Include="UserFiles\Image\" />
@@ -1168,10 +1166,6 @@ xcopy /s /y "$(SolutionDir)"lib\Castle.Facilities.NHibernateIntegration.dll "$(T
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

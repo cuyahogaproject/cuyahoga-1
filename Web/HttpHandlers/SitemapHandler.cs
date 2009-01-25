@@ -171,7 +171,7 @@ namespace Cuyahoga.Web.HttpHandlers
                     SitePage sitePage = new SitePage();
                     sitePage.ChangeFreq = DefaultPageUpdateFrequency;
                     sitePage.LastMod = node.UpdateTimestamp;
-                    sitePage.Loc = UrlHelper.GetUrlFromNode(node);
+                    sitePage.Loc = UrlHelper.GetSiteUrl() + UrlHelper.GetUrlFromNode( node );
                     sitePage.Priority = DefaultPagePriority;
                     sitePage.Title = node.Title;
 

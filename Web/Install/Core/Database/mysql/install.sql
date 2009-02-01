@@ -101,8 +101,10 @@ metakeywords MEDIUMTEXT,
 metadescription MEDIUMTEXT,
 inserttimestamp TIMESTAMP NOT NULL,
 updatetimestamp DATETIME NOT NULL,
+offlinetemplateid int NULL,
 FOREIGN KEY (roleid) REFERENCES cuyahoga_role (roleid),
 FOREIGN KEY (templateid) REFERENCES cuyahoga_template (templateid),
+FOREIGN KEY (offlinetemplateid) REFERENCES cuyahoga_template (templateid),
 PRIMARY KEY (siteid),
 UNIQUE UC_site_name (name));
 
@@ -123,6 +125,7 @@ metakeywords MEDIUMTEXT,
 metadescription MEDIUMTEXT,
 inserttimestamp TIMESTAMP NOT NULL,
 updatetimestamp DATETIME NOT NULL,
+status int NOT NULL DEFAULT (0),
 FOREIGN KEY (parentnodeid) REFERENCES cuyahoga_node (nodeid),
 FOREIGN KEY (siteid) REFERENCES cuyahoga_site (siteid),
 FOREIGN KEY (templateid) REFERENCES cuyahoga_template (templateid),
@@ -255,4 +258,4 @@ INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css,
 INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (3, 'Cuyahoga New', 'Templates/Default', 'CuyahogaNew.ascx', 'red-new.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
 INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (4, 'Another Red', 'Templates/AnotherRed', 'Cuyahoga.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
 
-INSERT INTO cuyahoga_version (assembly, major, minor, patch) VALUES ('Cuyahoga.Core', 1, 5, 2);
+INSERT INTO cuyahoga_version (assembly, major, minor, patch) VALUES ('Cuyahoga.Core', 1, 6, 0);

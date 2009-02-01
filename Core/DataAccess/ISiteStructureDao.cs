@@ -133,5 +133,11 @@ namespace Cuyahoga.Core.DataAccess
 		/// <param name="siteAlias"></param>
 		void DeleteSiteAlias(SiteAlias siteAlias);
 
+        /// <summary>
+        /// Get all nodes of a site
+        /// </summary>
+        /// <param name="site"></param>
+        /// <returns></returns>
+	    IList GetNodesBySite(Site site);
 	}
 }

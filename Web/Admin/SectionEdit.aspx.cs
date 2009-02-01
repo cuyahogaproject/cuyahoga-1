@@ -39,10 +39,10 @@ namespace Cuyahoga.Web.Admin
 		protected Repeater rptConnections;
 		protected PlaceHolder plcCustomSettings;
 
-        // added for 1.6.0
-        protected Button btnSaveTop;
-        protected Button btnBackTop;
-        // added for 1.6.0
+		// added for 1.6.0
+		protected Button btnSaveTop;
+		protected Button btnBackTop;
+		// added for 1.6.0
 	
 		private void Page_Load(object sender, EventArgs e)
 		{

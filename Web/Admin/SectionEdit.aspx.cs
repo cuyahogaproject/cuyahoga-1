@@ -402,10 +402,10 @@ namespace Cuyahoga.Web.Admin
 			this.btnBack.Click += new System.EventHandler(this.btnBack_Click);
 			this.Load += new System.EventHandler(this.Page_Load);
 
-            // added for 1.6.0
-            this.btnSaveTop.Click += new System.EventHandler( this.btnSave_Click );
-            this.btnBackTop.Click += new System.EventHandler( this.btnBack_Click );
-            // added for 1.6.0
+			// added for 1.6.0
+			this.btnSaveTop.Click += new System.EventHandler( this.btnSave_Click );
+			this.btnBackTop.Click += new System.EventHandler( this.btnBack_Click );
+			// added for 1.6.0
 
 		}
 		#endregion

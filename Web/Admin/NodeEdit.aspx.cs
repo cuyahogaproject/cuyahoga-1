@@ -143,18 +143,18 @@ namespace Cuyahoga.Web.Admin
 				BindPositionButtonsVisibility();
 			}
 
-            // added for v1.6.0
-            btnDuplicate.Attributes.Add( "onclick", "return confirm('Duplicate node?')" );
-            btnDuplicate2.Attributes.Add( "onclick", "return confirm('Duplicate node?')" );
-
-            if (ActiveNode != null)
-            {
-                string onclickstring = "window.open('{0}?preview=on');";
-                onclickstring = string.Format(onclickstring, UrlHelper.GetUrlFromNode(ActiveNode));
-                btnPreview.Attributes.Add("onclick", onclickstring);
-                btnPreview2.Attributes.Add( "onclick", onclickstring );
-            }
-            // added for v1.6.0
+			// added for v1.6.0
+			btnDuplicate.Attributes.Add( "onclick", "return confirm('Duplicate node?')" );
+			btnDuplicate2.Attributes.Add( "onclick", "return confirm('Duplicate node?')" );
+			
+			if (ActiveNode != null)
+			{
+				string onclickstring = "window.open('{0}?preview=on');";
+				onclickstring = string.Format(onclickstring, UrlHelper.GetUrlFromNode(ActiveNode));
+				btnPreview.Attributes.Add("onclick", onclickstring);
+				btnPreview2.Attributes.Add( "onclick", onclickstring );
+			}
+			// added for v1.6.0
 
 		}
 
@@ -185,31 +185,39 @@ namespace Cuyahoga.Web.Admin
 			btnNew.Visible = (this.ActiveNode.Id > 0);
 			btnDelete.Visible = (this.ActiveNode.Id > 0);
 			btnDelete.Attributes.Add("onclick", "return confirmDeleteNode();");
+			btnDelete2.Attributes.Add( "onclick", "return confirmDeleteNode();" );
+			btnDelete2.Visible = btnDelete.Visible;
+			btnNew2.Visible = btnNew.Visible;
 
-            // added for v1.6.0 -- leave space for future implementation of new statuses
-            if (ActiveNode.Id > 0)
-            {
-		        switch ((NodeStatus)ActiveNode.Status)
-		        {
-                    case NodeStatus.Online:
-                        btnOffline.Text = "Take Offline";
-                        lblStatus.Text = "Online";
-		                break;
+			// added for v1.6.0 -- leave space for future implementation of new statuses
+			if( ActiveNode.Id > 0 )
+			{
+				switch( ( NodeStatus ) ActiveNode.Status )
+				{
+					case NodeStatus.Online:
+						btnOffline.Text = "Take Offline";
+						lblStatus.Text = "Online";
+						btnOffline.Attributes.Add( "onclick", "return confirm('Take offline node?')" );
+						btnOffline2.Attributes.Add( "onclick", "return confirm('Take offline node?')" );
+						break;
 
-                    case NodeStatus.Offline:
-                        btnOffline.Text = "Bring online";
-                        lblStatus.Text = "<strong>Offline</strong>";
-		                break;
+					case NodeStatus.Offline:
+						btnOffline.Text = "Bring online";
+						lblStatus.Text = "<strong>Offline</strong>";
+						btnOffline.Attributes.Add( "onclick", "return confirm('Bring online node?')" );
+						btnOffline2.Attributes.Add( "onclick", "return confirm('Bring online node?')" );
+						break;
 
-                    default:
-		                btnOffline.Enabled = false;
-		                break;
-    		            
-		        }
-                btnOffline2.Text = btnOffline.Text; // replicate text on top button
-            }
-            else btnOffline.Visible = false;
-            // added for v1.6.0
+					default:
+						btnOffline.Enabled = false;
+						break;
+
+				}
+				btnOffline2.Text = btnOffline.Text; // replicate text on top button
+			}
+			else
+				btnOffline.Visible = false;
+			// added for v1.6.0
 
 		}
 

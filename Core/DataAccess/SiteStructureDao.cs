@@ -275,18 +275,18 @@ namespace Cuyahoga.Core.DataAccess
 			session.Delete(siteAlias);
 		}
 
-        // added for 1.6.0
-        public IList GetNodesBySite( Site site )
-        {
-            ISession session = this._sessionManager.OpenSession();
+		// added for 1.6.0
+		public IList GetNodesBySite( Site site )
+		{
+			ISession session = this._sessionManager.OpenSession();
 
-            string hql = "from Node n where n.Site.Id = :siteId ";
-            IQuery q = session.CreateQuery( hql );
-            q.SetInt32( "siteId", site.Id );
-            return q.List();
+			string hql = "from Node n where n.Site.Id = :siteId ";
+			IQuery q = session.CreateQuery( hql );
+			q.SetInt32( "siteId", site.Id );
+			return q.List();
 
-        }
-        // added for 1.6.0
+		}
+		// added for 1.6.0
 		#endregion
 	}
 }

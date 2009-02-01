@@ -11,19 +11,15 @@ Additions:
 
 - Admin: You can take offline a page (and related child pages), showing a special template (definited in site admin): admin can take offline temporarly 
 	a page for maintenance.
-  * A new button on Node Edit page was added. Note that admin can still access to the page to make administrative tasks.
-  * Status property was added to the node, so futher statuses can be implemented, such as the http 301 permanent redirect and may be add Location field 
-	header with LinkUrl content.
+	* A new button on Node Edit page was added. Note that admin can still access to the page to make administrative tasks.
+	* Status property was added to the node, so further statuses can be implemented, such as the http 301 permanent redirect and may be add Location field 
+	  header with LinkUrl content.
 - Admin: buttons at the top of the page instead only at the bottom of the page on Node Edit and Section Edit pages
 - Admin: Added Admin linkbutton on each section on node to access directly to the "Edit" link of a section (Admin page)
 - Edit Template: edit html code of template ascx and css (this require special permission on server's folder)
 - Admin: Duplicate a Node
 - Admin: Preview the page, opening a new window, without std admin links
-- A Sitemap handler for Google sitemap spec.
-
-MISSING
-- test db scripts for db upgrade
-- more exaistive testing
+- A Sitemap handler for Google sitemap spec. 
 
 Marco Trova
 Email: marco.trova@gmail.com

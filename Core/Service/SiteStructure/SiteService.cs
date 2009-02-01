@@ -131,6 +131,12 @@ namespace Cuyahoga.Core.Service.SiteStructure
 			}
 		}
 
+        // added for 1.6.0
+        public IList GetNodesBySite( Site site )
+        {
+            return _siteStructureDao.GetNodesBySite(site);
+        }
+        // added for 1.6.0
 		#endregion
 	}
 }

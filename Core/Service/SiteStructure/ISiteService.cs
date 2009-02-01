@@ -74,5 +74,11 @@ namespace Cuyahoga.Core.Service.SiteStructure
 		/// </summary>
 		/// <param name="siteAlias"></param>
 		void DeleteSiteAlias(SiteAlias siteAlias);
+
+        /// <summary>
+        /// Get all nodes of the site
+        /// </summary>
+        /// <returns></returns>
+        IList GetNodesBySite( Site site );
 	}
 }

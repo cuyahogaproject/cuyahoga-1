@@ -161,9 +161,10 @@ namespace Cuyahoga.Web.HttpHandlers
 				// foreach( SitePage sitePage in sitePages )
 				foreach (Node node in nodes)
 				{
-					if (node.Status != (int) NodeStatus.Offline
+					if (node.Status == (int) NodeStatus.Online
 						&& !node.IsExternalLink
-						&& node.AnonymousViewAllowed)
+						&& node.AnonymousViewAllowed
+						&& node.ShowInNavigation)
 					{
 						SitePage sitePage = new SitePage();
 						sitePage.ChangeFreq = DefaultPageUpdateFrequency;
@@ -211,7 +212,10 @@ namespace Cuyahoga.Web.HttpHandlers
 			//start off the site map
 			writer.WriteProcessingInstruction("xml", "version=\"1.0\" encoding=\"UTF-8\"");
 			writer.WriteStartElement("urlset");
-			writer.WriteAttributeString("xmlns", "http://www.google.com/schemas/sitemap/0.84");
+			writer.WriteAttributeString("xmlns", "http://www.google.com/schemas/sitemap/0.9");
+
+
+
 		}
 
 		internal void WriteSiteMapFooter(XmlWriter writer)

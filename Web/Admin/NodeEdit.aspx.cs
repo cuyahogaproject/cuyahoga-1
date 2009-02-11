@@ -197,15 +197,15 @@ namespace Cuyahoga.Web.Admin
 					case NodeStatus.Online:
 						btnOffline.Text = "Take Offline";
 						lblStatus.Text = "Online";
-						btnOffline.Attributes.Add( "onclick", "return confirm('Take offline node?')" );
-						btnOffline2.Attributes.Add( "onclick", "return confirm('Take offline node?')" );
+						btnOffline.Attributes.Add( "onclick", "return confirm('Take node offline?')" );
+						btnOffline2.Attributes.Add( "onclick", "return confirm('Take node offline?')" );
 						break;
 
 					case NodeStatus.Offline:
 						btnOffline.Text = "Bring online";
 						lblStatus.Text = "<strong>Offline</strong>";
-						btnOffline.Attributes.Add( "onclick", "return confirm('Bring online node?')" );
-						btnOffline2.Attributes.Add( "onclick", "return confirm('Bring online node?')" );
+						btnOffline.Attributes.Add( "onclick", "return confirm('Bring node online?')" );
+						btnOffline2.Attributes.Add("onclick", "return confirm('Bring node online?')");
 						break;
 
 					default:

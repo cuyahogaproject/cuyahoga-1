@@ -1100,6 +1100,7 @@
     <None Include="Install\Core\Database\mssql2000\1.0.0.sql" />
     <None Include="Install\Core\Database\mssql2000\1.5.1.sql" />
     <None Include="Install\Core\Database\mssql2000\1.5.2.sql" />
+    <None Include="Install\Core\Database\mssql2000\1.6.0.sql" />
     <None Include="Install\Core\Database\mssql2000\install.sql" />
     <None Include="Install\Core\Database\mysql\0.8.2.sql" />
     <None Include="Install\Core\Database\mysql\0.9.0.sql" />

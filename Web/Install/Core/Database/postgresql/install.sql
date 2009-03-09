@@ -89,7 +89,7 @@ webmasteremail varchar(100) NOT NULL,
 usefriendlyurls bool,
 metakeywords varchar(500),
 metadescription varchar(500),
-offlinetemplateid int NULL,
+offlinetemplateid int,
 inserttimestamp timestamp DEFAULT current_timestamp NOT NULL,
 updatetimestamp timestamp DEFAULT current_timestamp NOT NULL,
 CONSTRAINT FK_site_role_roleid FOREIGN KEY (roleid) REFERENCES cuyahoga_role (roleid),
@@ -111,7 +111,7 @@ linkurl varchar(255),
 linktarget int4,
 metakeywords varchar(500),
 metadescription varchar(500),
-status int NOT NULL DEFAULT (0),
+status int4  DEFAULT 0 NOT NULL,
 inserttimestamp timestamp DEFAULT current_timestamp NOT NULL,
 updatetimestamp timestamp DEFAULT current_timestamp NOT NULL,
 CONSTRAINT FK_node_node_parentnodeid FOREIGN KEY (parentnodeid) REFERENCES cuyahoga_node (nodeid),
@@ -236,5 +236,6 @@ INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css,
 INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (2, 'Cuyahoga Standard', 'Templates/Classic', 'CuyahogaStandard.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
 INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (3, 'Cuyahoga New', 'Templates/Default', 'CuyahogaNew.ascx', 'red-new.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
 INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (4, 'Another Red', 'Templates/AnotherRed', 'Cuyahoga.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
+INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) VALUES (5, 'Offline', 'Templates/AnotherRed', 'Offline.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
 
 INSERT INTO cuyahoga_version (assembly, major, minor, patch) VALUES ('Cuyahoga.Core', 1, 6, 0);

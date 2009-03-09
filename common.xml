@@ -9,7 +9,7 @@
 	<property name="lib.framework.dir" value="${path::combine(lib.family.dir, version::to-string(framework::get-version(framework::get-target-framework())))}" dynamic="true" />
 
 	<!-- Versioning	-->
-	<property name="project.version" value="1.5.2.0" overwrite="false" />
+	<property name="project.version" value="1.6.0.0" overwrite="false" />
 	<property name="project.major" value="${version::get-major(version::parse(project.version))}" dynamic="true" />
 	<property name="project.minor" value="${version::get-minor(version::parse(project.version))}" dynamic="true" />
 	<property name="project.build" value="${version::get-build(version::parse(project.version))}" dynamic="true" />

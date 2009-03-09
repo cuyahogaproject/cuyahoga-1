@@ -481,6 +481,8 @@
     <Content Include="User\ResetPassword.ascx">
       <SubType>UserControl</SubType>
     </Content>
+    <Content Include="User\EmailTemplates\Register.vi.txt" />
+    <Content Include="User\EmailTemplates\ResetPassword.vi.txt" />
     <Content Include="User\User.ascx">
       <SubType>UserControl</SubType>
     </Content>
@@ -509,6 +511,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Search\Resources\Strings.sv.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Search\Resources\Strings.vi.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Search\Search.ascx.resx">
@@ -552,6 +557,9 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="User\Resources\Strings.sv.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="User\Resources\Strings.vi.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="User\User.ascx.resx">

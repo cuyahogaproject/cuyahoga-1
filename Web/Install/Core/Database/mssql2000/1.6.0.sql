@@ -26,8 +26,8 @@ go
 /* 
  * Offline template 
  */
-INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) 
-VALUES (5, 'Offline', 'Templates/AnotherRed', 'Offline.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365')
+INSERT INTO cuyahoga_template (name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) 
+VALUES ('Offline', 'Templates/AnotherRed', 'Offline.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365')
 go
 /*
  *  Version

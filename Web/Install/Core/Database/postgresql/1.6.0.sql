@@ -20,8 +20,11 @@ ALTER TABLE cuyahoga_node
 /* 
  * Offline template 
  */
-INSERT INTO cuyahoga_template (templateid, name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) 
-VALUES (5, 'Offline', 'Templates/AnotherRed', 'Offline.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
+ -- first set sequence values, otherwise the inserts will fail due to violation of the pk_constraint
+SELECT setval('cuyahoga_template_templateid_seq', (SELECT max(moduletypeid) FROM cuyahoga_moduletype));
+
+INSERT INTO cuyahoga_template (name, basepath, templatecontrol, css, inserttimestamp, updatetimestamp) 
+VALUES ('Offline', 'Templates/AnotherRed', 'Offline.ascx', 'red.css', '2004-01-26 21:52:52.365', '2004-01-26 21:52:52.365');
 
 /*
  *  Version

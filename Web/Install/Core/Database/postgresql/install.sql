@@ -89,12 +89,12 @@ webmasteremail varchar(100) NOT NULL,
 usefriendlyurls bool,
 metakeywords varchar(500),
 metadescription varchar(500),
-offlinetemplateid int,
+offlinetemplateid int4,
 inserttimestamp timestamp DEFAULT current_timestamp NOT NULL,
 updatetimestamp timestamp DEFAULT current_timestamp NOT NULL,
 CONSTRAINT FK_site_role_roleid FOREIGN KEY (roleid) REFERENCES cuyahoga_role (roleid),
-CONSTRAINT FK_site_template_templateid FOREIGN KEY (templateid) REFERENCES cuyahoga_template (templateid)),
-CONSTRAINT FK_site_template_offlinetemplateid FOREIGN KEY (offlinetemplateid) REFERENCES cuyahoga_template (templateid)),;
+CONSTRAINT FK_site_template_templateid FOREIGN KEY (templateid) REFERENCES cuyahoga_template (templateid),
+CONSTRAINT FK_site_template_offlinetemplateid FOREIGN KEY (offlinetemplateid) REFERENCES cuyahoga_template (templateid));
 
 
 CREATE TABLE cuyahoga_node(

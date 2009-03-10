@@ -93,59 +93,64 @@ namespace Cuyahoga.Web.UI
 		protected override void Render(System.Web.UI.HtmlTextWriter writer)
 		{
 			// Rss feed
-			writer.Write("<div class=\"moduletools\">");
 			if (this._displaySyndicationIcon)
 			{
-				writer.Write(String.Format("<a href=\"{0}\"><img src=\"{1}\" alt=\"RSS-2.0\"/></a>", 
+				writer.Write(String.Format("<div class=\"syndicate\"><a href=\"{0}\"><img src=\"{1}\" alt=\"RSS-2.0\"/></a></div>", 
 					UrlHelper.GetRssUrlFromSection(this._module.Section) + this._module.ModulePathInfo, UrlHelper.GetApplicationPath() + "Images/feed-icon.png"));
 			}
 
-            // added for 1.6.0
-            bool bPreview = ( Request.QueryString[ "preview" ] == null ? false : ( Request.QueryString[ "preview" ].ToString() == "on" ) );
-            // added for 1.6.0
-
-			// Edit button
 			User cuyahogaUser = this.Page.User.Identity as User;
 
-			// if (cuyahogaUser != null)
-            if( cuyahogaUser != null && !bPreview ) // modified for 1.6.0
+			if (cuyahogaUser != null && (cuyahogaUser.CanEdit(this._module.Section) || cuyahogaUser.HasPermission(AccessLevel.Administrator)))
 			{
-				if (this._module.Section.ModuleType.EditPath != null
-					&& cuyahogaUser.CanEdit(this._module.Section))
+				writer.Write("<div class=\"moduletools\">");
+				// added for 1.6.0
+				bool isPreview = (Request.QueryString["preview"] == null
+				                  	? false
+				                  	: (Request.QueryString["preview"] == "on"));
+
+				// Edit button
+				if (!isPreview) // modified for 1.6.0
 				{
-					if (this._module.Section.Node != null)
+					if (this._module.Section.ModuleType.EditPath != null
+					    && cuyahogaUser.CanEdit(this._module.Section))
 					{
-						writer.Write(String.Format("&nbsp;[<a href=\"{0}?NodeId={1}&amp;SectionId={2}\">Edit</a>]"
-							, UrlHelper.GetApplicationPath() + this._module.Section.ModuleType.EditPath
-							, this._module.Section.Node.Id
-							, this._module.Section.Id));
+						if (this._module.Section.Node != null)
+						{
+							writer.Write(String.Format("&nbsp;<a href=\"{0}?NodeId={1}&amp;SectionId={2}\">Edit</a>"
+							                           , UrlHelper.GetApplicationPath() + this._module.Section.ModuleType.EditPath
+							                           , this._module.Section.Node.Id
+							                           , this._module.Section.Id));
+						}
+						else
+						{
+							writer.Write(String.Format("&nbsp;<a href=\"{0}?NodeId={1}&amp;SectionId={2}\">Edit</a>"
+							                           , UrlHelper.GetApplicationPath() + this._module.Section.ModuleType.EditPath
+							                           , this.PageEngine.ActiveNode.Id
+							                           , this._module.Section.Id));
+						}
 					}
-					else
+					if (cuyahogaUser.HasPermission(AccessLevel.Administrator))
 					{
-						writer.Write(String.Format("&nbsp;[<a href=\"{0}?NodeId={1}&amp;SectionId={2}\">Edit</a>]"
-							, UrlHelper.GetApplicationPath() + this._module.Section.ModuleType.EditPath
-							, this.PageEngine.ActiveNode.Id
-							, this._module.Section.Id));
+						if (this._module.Section.Node != null)
+						{
+							writer.Write(
+								String.Format(
+									"&nbsp;<a href=\"{0}Admin/SectionEdit.aspx?NodeId={1}&amp;SectionId={2}\">Section Properties</a>"
+									, UrlHelper.GetApplicationPath()
+									, this._module.Section.Node.Id
+									, this._module.Section.Id));
+						}
+						else
+						{
+							writer.Write(String.Format("&nbsp;<a href=\"{0}Admin/SectionEdit.aspx?SectionId={1}\">Section Properties</a>"
+							                           , UrlHelper.GetApplicationPath()
+							                           , this._module.Section.Id));
+						}
 					}
 				}
-				if (cuyahogaUser.HasPermission(AccessLevel.Administrator))
-				{
-					if (this._module.Section.Node != null)
-					{
-						writer.Write(String.Format("&nbsp;[<a href=\"{0}Admin/SectionEdit.aspx?NodeId={1}&amp;SectionId={2}\">Section Properties</a>]"
-							, UrlHelper.GetApplicationPath()
-							, this._module.Section.Node.Id
-							, this._module.Section.Id));
-					}
-					else
-					{
-						writer.Write(String.Format("&nbsp;[<a href=\"{0}Admin/SectionEdit.aspx?SectionId={1}\">Section Properties</a>]"
-							, UrlHelper.GetApplicationPath()
-							, this._module.Section.Id));
-					}
-				}
+				writer.Write("</div>");
 			}
-			writer.Write("</div>");
 			// TODO: get rid of this html hacking. Need a more declarative approach.
 			writer.Write("<div class=\"section\">");
 			// Section title

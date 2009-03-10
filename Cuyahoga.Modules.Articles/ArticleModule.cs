@@ -563,14 +563,14 @@ namespace Cuyahoga.Modules.Articles
 		/// Returns a list of outbound actions.
 		/// </summary>
 		/// <returns></returns>
-		public ActionCollection GetOutboundActions()
+		public ModuleActionCollection GetOutboundActions()
 		{
-			ActionCollection actions = new ActionCollection();
+			ModuleActionCollection moduleActions = new ModuleActionCollection();
 			// This action is for example compatible with the ViewProfile inbound action of 
 			// the ProfileModule but it's also possible to write your own Profile module that
 			// has a compatible inbound action.
-			actions.Add(new Action("ViewProfile", new string[1] {"UserId"}));
-			return actions;
+			moduleActions.Add(new ModuleAction("ViewProfile", new string[1] {"UserId"}));
+			return moduleActions;
 		}
 
 		#endregion

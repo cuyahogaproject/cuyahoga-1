@@ -17,8 +17,8 @@ namespace Cuyahoga.Modules.Search
 	{
 		private int _resultsPerPage = 10;
 		private bool _showInputPanel = true;
-		private ActionCollection _inboundActions;
-		private Action _currentAction;
+		private ModuleActionCollection _inboundModuleActions;
+		private ModuleAction _currentModuleAction;
 		private string _searchQuery;
 
 		/// <summary>
@@ -40,9 +40,9 @@ namespace Cuyahoga.Modules.Search
 		/// <summary>
 		/// 
 		/// </summary>
-		public Action CurrentAction
+		public ModuleAction CurrentModuleAction
 		{
-			get { return this._currentAction; }
+			get { return this._currentModuleAction; }
 		}
 
 		/// <summary>
@@ -60,9 +60,9 @@ namespace Cuyahoga.Modules.Search
 		public SearchModule()
 		{
 			// Init inbound actions
-			this._inboundActions = new ActionCollection();
-			this._inboundActions.Add(new Action("Search", new string[0]));
-			this._currentAction = this._inboundActions[0];
+			this._inboundModuleActions = new ModuleActionCollection();
+			this._inboundModuleActions.Add(new ModuleAction("Search", new string[0]));
+			this._currentModuleAction = this._inboundModuleActions[0];
 		}
 
 		public override void ReadSectionSettings()
@@ -116,10 +116,10 @@ namespace Cuyahoga.Modules.Search
 				if (base.ModuleParams.Length == 1)
 				{
 					// First argument is the module action
-					this._currentAction = this._inboundActions.FindByName(base.ModuleParams[0]);
-					if (this._currentAction != null)
+					this._currentModuleAction = this._inboundModuleActions.FindByName(base.ModuleParams[0]);
+					if (this._currentModuleAction != null)
 					{
-						if (this._currentAction.Name == "Search")
+						if (this._currentModuleAction.Name == "Search")
 						{
 							this._searchQuery = HttpContext.Current.Server.UrlDecode(HttpContext.Current.Request.QueryString["q"]);
 						}
@@ -161,9 +161,9 @@ namespace Cuyahoga.Modules.Search
 
 		#region IActionConsumer Members
 
-		public ActionCollection GetInboundActions()
+		public ModuleActionCollection GetInboundActions()
 		{
-			return this._inboundActions;
+			return this._inboundModuleActions;
 		}
 
 		#endregion

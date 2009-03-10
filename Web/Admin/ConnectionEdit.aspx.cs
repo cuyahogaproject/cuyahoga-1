@@ -64,8 +64,8 @@ namespace Cuyahoga.Web.Admin
 		{		
 			this.lblSectionFrom.Text = this._activeSection.FullName;
 			this.lblModuleType.Text = this._activeSection.ModuleType.Name;
-			ActionCollection outboundActions = this._activeActionProvider.GetOutboundActions();
-			foreach (Action action in outboundActions)
+			ModuleActionCollection outboundModuleActions = this._activeActionProvider.GetOutboundActions();
+			foreach (ModuleAction action in outboundModuleActions)
 			{
 				// Only add actions that are not assigned yet.
 				if (this._activeSection.Connections[action.Name] == null)
@@ -102,8 +102,8 @@ namespace Cuyahoga.Web.Admin
                     if (moduleInstance is IActionConsumer)
                     {
                         IActionConsumer actionConsumer = moduleInstance as IActionConsumer;
-                        Action currentAction = this._activeActionProvider.GetOutboundActions().FindByName(selectedAction);
-                        if (actionConsumer.GetInboundActions().Contains(currentAction))
+                        ModuleAction currentModuleAction = this._activeActionProvider.GetOutboundActions().FindByName(selectedAction);
+                        if (actionConsumer.GetInboundActions().Contains(currentModuleAction))
                         {
                             compatibleModuleTypes.Add(mt);
                         }

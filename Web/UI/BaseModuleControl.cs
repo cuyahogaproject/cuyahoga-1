@@ -140,6 +140,11 @@ namespace Cuyahoga.Web.UI
 									, UrlHelper.GetApplicationPath()
 									, this._module.Section.Node.Id
 									, this._module.Section.Id));
+							writer.Write(
+								String.Format(
+									"&nbsp;<a href=\"{0}Admin/NodeEdit.aspx?NodeId={1}\">Page Properties</a>"
+									, UrlHelper.GetApplicationPath()
+									, this._module.Section.Node.Id));
 						}
 						else
 						{
@@ -151,7 +156,6 @@ namespace Cuyahoga.Web.UI
 				}
 				writer.Write("</div>");
 			}
-			// TODO: get rid of this html hacking. Need a more declarative approach.
 			writer.Write("<div class=\"section\">");
 			// Section title
 			if (this._module.Section != null && this._module.Section.ShowTitle)
@@ -203,6 +207,16 @@ namespace Cuyahoga.Web.UI
 		protected void RegisterStylesheet(string key, string absoluteCssPath)
 		{
 			this._pageEngine.RegisterStylesheet(key, absoluteCssPath);
+		}
+
+		/// <summary>
+		/// Register module-specific javascripts.
+		/// </summary>
+		/// <param name="key">The unique key for the script.</param>
+		/// <param name="absoluteJavaScriptPath">The path to the javascript file from the application root.</param>
+		protected void RegisterJavaScript(string key, string absoluteJavaScriptPath)
+		{
+			this._pageEngine.RegisterJavaScript(key, absoluteJavaScriptPath);
 		}
 	}
 }

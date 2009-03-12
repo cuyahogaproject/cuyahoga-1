@@ -141,6 +141,7 @@ namespace Cuyahoga.Modules.Search
 		/// <returns></returns>
 		private SearchResultCollection FilterResults(SearchResultCollection nonFilteredResults)
 		{
+			long filterStartTicks = DateTime.Now.Ticks;
 			SearchResultCollection filteredResults = new SearchResultCollection();
 			CoreRepository cr = HttpContext.Current.Items["CoreRepository"] as CoreRepository;
 			if (cr != null)
@@ -154,7 +155,7 @@ namespace Cuyahoga.Modules.Search
 					}
 				}
 			}
-
+			filteredResults.ExecutionTime = DateTime.Now.Ticks - filterStartTicks + nonFilteredResults.ExecutionTime;
 			return filteredResults;
 		}
 

@@ -221,6 +221,7 @@
     <Compile Include="Search\SearchContent.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Search\SearchException.cs" />
     <Compile Include="Search\SearchResult.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -337,7 +338,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Service\Content\" />
-    <Folder Include="Service\Search\" />
     <Folder Include="Service\Versioning\" />
     <Folder Include="Service\Workflow\" />
   </ItemGroup>

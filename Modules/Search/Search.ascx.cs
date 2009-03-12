@@ -1,24 +1,19 @@
+using log4net;
+
 namespace Cuyahoga.Modules.Search
 {
 	using System;
-	using System.Data;
-	using System.Drawing;
-	using System.Web;
 	using System.Web.UI.WebControls;
-	using System.Web.UI.HtmlControls;
-
-	using Cuyahoga.Core.Domain;
 	using Cuyahoga.Core.Search;
-	using Cuyahoga.Core.Service;
 	using Cuyahoga.Core.Util;
 	using Cuyahoga.Web.UI;
-	using Cuyahoga.ServerControls;
 
 	/// <summary>
 	///		Summary description for Search.
 	/// </summary>
 	public partial class Search : BaseModuleControl
 	{
+		private static readonly ILog logger = LogManager.GetLogger(typeof (Search));
 		private string _indexDir;
 		private SearchModule _module;
 
@@ -46,31 +41,40 @@ namespace Cuyahoga.Modules.Search
 
 		private void BindSearchResults(string queryString, int pageIndex)
 		{
-			SearchResultCollection results = this._module.GetSearchResults(queryString, this._indexDir);
-			if (results.Count > 0)
+			try
 			{
-				int start = pageIndex * this._module.ResultsPerPage;
-				int end = start + this._module.ResultsPerPage;
-				if (end > results.Count)
+				SearchResultCollection results = this._module.GetSearchResults(queryString, this._indexDir);
+				if (results.Count > 0)
 				{
-					end = results.Count;
-				}
-				this.pnlResults.Visible = true;
-				this.pnlNotFound.Visible = false;
+					int start = pageIndex*this._module.ResultsPerPage;
+					int end = start + this._module.ResultsPerPage;
+					if (end > results.Count)
+					{
+						end = results.Count;
+					}
+					this.pnlResults.Visible = true;
+					this.pnlNotFound.Visible = false;
 
-				this.lblFrom.Text = (start + 1).ToString();
-				this.lblTo.Text = end.ToString();
-				this.lblTotal.Text = results.Count.ToString();
-				this.lblQueryText.Text = this._module.SearchQuery != null ? this._module.SearchQuery : this.txtSearchText.Text;
-				float duration = results.ExecutionTime * 0.0000001F;
-				this.lblDuration.Text = duration.ToString();
-				this.rptResults.DataSource = results;
-				this.rptResults.DataBind();
+					this.lblFrom.Text = (start + 1).ToString();
+					this.lblTo.Text = end.ToString();
+					this.lblTotal.Text = results.Count.ToString();
+					this.lblQueryText.Text = this._module.SearchQuery != null ? this._module.SearchQuery : this.txtSearchText.Text;
+					float duration = results.ExecutionTime*0.0000001F;
+					this.lblDuration.Text = duration.ToString();
+					this.rptResults.DataSource = results;
+					this.rptResults.DataBind();
+				}
+				else
+				{
+					this.pnlResults.Visible = false;
+					this.pnlNotFound.Visible = true;
+				}
 			}
-			else
+			catch (SearchException ex)
 			{
+				logger.Error(ex.Message, ex);
+				this.pnlInvalidQuery.Visible = true;
 				this.pnlResults.Visible = false;
-				this.pnlNotFound.Visible = true;
 			}
 		}
 

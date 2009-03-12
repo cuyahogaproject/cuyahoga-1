@@ -39,47 +39,55 @@ namespace Cuyahoga.Core.Search
 		{
 			long startTicks = DateTime.Now.Ticks;
 
-			Query query = MultiFieldQueryParser.Parse(queryText, new string[]{"title", "contents"}, new StandardAnalyzer());
-			IndexSearcher searcher = new IndexSearcher(this._indexDirectory);
 			Hits hits;
-			if (keywordFilter != null && keywordFilter.Count > 0)
+			try
 			{
-				QueryFilter qf = BuildQueryFilterFromKeywordFilter(keywordFilter);
-				hits = searcher.Search(query, qf);
-			}
-			else
-			{
-				hits = searcher.Search(query);
-			}
-			int start = pageIndex * pageSize;
-			int end = (pageIndex + 1) * pageSize;
-			if (hits.Length() <= end)
-			{
-				end = hits.Length();
-			}
-			SearchResultCollection results = new SearchResultCollection();
-			results.TotalCount = hits.Length();
-			results.PageIndex = pageIndex;
-			
-			for (int i = start; i < end; i++)
-			{
-				SearchResult result = new SearchResult();
-				result.Title = hits.Doc(i).Get("title");
-				result.Summary = hits.Doc(i).Get("summary");
-				result.Author = hits.Doc(i).Get("author");
-				result.ModuleType = hits.Doc(i).Get("moduletype");
-				result.Path = hits.Doc(i).Get("path");
-				result.Category = hits.Doc(i).Get("category");
-				result.DateCreated = DateTime.Parse((hits.Doc(i).Get("datecreated")));
-				result.Score = hits.Score(i);
-				result.Boost = hits.Doc(i).GetBoost();
-				result.SectionId = Int32.Parse(hits.Doc(i).Get("sectionid"));
-				results.Add(result);
-			}
-			searcher.Close();
-			results.ExecutionTime = DateTime.Now.Ticks - startTicks;
+				Query query = MultiFieldQueryParser.Parse(queryText, new string[] {"title", "contents"}, new StandardAnalyzer());
+				IndexSearcher searcher = new IndexSearcher(this._indexDirectory);
 
-			return results;
+				if (keywordFilter != null && keywordFilter.Count > 0)
+				{
+					QueryFilter qf = BuildQueryFilterFromKeywordFilter(keywordFilter);
+					hits = searcher.Search(query, qf);
+				}
+				else
+				{
+					hits = searcher.Search(query);
+				}
+				int start = pageIndex*pageSize;
+				int end = (pageIndex + 1)*pageSize;
+				if (hits.Length() <= end)
+				{
+					end = hits.Length();
+				}
+				SearchResultCollection results = new SearchResultCollection();
+				results.TotalCount = hits.Length();
+				results.PageIndex = pageIndex;
+
+				for (int i = start; i < end; i++)
+				{
+					SearchResult result = new SearchResult();
+					result.Title = hits.Doc(i).Get("title");
+					result.Summary = hits.Doc(i).Get("summary");
+					result.Author = hits.Doc(i).Get("author");
+					result.ModuleType = hits.Doc(i).Get("moduletype");
+					result.Path = hits.Doc(i).Get("path");
+					result.Category = hits.Doc(i).Get("category");
+					result.DateCreated = DateTime.Parse((hits.Doc(i).Get("datecreated")));
+					result.Score = hits.Score(i);
+					result.Boost = hits.Doc(i).GetBoost();
+					result.SectionId = Int32.Parse(hits.Doc(i).Get("sectionid"));
+					results.Add(result);
+				}
+				searcher.Close();
+				results.ExecutionTime = DateTime.Now.Ticks - startTicks;
+
+				return results;
+			}
+			catch (Exception ex)
+			{
+				throw new SearchException("Error while performing full-text search.", ex);
+			}
 		}
 
 		private QueryFilter BuildQueryFilterFromKeywordFilter(Hashtable keywordFilter)

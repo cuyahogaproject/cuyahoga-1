@@ -40,3 +40,6 @@
 <asp:panel id="pnlNotFound" runat="server" visible="False" enableviewstate="False">
 	<%= base.GetText("NOTFOUND") %>
 </asp:panel>
+<asp:panel id="pnlInvalidQuery" runat="server" visible="False" enableviewstate="False">
+	<%= base.GetText("INVALIDQUERY") %>
+</asp:panel>

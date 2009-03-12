@@ -1,28 +1,38 @@
 Cuyahoga release notes
 
-
 ===========================================================================
-1.6.0 - 2009-01-11
+1.6.0 - 2009-03-12
 ===========================================================================
+Cuyahoga 1.6.0 is a maintenance release that mostly consists of small admin
+UI improvements and bug fixes. Many thanks to Marco Trova for the 
+contributions.
 
-Features added for everyday use:
-
-Additions:
-
-- Admin: You can take offline a page (and related child pages), showing a special template (definited in site admin): admin can take offline temporarly 
-	a page for maintenance.
-	* A new button on Node Edit page was added. Note that admin can still access to the page to make administrative tasks.
-	* Status property was added to the node, so further statuses can be implemented, such as the http 301 permanent redirect and may be add Location field 
-	  header with LinkUrl content.
-- Admin: buttons at the top of the page instead only at the bottom of the page on Node Edit and Section Edit pages
-- Admin: Added Admin linkbutton on each section on node to access directly to the "Edit" link of a section (Admin page)
-- Edit Template: edit html code of template ascx and css (this require special permission on server's folder)
-- Admin: Duplicate a Node
-- Admin: Preview the page, opening a new window, without std admin links
+New Features:
 - A Sitemap handler for Google sitemap spec. 
+- Vietnamese translations (thanks to Juan Woang).
 
-Marco Trova
-Email: marco.trova@gmail.com
+Improvements:
+- Hide the moduletools div for unauthorized users (CUY-149).
+- Register custom Javascripts and CSS links for module controls and module
+  admin pages. Thanks to John Lynch (CUY-153).
+- Admin: You can take a page offline (and related child pages), showing a 
+  special template (definited in site admin).
+- Admin: buttons at the top of the page instead only at the bottom of the 
+  page on Node Edit and Section Edit pages.
+- Admin: Added Admin linkbutton on each section on node to access directly 
+  to the "Edit" link of a section (Admin page).
+- Edit Template: edit html code of template ascx and css (this requires 
+  special permission on server's folder).
+- Admin: Duplicate a Node.
+- Admin: Preview the page, opening a new window, without std admin links.
+- .NET 3.5 compatibility: renamed Cuyahoga.Core.Communication.Action to
+  Cuyahoga.Core.Communication.ModuleAction to fix the naming conflict
+  with System.Action (CUY-145).
+  
+Bug fixes:
+- Handle error that occures when entering invalid search terms (CUY-147)
+- Fixed display of search query duration.
+
 
 ===========================================================================
 1.5.2 - 2008-02-20

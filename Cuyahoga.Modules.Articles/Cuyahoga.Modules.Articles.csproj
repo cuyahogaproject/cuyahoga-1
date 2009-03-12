@@ -156,6 +156,9 @@
     <EmbeddedResource Include="Web\Resources\Strings.sv.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Web\Resources\Strings.vi.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <Content Include="Web\EditArticle.aspx">
       <SubType>Form</SubType>
     </Content>

@@ -2,6 +2,7 @@ using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
 
 using System.Collections;
+using System.Collections.Specialized;
 using System.Text;
 
 namespace Cuyahoga.Web.UI
@@ -34,13 +35,13 @@ namespace Cuyahoga.Web.UI
 		/// </summary>
 		protected PlaceHolder AddedJavaScriptPlaceHolder;
 
-		private IDictionary _stylesheets;
-		private IDictionary _javascripts;
+		private OrderedDictionary _stylesheets;
+		private OrderedDictionary _javascripts;
 
 		public BasePageControl()
 		{
-			this._stylesheets = new Hashtable();
-			this._javascripts = new Hashtable();
+			this._stylesheets = new OrderedDictionary();
+			this._javascripts = new OrderedDictionary();
 		}
 
 		/// <summary>
@@ -87,26 +88,26 @@ namespace Cuyahoga.Web.UI
 
 		public void InsertStylesheets()
 		{
-			string[] stylesheetLinks = new string[this._stylesheets.Count];
+			string[] stylesheetlinks = new string[this._stylesheets.Count];
 			int i = 0;
 			foreach (string stylesheet in this._stylesheets.Values)
 			{
-				stylesheetLinks[i] = stylesheet;
+				stylesheetlinks[i] = stylesheet;
 				i++;
 			}
-			this.RenderCssLinks(stylesheetLinks);
+			this.RenderCssLinks(stylesheetlinks);
 		}
 
 		public void InsertJavascripts()
 		{
-			string[] javascriptLinks = new string[this._javascripts.Count];
+			string[] javascriptlinks = new string[this._javascripts.Count];
 			int i = 0;
 			foreach (string javascript in this._javascripts.Values)
 			{
-				javascriptLinks[i] = javascript;
+				javascriptlinks[i] = javascript;
 				i++;
 			}
-			this.RenderJavascriptLinks(javascriptLinks);
+			this.RenderJavascriptLinks(javascriptlinks);
 		}
 
 		/// <summary>

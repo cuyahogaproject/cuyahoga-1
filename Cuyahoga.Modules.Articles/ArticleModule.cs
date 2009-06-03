@@ -487,6 +487,7 @@ namespace Cuyahoga.Modules.Articles
 				item.ItemId = article.Id;
 				item.Title = article.Title;
 				// item.Link = "" (can't determine link here)
+                item.Link = UrlHelper.GetFullUrlFromSection(base.Section) + "/" + item.ItemId; //Why? Otherwise limits module development :)
 				if (displayType == DisplayType.FullContent)
 				{
 					item.Description = article.Content;

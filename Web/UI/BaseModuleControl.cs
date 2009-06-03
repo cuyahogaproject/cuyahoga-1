@@ -66,13 +66,13 @@ namespace Cuyahoga.Web.UI
 
 		protected override void OnInit(EventArgs e)
 		{
-			if (this.Module.Section.CacheDuration > 0 
+			if (this.Module.Section.CacheDuration > 0
 				&& this.Module.CacheKey != null
-				&& ! this.Page.User.Identity.IsAuthenticated
-				&& ! this.Page.IsPostBack)
+				&& !this.Page.User.Identity.IsAuthenticated
+				&& !this.Page.IsPostBack)
 			{
 				// Get the cached content. Don't use cached output after a postback.
-				if (HttpContext.Current.Cache[this.Module.CacheKey] != null && ! this.IsPostBack)
+				if (HttpContext.Current.Cache[this.Module.CacheKey] != null && !this.IsPostBack)
 				{
 					// Found cached content.
 					this._cachedOutput = HttpContext.Current.Cache[this.Module.CacheKey].ToString();
@@ -95,7 +95,7 @@ namespace Cuyahoga.Web.UI
 			// Rss feed
 			if (this._displaySyndicationIcon)
 			{
-				writer.Write(String.Format("<div class=\"syndicate\"><a href=\"{0}\"><img src=\"{1}\" alt=\"RSS-2.0\"/></a></div>", 
+				writer.Write(String.Format("<div class=\"syndicate\"><a href=\"{0}\"><img src=\"{1}\" alt=\"RSS-2.0\"/></a></div>",
 					UrlHelper.GetRssUrlFromSection(this._module.Section) + this._module.ModulePathInfo, UrlHelper.GetApplicationPath() + "Images/feed-icon.png"));
 			}
 
@@ -106,28 +106,28 @@ namespace Cuyahoga.Web.UI
 				writer.Write("<div class=\"moduletools\">");
 				// added for 1.6.0
 				bool isPreview = (Request.QueryString["preview"] == null
-				                  	? false
-				                  	: (Request.QueryString["preview"] == "on"));
+									? false
+									: (Request.QueryString["preview"] == "on"));
 
 				// Edit button
 				if (!isPreview) // modified for 1.6.0
 				{
 					if (this._module.Section.ModuleType.EditPath != null
-					    && cuyahogaUser.CanEdit(this._module.Section))
+						&& cuyahogaUser.CanEdit(this._module.Section))
 					{
 						if (this._module.Section.Node != null)
 						{
 							writer.Write(String.Format("&nbsp;<a href=\"{0}?NodeId={1}&amp;SectionId={2}\">Edit</a>"
-							                           , UrlHelper.GetApplicationPath() + this._module.Section.ModuleType.EditPath
-							                           , this._module.Section.Node.Id
-							                           , this._module.Section.Id));
+													   , UrlHelper.GetApplicationPath() + this._module.Section.ModuleType.EditPath
+													   , this._module.Section.Node.Id
+													   , this._module.Section.Id));
 						}
 						else
 						{
 							writer.Write(String.Format("&nbsp;<a href=\"{0}?NodeId={1}&amp;SectionId={2}\">Edit</a>"
-							                           , UrlHelper.GetApplicationPath() + this._module.Section.ModuleType.EditPath
-							                           , this.PageEngine.ActiveNode.Id
-							                           , this._module.Section.Id));
+													   , UrlHelper.GetApplicationPath() + this._module.Section.ModuleType.EditPath
+													   , this.PageEngine.ActiveNode.Id
+													   , this._module.Section.Id));
 						}
 					}
 					if (cuyahogaUser.HasPermission(AccessLevel.Administrator))
@@ -149,8 +149,8 @@ namespace Cuyahoga.Web.UI
 						else
 						{
 							writer.Write(String.Format("&nbsp;<a href=\"{0}Admin/SectionEdit.aspx?SectionId={1}\">Section Properties</a>"
-							                           , UrlHelper.GetApplicationPath()
-							                           , this._module.Section.Id));
+													   , UrlHelper.GetApplicationPath()
+													   , this._module.Section.Id));
 						}
 					}
 				}
@@ -162,13 +162,13 @@ namespace Cuyahoga.Web.UI
 			{
 				writer.Write("<h3>" + this._module.DisplayTitle + "</h3>");
 			}
-			
+
 			// Write module content and handle caching when neccesary.
 			// Don't cache when the user is logged in or after a postback.
-			if (this._module.Section.CacheDuration > 0 
+			if (this._module.Section.CacheDuration > 0
 				&& this.Module.CacheKey != null
-				&& ! this.Page.User.Identity.IsAuthenticated
-				&& ! this.Page.IsPostBack)
+				&& !this.Page.User.Identity.IsAuthenticated
+				&& !this.Page.IsPostBack)
 			{
 				if (this._cachedOutput == null)
 				{
@@ -179,11 +179,11 @@ namespace Cuyahoga.Web.UI
 						, DateTime.Now.AddSeconds(this._module.Section.CacheDuration), TimeSpan.Zero);
 				}
 				// Output the user control's content.
-                writer.Write(_cachedOutput);
+				writer.Write(_cachedOutput);
 			}
 			else
 			{
-				base.Render (writer);
+				base.Render(writer);
 			}
 			writer.Write("</div>");
 		}
@@ -214,7 +214,7 @@ namespace Cuyahoga.Web.UI
 		/// </summary>
 		/// <param name="key">The unique key for the script.</param>
 		/// <param name="absoluteJavaScriptPath">The path to the javascript file from the application root.</param>
-		protected void RegisterJavaScript(string key, string absoluteJavaScriptPath)
+		protected void RegisterJavascript(string key, string absoluteJavaScriptPath)
 		{
 			this._pageEngine.RegisterJavaScript(key, absoluteJavaScriptPath);
 		}

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Globalization;
 
@@ -28,12 +29,21 @@ namespace Cuyahoga.Core.Util
 		/// <param name="culture"></param>
 		/// <returns></returns>
 		public static string GetNativeLanguageTextFromCulture(string culture)
-		{
-			CultureInfo ci = new CultureInfo(culture);
-			string languageAsText = ci.NativeName.Substring(0, ci.NativeName.IndexOf("(") - 1);
+        {
+            CultureInfo ci = new CultureInfo(culture);
+            TextElementEnumerator enumerator = StringInfo.GetTextElementEnumerator(ci.NativeName);
+            string languageAsText = String.Empty;
+            while (enumerator.MoveNext())
+            {
+                string textElement = enumerator.GetTextElement();
+                if (textElement == "(") break;
+                languageAsText += textElement;
+            }
 
-			return languageAsText;
-		}
+            return languageAsText;
+        }
+
+
 
 		/// <summary>
 		/// Get the country part from the culture string.

@@ -4,7 +4,7 @@ using System.Reflection;
 
 using log4net;
 using NHibernate;
-using NHibernate.Expression;
+using NHibernate.Criterion;
 
 using Cuyahoga.Core.Domain;
 
@@ -98,7 +98,7 @@ namespace Cuyahoga.Core.Service
 		public virtual object GetObjectByDescription(Type type, string propertyName, string description)
 		{
 			ICriteria crit = this._activeSession.CreateCriteria(type);
-			crit.Add(Expression.Eq(propertyName, description));
+			crit.Add(Restrictions.Eq(propertyName, description));
 			return crit.UniqueResult();
 		}
 
@@ -586,8 +586,8 @@ namespace Cuyahoga.Core.Service
 		public virtual User GetUserByUsernameAndPassword(string username, string password)
 		{
 			ICriteria crit = this._activeSession.CreateCriteria(typeof(User));
-			crit.Add(Expression.Eq("UserName", username));
-			crit.Add(Expression.Eq("Password", password));
+			crit.Add(Restrictions.Eq("UserName", username));
+			crit.Add(Restrictions.Eq("Password", password));
 			IList results = crit.List();
 			if (results.Count == 1)
 			{
@@ -612,8 +612,8 @@ namespace Cuyahoga.Core.Service
 		public virtual User GetUserByUsernameAndEmail(string username, string email)
 		{
 			ICriteria crit = this._activeSession.CreateCriteria(typeof(User));
-			crit.Add(Expression.Eq("UserName", username));
-			crit.Add(Expression.Eq("Email", email));
+			crit.Add(Restrictions.Eq("UserName", username));
+			crit.Add(Restrictions.Eq("Email", email));
 			IList results = crit.List();
 			if (results.Count == 1)
 			{
@@ -636,8 +636,8 @@ namespace Cuyahoga.Core.Service
 			string hql;
 			if (searchString.Length > 0)
 			{
-				hql = "from User u where u.UserName like ? order by u.UserName ";
-				return this._activeSession.Find(hql, searchString + "%", NHibernateUtil.String);
+				hql = "from User u where u.UserName like :searchParam order by u.UserName ";
+				return this._activeSession.CreateQuery(hql).SetString("searchParam", searchString + "%").List();
 			}
 			else
 			{

@@ -93,37 +93,44 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Castle.Core.dll</HintPath>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Facilities.AutoTx">
+      <HintPath>..\packages\Castle.Facilities.AutoTx.2.5.0.0\lib\net40\Castle.Facilities.AutoTx.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Facilities.NHibernateIntegration">
-      <Name>Castle.Facilities.NHibernateIntegration</Name>
-      <HintPath>..\lib\Castle.Facilities.NHibernateIntegration.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.MicroKernel">
-      <Name>Castle.MicroKernel</Name>
-      <HintPath>..\lib\Castle.MicroKernel.dll</HintPath>
+      <HintPath>..\packages\Castle.Facilities.NHibernateIntegration.1.1.0\lib\NET40\Castle.Facilities.NHibernateIntegration.dll</HintPath>
     </Reference>
     <Reference Include="Castle.Services.Transaction">
-      <Name>Castle.Services.Transaction</Name>
-      <HintPath>..\lib\Castle.Services.Transaction.dll</HintPath>
+      <HintPath>..\packages\Castle.Services.Transaction.2.5.0\lib\NET40\Castle.Services.Transaction.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Windsor, Version=1.0.0.2, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Castle.Windsor.dll</HintPath>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.2.5.2\lib\NET40\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
     </Reference>
     <Reference Include="log4net">
-      <Name>log4net</Name>
-      <HintPath>..\lib\log4net.dll</HintPath>
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Lucene.Net">
       <Name>Lucene.Net</Name>
       <HintPath>..\lib\Lucene.Net.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate">
-      <Name>NHibernate</Name>
-      <HintPath>..\lib\NHibernate.dll</HintPath>
+    <Reference Include="NHibernate, Version=1.2.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle">
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq">
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\Remotion.Data.Linq.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -354,6 +361,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Cuyahoga.Core.build" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Service\Content\" />

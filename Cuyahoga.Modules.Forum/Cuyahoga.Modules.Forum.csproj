@@ -43,21 +43,37 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Castle.Facilities.NHibernateIntegration, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Castle.Facilities.NHibernateIntegration.dll</HintPath>
+    <Reference Include="Antlr3.Runtime">
+      <HintPath>..\packages\Antlr.3.1.3.42154\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.Services.Transaction, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Castle.Services.Transaction.dll</HintPath>
+    <Reference Include="Castle.Core">
+      <HintPath>..\packages\Castle.Core.2.5.2\lib\NET35\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="log4net, Version=1.2.9.0, Culture=neutral, PublicKeyToken=b32731d11ce58905">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\log4net.dll</HintPath>
+    <Reference Include="Castle.Facilities.NHibernateIntegration">
+      <HintPath>..\packages\Castle.Facilities.NHibernateIntegration.1.1.0\lib\NET40\Castle.Facilities.NHibernateIntegration.dll</HintPath>
     </Reference>
-    <Reference Include="NHibernate, Version=1.0.2.0, Culture=neutral, PublicKeyToken=154fdcb44c4484fc">
+    <Reference Include="Castle.Services.Transaction">
+      <HintPath>..\packages\Castle.Services.Transaction.2.5.0\lib\NET40\Castle.Services.Transaction.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\packages\Castle.Windsor.2.5.2\lib\NET40\Castle.Windsor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.1.0.1\lib\Iesi.Collections.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate.ByteCode.Castle, Version=3.0.0.4000, Culture=neutral, PublicKeyToken=aa95f207798dfdb4, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\NHibernate.dll</HintPath>
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\NHibernate.ByteCode.Castle.dll</HintPath>
+    </Reference>
+    <Reference Include="Remotion.Data.Linq">
+      <HintPath>..\packages\NHibernate.3.0.0.4000\lib\Remotion.Data.Linq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -86,52 +102,70 @@
     <Compile Include="Utils\Utils.cs" />
     <Compile Include="Web\AdminEditCategory.aspx.cs">
       <DependentUpon>AdminEditCategory.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\AdminEditEmoticon.aspx.cs">
       <DependentUpon>AdminEditEmoticon.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\AdminEditForum.aspx.cs">
       <DependentUpon>AdminEditForum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\AdminEditTag.aspx.cs">
       <DependentUpon>AdminEditTag.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\AdminForum.aspx.cs">
       <DependentUpon>AdminForum.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Web\UI\BaseForumControl.cs" />
+    <Compile Include="Web\UI\BaseForumControl.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="Web\ForumCategoryList.ascx.cs">
       <DependentUpon>ForumCategoryList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumFooter.ascx.cs">
       <DependentUpon>ForumFooter.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumList.ascx.cs">
       <DependentUpon>ForumList.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumNewPost.ascx.cs">
       <DependentUpon>ForumNewPost.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumProfile.ascx.cs">
       <DependentUpon>ForumProfile.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumReplyPost.ascx.cs">
       <DependentUpon>ForumReplyPost.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumSearch.ascx.cs">
       <DependentUpon>ForumSearch.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumTop.ascx.cs">
       <DependentUpon>ForumTop.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumView.ascx.cs">
       <DependentUpon>ForumView.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumViewPost.ascx.cs">
       <DependentUpon>ForumViewPost.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Web\ForumViewProfile.ascx.cs">
       <DependentUpon>ForumViewProfile.ascx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -318,6 +352,7 @@
     <None Include="Install\Database\postgresql\1.5.1.sql" />
     <None Include="Install\Database\postgresql\1.5.2.sql" />
     <Content Include="web.config" />
+    <Content Include="packages.config" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

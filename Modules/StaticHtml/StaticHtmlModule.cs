@@ -2,10 +2,8 @@ using System;
 using System.Collections;
 
 using NHibernate;
-using NHibernate.Expression;
 
 using Cuyahoga.Core;
-using Cuyahoga.Core.Service;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Search;
 using Cuyahoga.Core.Util;
@@ -30,8 +28,8 @@ namespace Cuyahoga.Modules.StaticHtml
 		{
 			if (base.Section != null)
 			{
-				string hql = "from StaticHtmlContent s where s.Section.Id = ? ";
-				IList results = base.NHSession.Find(hql, this.Section.Id, NHibernateUtil.Int32);
+				string hql = "from StaticHtmlContent s where s.Section.Id = :sectionId ";
+				IList results = base.NHSession.CreateQuery(hql).SetInt32("sectionId", this.Section.Id).List();
 				if (results.Count == 1)
 				{
 					return (StaticHtmlContent)results[0];

@@ -4,7 +4,7 @@ using System.Collections;
 using Castle.Facilities.NHibernateIntegration;
 using Castle.Services.Transaction;
 using NHibernate;
-using NHibernate.Expression;
+using NHibernate.Criterion;
 
 using Cuyahoga.Core.Domain;
 
@@ -36,8 +36,8 @@ namespace Cuyahoga.Core.DataAccess
 			ISession session = this._sessionManager.OpenSession();
 
 			ICriteria crit = session.CreateCriteria(typeof(User));
-			crit.Add(Expression.Eq("UserName", username));
-			crit.Add(Expression.Eq("Password", password));
+			crit.Add(Restrictions.Eq("UserName", username));
+			crit.Add(Restrictions.Eq("Password", password));
 			IList results = crit.List();
 			if (results.Count == 1)
 			{
@@ -58,8 +58,8 @@ namespace Cuyahoga.Core.DataAccess
 			ISession session = this._sessionManager.OpenSession();
 
 			ICriteria crit = session.CreateCriteria(typeof(User));
-			crit.Add(Expression.Eq("UserName", username));
-			crit.Add(Expression.Eq("Email", email));
+			crit.Add(Restrictions.Eq("UserName", username));
+			crit.Add(Restrictions.Eq("Email", email));
 			IList results = crit.List();
 			if (results.Count == 1)
 			{
@@ -77,8 +77,8 @@ namespace Cuyahoga.Core.DataAccess
 			{
 				ISession session = this._sessionManager.OpenSession();
 
-				string hql = "from User u where u.UserName like ? order by u.UserName ";
-				return session.Find(hql, searchString + "%", NHibernateUtil.String);
+				string hql = "from User u where u.UserName like :searchParam order by u.UserName ";
+				return session.CreateQuery(hql).SetString("searchParam", searchString + "%").List();
 			}
 			else
 			{

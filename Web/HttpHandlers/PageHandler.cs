@@ -33,7 +33,9 @@ namespace Cuyahoga.Web.HttpHandlers
 		/// <param name="context"></param>
 		public void ProcessRequest(HttpContext context)
 		{
-			string rawUrl = context.Request.RawUrl;
+//			string rawUrl = context.Request.RawUrl;
+			string rawUrl = context.Request.Url.PathAndQuery;
+
 			log.Info("Starting request for " + rawUrl);
 			DateTime startTime = DateTime.Now;
 

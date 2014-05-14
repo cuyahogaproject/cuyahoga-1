@@ -21,8 +21,8 @@ using System.Security;
 [assembly: AssemblyCompanyAttribute("Cuyahoga Project")]
 [assembly: AssemblyProductAttribute("Cuyahoga")]
 [assembly: AssemblyCopyrightAttribute("2004-2008 Cuyahoga Project. All rights reserved.")]
-[assembly: AssemblyVersionAttribute("1.6.0.0")]
-[assembly: AssemblyInformationalVersionAttribute("1.6.0.0")]
-[assembly: AssemblyFileVersionAttribute("1.6.0.0")]
+[assembly: AssemblyVersionAttribute("1.7.0.0")]
+[assembly: AssemblyInformationalVersionAttribute("1.7.0.0")]
+[assembly: AssemblyFileVersionAttribute("1.7.0.0")]
 [assembly: AllowPartiallyTrustedCallersAttribute()]
 

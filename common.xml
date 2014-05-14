@@ -9,7 +9,7 @@
 	<property name="lib.framework.dir" value="${path::combine(lib.family.dir, version::to-string(framework::get-version(framework::get-target-framework())))}" dynamic="true" />
 
 	<!-- Versioning	-->
-	<property name="project.version" value="1.6.0.0" overwrite="false" />
+	<property name="project.version" value="1.7.0.0" overwrite="false" />
 	<property name="project.major" value="${version::get-major(version::parse(project.version))}" dynamic="true" />
 	<property name="project.minor" value="${version::get-minor(version::parse(project.version))}" dynamic="true" />
 	<property name="project.build" value="${version::get-build(version::parse(project.version))}" dynamic="true" />
@@ -74,6 +74,12 @@
 		<property name="nant.settings.currentframework" value="net-2.0" />
 		<property name="current.build.defines" value="${build.defines},NET,DOTNET2" />
 		<property name="link.sdkdoc.version" value="SDK_v2_0" />
+	</target>
+
+	<target name="set-net-4.0-framework-configuration">
+		<property name="nant.settings.currentframework" value="net-4.0" />
+		<property name="current.build.defines" value="${build.defines},NET,DOTNET4" />
+		<property name="link.sdkdoc.version" value="SDK_v4_0" />
 	</target>
 
 	<target name="set-mono-2.0-framework-configuration">

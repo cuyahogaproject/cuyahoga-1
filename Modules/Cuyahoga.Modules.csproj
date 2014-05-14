@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -27,6 +28,14 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <TargetFrameworkProfile />
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\Debug\</OutputPath>
@@ -97,12 +106,17 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
     <Reference Include="System.Web">
       <Name>System.Web</Name>
     </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
@@ -121,6 +135,7 @@
       <Project>{DD158F08-6E8F-4234-B3F6-A5402C8E34CC}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="LanguageSwitcher\LanguageSwitcher.ascx.designer.cs">
@@ -131,21 +146,18 @@
     </Compile>
     <Compile Include="LanguageSwitcher\LanguageSwitcher.ascx.cs">
       <DependentUpon>LanguageSwitcher.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="LanguageSwitcher\LanguageSwitcherModule.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Search\Search.ascx.cs">
       <DependentUpon>Search.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Search\Search.ascx.designer.cs">
       <DependentUpon>Search.ascx</DependentUpon>
     </Compile>
     <Compile Include="Search\SearchInput.ascx.cs">
       <DependentUpon>SearchInput.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Search\SearchInput.ascx.designer.cs">
       <DependentUpon>SearchInput.ascx</DependentUpon>
@@ -159,21 +171,18 @@
     <Compile Include="Sitemap\SitemapModule.cs" />
     <Compile Include="Sitemap\SitemapControl.ascx.cs">
       <DependentUpon>SitemapControl.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Sitemap\SitemapControl.ascx.designer.cs">
       <DependentUpon>SitemapControl.ascx</DependentUpon>
     </Compile>
     <Compile Include="StaticHtml\EditHtml.aspx.cs">
       <DependentUpon>EditHtml.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="StaticHtml\EditHtml.aspx.designer.cs">
       <DependentUpon>EditHtml.aspx</DependentUpon>
     </Compile>
     <Compile Include="StaticHtml\StaticHtml.ascx.cs">
       <DependentUpon>StaticHtml.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="StaticHtml\StaticHtml.ascx.designer.cs">
       <DependentUpon>StaticHtml.ascx</DependentUpon>
@@ -186,7 +195,6 @@
     </Compile>
     <Compile Include="User\EditProfile.ascx.cs">
       <DependentUpon>EditProfile.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="User\EditProfile.ascx.designer.cs">
       <DependentUpon>EditProfile.ascx</DependentUpon>
@@ -196,21 +204,18 @@
     </Compile>
     <Compile Include="User\Register.ascx.cs">
       <DependentUpon>Register.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="User\Register.ascx.designer.cs">
       <DependentUpon>Register.ascx</DependentUpon>
     </Compile>
     <Compile Include="User\ResetPassword.ascx.cs">
       <DependentUpon>ResetPassword.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="User\ResetPassword.ascx.designer.cs">
       <DependentUpon>ResetPassword.ascx</DependentUpon>
     </Compile>
     <Compile Include="User\User.ascx.cs">
       <DependentUpon>User.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="User\User.ascx.designer.cs">
       <DependentUpon>User.ascx</DependentUpon>
@@ -220,7 +225,6 @@
     </Compile>
     <Compile Include="User\ViewProfile.ascx.cs">
       <DependentUpon>ViewProfile.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="User\ViewProfile.ascx.designer.cs">
       <DependentUpon>ViewProfile.ascx</DependentUpon>
@@ -572,6 +576,13 @@
   <ItemGroup>
     <None Include="Cuyahoga.Modules.build" />
     <None Include="LanguageSwitcher\Images\flags\flag.tar.gz" />
+    <Content Include="web.config" />
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
@@ -589,15 +600,19 @@ rmdir /s /q "$(SolutionDir)"Web\Modules\obj</PostBuildEvent>
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>0</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost:54304/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v11.0\WebApplications\Microsoft.WebApplication.targets" />
 </Project>

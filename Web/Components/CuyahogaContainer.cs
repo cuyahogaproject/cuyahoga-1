@@ -1,3 +1,5 @@
+using Castle.Core;
+using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Castle.Windsor.Configuration.Interpreters;
 using Cuyahoga.Core.Service;
@@ -28,8 +30,8 @@ namespace Cuyahoga.Web.Components
 			// The core services are registrated via services.config
 			
 			// Utility services
-			AddComponent("web.moduleloader", typeof(ModuleLoader));
-			AddComponent("core.sessionfactoryhelper", typeof(SessionFactoryHelper));
+			Register(Component.For<ModuleLoader>().LifestyleSingleton());
+			Register(Component.For<SessionFactoryHelper>().LifestyleSingleton());
 
 			// Legacy
 			AddComponent("corerepositoryadapter", typeof(CoreRepositoryAdapter));

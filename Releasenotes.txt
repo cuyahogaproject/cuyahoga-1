@@ -1,6 +1,15 @@
 Cuyahoga release notes
 
 ===========================================================================
+1.7.0 - 2014-05-16
+===========================================================================
+Cuyahoga 1.7.0 is basically the same as Cuyahoga 1.6.0 but with upgraded 
+libraries and support for the latest .NET versions.
+
+Improvements:
+- Support for IIS Integrated mode
+
+===========================================================================
 1.6.0 - 2009-03-12
 ===========================================================================
 Cuyahoga 1.6.0 is a maintenance release that mostly consists of small admin

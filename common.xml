@@ -7,6 +7,14 @@
 	<property name="lib.dir" value="lib" dynamic="true" />
 	<property name="lib.family.dir" value="${path::combine(lib.dir, framework::get-family(framework::get-target-framework()))}" dynamic="true" />
 	<property name="lib.framework.dir" value="${path::combine(lib.family.dir, version::to-string(framework::get-version(framework::get-target-framework())))}" dynamic="true" />
+	
+	<!-- path to nuget lib dirs -->
+	<property name="lib.nuget.dir" value="packages" />
+	<property name="lib.nuget.dir.log4net" value="${path::combine(lib.nuget.dir, 'log4net.1.2.10/lib/2.0')}" dynamic="true" />
+	<property name="lib.nuget.dir.castle.core" value="${path::combine(lib.nuget.dir, 'Castle.Core.3.2.0/lib/net40-client')}" dynamic="true" />
+	<property name="lib.nuget.dir.castle.windsor" value="${path::combine(lib.nuget.dir, 'Castle.Windsor.3.2.1/lib/net40')}" dynamic="true" />
+	<property name="lib.nuget.dir.iesi.collections" value="${path::combine(lib.nuget.dir, 'Iesi.Collections.3.2.0.1001/lib/Net35')}" dynamic="true" />
+	<property name="lib.nuget.dir.nhibernate" value="${path::combine(lib.nuget.dir, 'NHibernate.3.3.3.4001/lib/Net35')}" dynamic="true" />
 
 	<!-- Versioning	-->
 	<property name="project.version" value="1.7.0.0" overwrite="false" />

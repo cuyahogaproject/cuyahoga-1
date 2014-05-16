@@ -32,8 +32,8 @@ namespace Cuyahoga.Modules.Articles.Web
 
 		protected void Page_Load(object sender, System.EventArgs e)
 		{
-			this.fckContent.BasePath = this.Page.ResolveUrl("~/Support/FCKeditor/");
 			this._articleModule = base.Module as ArticleModule;
+			this.RegisterAdminJavascript("ckeditor", ResolveUrl("~/Support/ckeditor/ckeditor.js"));
 			this.btnCancel.Attributes.Add("onclick", String.Format("document.location.href='AdminArticles.aspx{0}'", base.GetBaseQueryString()));
 
 			if (! this.IsPostBack)
@@ -71,7 +71,7 @@ namespace Cuyahoga.Modules.Articles.Web
 		{
 			this.txtTitle.Text = this._article.Title;
 			this.txtSummary.Text = this._article.Summary;
-			this.fckContent.Value = this._article.Content;
+			this.txtContent.Text = this._article.Content;
 			this.chkSyndicate.Checked = this._article.Syndicate;
 			this.calDateOnline.SelectedDate = TimeZoneUtil.AdjustDateToUserTimeZone(this._article.DateOnline, this.User.Identity);
 			this.calDateOffline.SelectedDate = TimeZoneUtil.AdjustDateToUserTimeZone(this._article.DateOffline, this.User.Identity);
@@ -98,7 +98,7 @@ namespace Cuyahoga.Modules.Articles.Web
 				{
 					this._article.Summary = null;
 				}
-				this._article.Content = this.fckContent.Value;
+				this._article.Content = this.txtContent.Text.Trim();
 				if (this.ddlCategory.SelectedIndex > 0)
 				{
 					

@@ -1,16 +1,5 @@
 using System;
-using System.Collections;
-using System.ComponentModel;
-using System.Drawing;
-using System.Web;
-using System.Web.SessionState;
-using System.Web.UI;
-using System.Web.UI.WebControls;
-using System.Web.UI.HtmlControls;
-
-using Cuyahoga.Web.Util;
 using Cuyahoga.Web.UI;
-using Cuyahoga.Modules.StaticHtml;
 
 namespace Cuyahoga.Modules.StaticHtml
 {
@@ -23,19 +12,18 @@ namespace Cuyahoga.Modules.StaticHtml
 	
 		protected void Page_Load(object sender, System.EventArgs e)
 		{
-			this.fckEditor.BasePath = this.Page.ResolveUrl("~/Support/FCKeditor/");
 			this._module = base.Module as StaticHtmlModule;
-
+			this.RegisterAdminJavascript("ckeditor", ResolveUrl("~/Support/ckeditor/ckeditor.js"));
 			if (! this.IsPostBack)
 			{
 				StaticHtmlContent shc = this._module.GetContent();
 				if (shc != null)
 				{
-					this.fckEditor.Value = shc.Content;
+					this.txtEditor.Text = shc.Content;
 				}
 				else
 				{
-					this.fckEditor.Value = String.Empty;
+					this.txtEditor.Text = String.Empty;
 				}
 			}
 		}
@@ -57,7 +45,7 @@ namespace Cuyahoga.Modules.StaticHtml
 				// Exisiting
 				content.ModifiedBy = currentUser;
 			}
-			content.Content = this.fckEditor.Value;
+			content.Content = this.txtEditor.Text.Trim();
 			this._module.SaveContent(content);	
 		}
 

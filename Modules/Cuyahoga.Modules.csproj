@@ -93,10 +93,6 @@
       <HintPath>..\packages\Castle.Windsor.3.2.1\lib\net40\Castle.Windsor.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="FredCK.FCKeditorV2">
-      <Name>FredCK.FCKeditorV2</Name>
-      <HintPath>..\lib\FredCK.FCKeditorV2.dll</HintPath>
-    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.1001\lib\Net35\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
@@ -613,7 +609,6 @@ xcopy /s /y "$(ProjectDir)"*.gif "$(SolutionDir)"Web\Modules
 xcopy /s /y "$(ProjectDir)"*.png "$(SolutionDir)"Web\Modules
 xcopy /s /y "$(ProjectDir)"*.txt "$(SolutionDir)"Web\Modules
 xcopy /s /y "$(TargetDir)"Cuyahoga.Modules*.dll "$(SolutionDir)"Web\bin
-xcopy /s /y "$(TargetDir)"FredCK.FCKeditorV2.dll "$(SolutionDir)"Web\bin
 rmdir /s /q "$(SolutionDir)"Web\Modules\obj</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>

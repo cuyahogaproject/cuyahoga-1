@@ -12,11 +12,25 @@
 		<form id="Form1" method="post" runat="server">
 			<div id="moduleadminpane">
 				<h1>Edit static content</h1>
-				<asp:TextBox runat="server" id="txtEditor" CssClass="ckeditor" TextMode="MultiLine"></asp:TextBox>
+				<asp:TextBox runat="server" id="txtEditor" TextMode="MultiLine"></asp:TextBox>
 				<br/>
 				<br/>
 				<asp:button id="btnSave" runat="server" text="Save" onclick="btnSave_Click"></asp:button>
 			</div>
+			<asp:PlaceHolder runat="server">
+				<script type="text/javascript" src="<%= ResolveUrl("~/Support/ckeditor/ckeditor.js") %>"></script>
+				<script type="text/javascript">
+					var fileManUrl = '<%= ResolveUrl("~/Support/fileman/index.html") %>';
+					CKEDITOR.replace('<%= this.txtEditor.ClientID %>', {
+						uiColor: '#6699cc',
+						height: 400,
+						filebrowserBrowseUrl: fileManUrl,
+						filebrowserUploadUrl: fileManUrl,
+						filebrowserImageBrowseUrl: fileManUrl + '?type=image',
+						filebrowserImageUploadUrl: fileManUrl + '?type=image'
+					});
+				</script>
+			</asp:PlaceHolder>
 		</form>
 	</body>
 </html>

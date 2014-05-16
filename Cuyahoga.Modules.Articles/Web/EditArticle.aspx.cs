@@ -33,7 +33,7 @@ namespace Cuyahoga.Modules.Articles.Web
 		protected void Page_Load(object sender, System.EventArgs e)
 		{
 			this._articleModule = base.Module as ArticleModule;
-			this.RegisterAdminJavascript("ckeditor", ResolveUrl("~/Support/ckeditor/ckeditor.js"));
+			this.RegisterAdminJavascript("ckeditor","/Support/ckeditor/ckeditor.js");
 			this.btnCancel.Attributes.Add("onclick", String.Format("document.location.href='AdminArticles.aspx{0}'", base.GetBaseQueryString()));
 
 			if (! this.IsPostBack)

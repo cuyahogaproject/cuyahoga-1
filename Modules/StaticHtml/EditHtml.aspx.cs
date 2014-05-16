@@ -13,7 +13,6 @@ namespace Cuyahoga.Modules.StaticHtml
 		protected void Page_Load(object sender, System.EventArgs e)
 		{
 			this._module = base.Module as StaticHtmlModule;
-			this.RegisterAdminJavascript("ckeditor", ResolveUrl("~/Support/ckeditor/ckeditor.js"));
 			if (! this.IsPostBack)
 			{
 				StaticHtmlContent shc = this._module.GetContent();

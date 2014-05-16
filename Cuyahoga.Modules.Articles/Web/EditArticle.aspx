@@ -59,6 +59,19 @@
 				</div>
 				<p><asp:button id="btnSave" runat="server" text="Save" onclick="btnSave_Click"></asp:button><asp:button id="btnDelete" runat="server" text="Delete" visible="False" onclick="btnDelete_Click"></asp:button><input id="btnCancel" type="button" value="Cancel" runat="server"></p>
 			</div>
+			<asp:PlaceHolder runat="server">
+				<script type="text/javascript" src="<%= ResolveUrl("~/Support/ckeditor/ckeditor.js") %>"></script>
+				<script type="text/javascript">
+					var fileManUrl = '<%= ResolveUrl("~/Support/fileman/index.html") %>';
+					CKEDITOR.replace('<%= this.txtContent.ClientID %>', {
+						uiColor: '#6699cc',
+						filebrowserBrowseUrl: fileManUrl,
+						filebrowserUploadUrl: fileManUrl,
+						filebrowserImageBrowseUrl: fileManUrl + '?type=image',
+						filebrowserImageUploadUrl: fileManUrl + '?type=image'
+					});
+				</script>
+			</asp:PlaceHolder>
 		</form>
 	</body>
 </html>

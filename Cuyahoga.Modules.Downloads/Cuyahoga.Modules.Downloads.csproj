@@ -254,14 +254,7 @@
     <Content Include="Web\Images\xls.gif" />
     <Content Include="Web\Images\xml.gif" />
     <Content Include="Web\Images\zip.gif" />
-    <Content Include="web.config" />
     <Content Include="packages.config" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

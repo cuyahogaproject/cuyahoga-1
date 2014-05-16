@@ -16,7 +16,6 @@
 			<include name="Castle.Windsor.dll" />
 			<include name="log4net.dll" />
 			<include name="NHibernate.dll" />
-			<include name="FredCK.FCKeditorV2.dll" />
 			<include name="Cuyahoga.Core.dll" />
 			<include name="Cuyahoga.ServerControls.dll" />
 			<include name="Cuyahoga.Web.dll" />
@@ -45,7 +44,7 @@
 				<include name="**/*.js" />
 				<include name="**/*.css" />
 				<include name="**/*.xslt" />
-				<include name="**/*.txt" />
+				<include name="**/EmailTemplates/*.txt" />
 				<exclude name="obj/*.txt" />
 			</fileset>
 		</copy>

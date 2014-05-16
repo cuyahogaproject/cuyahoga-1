@@ -2,7 +2,6 @@ using System;
 using System.Web.UI.WebControls;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Web.UI;
-using FredCK.FCKeditorV2;
 using Cuyahoga.Modules.Flash.Domain;
 
 namespace Cuyahoga.Modules.Flash.Web
@@ -13,17 +12,16 @@ namespace Cuyahoga.Modules.Flash.Web
 	public class EditFlash : ModuleAdminBasePage
 	{
 		private FlashModule _module;
-		protected FCKeditor fckEditor;
 		protected Label lblMessage;
 		protected Button btnSave;
+		protected TextBox txtEditor;
 	
 		private void Page_Load(object sender, EventArgs e)
 		{
-			this.fckEditor.BasePath = this.Page.ResolveUrl("~/Support/FCKEditor/");
 			this._module = base.Module as FlashModule;
 			if(this.Section.Settings["ALTERNATEDIVID"].ToString() == string.Empty)
 			{
-				this.fckEditor.Visible = true;
+				this.txtEditor.Visible = true;
 				this.btnSave.Visible = true;
 				lblMessage.Text = "";
 				if (! this.IsPostBack)
@@ -31,17 +29,17 @@ namespace Cuyahoga.Modules.Flash.Web
 					AlternateContent shc = this._module.GetContent();
 					if (shc != null)
 					{
-						this.fckEditor.Value = shc.Content;
+						this.txtEditor.Text = shc.Content;
 					}
 					else
 					{
-						this.fckEditor.Value = String.Empty;
+						this.txtEditor.Text = String.Empty;
 					}
 				}
 			}
 			else
 			{
-				this.fckEditor.Visible = false;
+				this.txtEditor.Visible = false;
 				this.btnSave.Visible = false;
 				lblMessage.Text = "An alternate Div Id was provided for this section.";
 			}
@@ -65,7 +63,7 @@ namespace Cuyahoga.Modules.Flash.Web
 				// Exisiting
 				content.ModifiedBy = currentUser;
 			}
-			content.Content = this.fckEditor.Value;
+			content.Content = this.txtEditor.Text.Trim();
 			this._module.SaveContent(content);	
 		}
 

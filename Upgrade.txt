@@ -1,6 +1,6 @@
 
 **************************************************************
-From version 1.5.0, Cuyahoga requires the .NET 2.0 Framework.
+From version 1.7.0, Cuyahoga requires the .NET 4.0 Framework.
 **************************************************************
 
 Upgrading Cuyahoga

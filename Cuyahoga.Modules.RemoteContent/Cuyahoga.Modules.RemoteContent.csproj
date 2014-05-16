@@ -117,14 +117,7 @@
     <Content Include="Web\RemoteContent.ascx">
       <SubType>UserControl</SubType>
     </Content>
-    <Content Include="web.config" />
     <Content Include="packages.config" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Web\AdminRemoteContent.aspx.resx">

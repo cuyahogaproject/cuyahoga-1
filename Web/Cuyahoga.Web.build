@@ -45,6 +45,7 @@
 				<include name="**/*.txt" />
 				<include name="**/*.html" />
 				<include name="**/*.sql" />
+				<include name="**/*.json" />
 				<exclude name="Modules/**" />
 				<exclude name="UserFiles/**" />
 				<exclude name="files/*.*" />

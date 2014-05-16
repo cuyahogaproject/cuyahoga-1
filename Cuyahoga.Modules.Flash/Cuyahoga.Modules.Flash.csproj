@@ -43,10 +43,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FredCK.FCKeditorV2, Version=2.2.2106.29420, Culture=neutral, PublicKeyToken=4f86767c9b519a06">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\FredCK.FCKeditorV2.dll</HintPath>
-    </Reference>
     <Reference Include="Iesi.Collections">
       <HintPath>..\packages\Iesi.Collections.3.2.0.1001\lib\Net35\Iesi.Collections.dll</HintPath>
       <Private>True</Private>
@@ -104,14 +100,7 @@
     <None Include="lib\Xylem.Controls.FlashMovieControl.dll" />
     <Content Include="Web\EditFlash.aspx" />
     <Content Include="Web\Flash.ascx" />
-    <Content Include="web.config" />
     <Content Include="packages.config" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Web\EditFlash.aspx.resx">

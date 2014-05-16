@@ -13,7 +13,6 @@
 			<include name="System.Web.dll" />
 			<include name="System.Drawing.dll" />
 			<include name="NHibernate.dll" />
-			<include name="FredCK.FCKeditorV2.dll" />
 			<include name="Castle.Core.dll" />
 			<include name="Castle.Facilities.AutomaticTransaction.dll" />
 			<include name="Castle.Facilities.NHibernateIntegration.dll" />

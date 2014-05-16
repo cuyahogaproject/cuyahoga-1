@@ -1,4 +1,5 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="12.0">
   <PropertyGroup>
     <ProjectType>Local</ProjectType>
     <ProductVersion>8.0.50727</ProductVersion>
@@ -27,7 +28,14 @@
     </FileUpgradeFlags>
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
-    <OldToolsVersion>2.0</OldToolsVersion>
+    <OldToolsVersion>12.0</OldToolsVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication>enabled</IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>enabled</IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>false</IISExpressUseClassicPipelineMode>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>bin\</OutputPath>
@@ -86,25 +94,25 @@
       <Project>{C64DAA00-AAB1-4AC7-ADE2-119B53B9666A}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <Reference Include="Castle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+    <Reference Include="Castle.Core, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\Castle.Core.dll</HintPath>
+      <HintPath>..\packages\Castle.Core.3.2.0\lib\net40-client\Castle.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Castle.MicroKernel">
-      <Name>Castle.MicroKernel</Name>
-      <HintPath>..\lib\Castle.MicroKernel.dll</HintPath>
-    </Reference>
-    <Reference Include="Castle.Windsor">
-      <Name>Castle.Windsor</Name>
-      <HintPath>..\lib\Castle.Windsor.dll</HintPath>
-    </Reference>
-    <Reference Include="FredCK.FCKeditorV2, Version=2.5.2912.21007, Culture=neutral, PublicKeyToken=4f86767c9b519a06, processorArchitecture=MSIL">
+    <Reference Include="Castle.Windsor, Version=3.2.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\lib\FredCK.FCKeditorV2.dll</HintPath>
+      <HintPath>..\packages\Castle.Windsor.3.2.1\lib\net40\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <Name>log4net</Name>
-      <HintPath>..\lib\log4net.dll</HintPath>
+    <Reference Include="Iesi.Collections">
+      <HintPath>..\packages\Iesi.Collections.3.2.0.1001\lib\Net35\Iesi.Collections.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="NHibernate">
+      <HintPath>..\packages\NHibernate.3.3.3.4001\lib\Net35\NHibernate.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System">
       <Name>System</Name>
@@ -113,15 +121,21 @@
     <Reference Include="System.Data">
       <Name>System.Data</Name>
     </Reference>
+    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing">
       <Name>System.Drawing</Name>
     </Reference>
     <Reference Include="System.Web">
       <Name>System.Web</Name>
     </Reference>
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Xml">
       <Name>System.XML</Name>
     </Reference>
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Admin\ConnectionEdit.aspx.cs">
@@ -491,14 +505,20 @@
     <Content Include="Global.asax" />
     <Content Include="Images\feed-icon.png" />
     <Content Include="Install\Core\Database\mssql2000\1.5.0.sql" />
+    <Content Include="Install\Core\Database\mssql2000\1.7.0.sql" />
     <Content Include="Install\Core\Database\mysql\1.5.0.sql" />
+    <Content Include="Install\Core\Database\mysql\1.7.0.sql" />
     <Content Include="Install\Core\Database\postgresql\1.5.0.sql" />
+    <Content Include="Install\Core\Database\postgresql\1.7.0.sql" />
     <Content Include="Install\Install.aspx">
       <SubType>Form</SubType>
     </Content>
     <Content Include="Install\Modules\Database\mssql2000\1.5.0.sql" />
+    <Content Include="Install\Modules\Database\mssql2000\1.7.0.sql" />
     <Content Include="Install\Modules\Database\mysql\1.5.0.sql" />
+    <Content Include="Install\Modules\Database\mysql\1.7.0.sql" />
     <Content Include="Install\Modules\Database\postgresql\1.5.0.sql" />
+    <Content Include="Install\Modules\Database\postgresql\1.7.0.sql" />
     <Content Include="Install\Sorry.aspx">
       <SubType>Form</SubType>
     </Content>
@@ -515,365 +535,496 @@
     <Content Include="Rss.aspx">
       <SubType>Form</SubType>
     </Content>
-    <Content Include="Support\FCKeditor\editor\css\behaviors\disablehandles.htc" />
-    <Content Include="Support\FCKeditor\editor\css\behaviors\hiddenfield.gif" />
-    <Content Include="Support\FCKeditor\editor\css\behaviors\hiddenfield.htc" />
-    <Content Include="Support\FCKeditor\editor\css\behaviors\showtableborders.htc" />
-    <Content Include="Support\FCKeditor\editor\css\fck_editorarea.css" />
-    <Content Include="Support\FCKeditor\editor\css\fck_internal.css" />
-    <Content Include="Support\FCKeditor\editor\css\fck_showtableborders_gecko.css" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_address.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_blockquote.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_div.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_h1.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_h2.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_h3.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_h4.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_h5.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_h6.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_p.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\block_pre.png" />
-    <Content Include="Support\FCKeditor\editor\css\images\fck_anchor.gif" />
-    <Content Include="Support\FCKeditor\editor\css\images\fck_flashlogo.gif" />
-    <Content Include="Support\FCKeditor\editor\css\images\fck_hiddenfield.gif" />
-    <Content Include="Support\FCKeditor\editor\css\images\fck_pagebreak.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\common\fcknumericfield.htc" />
-    <Content Include="Support\FCKeditor\editor\dialog\common\fck_dialog_common.css" />
-    <Content Include="Support\FCKeditor\editor\dialog\common\fck_dialog_common.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\common\images\locked.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\common\images\reset.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\common\images\unlocked.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\common\moz-bindings.xml" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_about.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_about\lgpl.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_about\logo_fckeditor.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_about\logo_fredck.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_anchor.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_button.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_checkbox.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_colorselector.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_docprops.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_docprops\fck_document_preview.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_find.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_flash.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_flash\fck_flash.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_flash\fck_flash_preview.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_form.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_hiddenfield.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_image.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_image\fck_image.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_image\fck_image_preview.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_link.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_link\fck_link.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_listprop.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_paste.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_radiobutton.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_replace.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_select.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_select\fck_select.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_smiley.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_source.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_specialchar.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_spellerpages.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\blank.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\controls.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\controlWindow.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\spellchecker.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\spellChecker.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\spellerStyle.css" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\wordWindow.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_table.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_tablecell.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_template.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_template\images\template1.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_template\images\template2.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_template\images\template3.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_textarea.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_textfield.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_universalkey.html" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_universalkey\00.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_universalkey\data.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_universalkey\diacritic.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_universalkey\dialogue.js" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_universalkey\fck_universalkey.css" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_universalkey\keyboard_layout.gif" />
-    <Content Include="Support\FCKeditor\editor\dialog\fck_universalkey\multihexa.js" />
-    <Content Include="Support\FCKeditor\editor\dtd\fck_dtd_test.html" />
-    <Content Include="Support\FCKeditor\editor\dtd\fck_xhtml10strict.js" />
-    <Content Include="Support\FCKeditor\editor\dtd\fck_xhtml10transitional.js" />
-    <Content Include="Support\FCKeditor\editor\fckblank.html" />
-    <Content Include="Support\FCKeditor\editor\fckdebug.html" />
-    <Content Include="Support\FCKeditor\editor\fckdialog.html" />
-    <Content Include="Support\FCKeditor\editor\fckeditor.html" />
-    <Content Include="Support\FCKeditor\editor\fckeditor.original.html" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\browser.css" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\browser.html" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\frmactualfolder.html" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\frmcreatefolder.html" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\frmfolders.html" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\frmresourceslist.html" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\frmresourcetype.html" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\frmupload.html" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\ButtonArrow.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\Folder.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\Folder32.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\FolderOpened.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\FolderOpened32.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\FolderUp.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\ai.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\avi.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\bmp.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\cs.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\default.icon.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\dll.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\doc.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\exe.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\fla.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\gif.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\htm.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\html.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\jpg.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\js.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\mdb.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\mp3.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\pdf.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\png.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\ppt.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\rdp.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\swf.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\swt.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\txt.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\vsd.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\xls.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\xml.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\32\zip.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\ai.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\avi.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\bmp.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\cs.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\default.icon.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\dll.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\doc.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\exe.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\fla.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\gif.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\htm.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\html.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\jpg.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\js.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\mdb.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\mp3.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\pdf.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\png.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\ppt.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\rdp.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\swf.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\swt.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\txt.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\vsd.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\xls.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\xml.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\icons\zip.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\images\spacer.gif" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\js\common.js" />
-    <Content Include="Support\FCKeditor\editor\filemanager\browser\default\js\fckxml.js" />
-    <Content Include="Support\FCKeditor\editor\filemanager\connectors\aspx\config.ascx" />
-    <Content Include="Support\FCKeditor\editor\filemanager\connectors\aspx\connector.aspx" />
-    <Content Include="Support\FCKeditor\editor\filemanager\connectors\aspx\upload.aspx" />
-    <Content Include="Support\FCKeditor\editor\images\anchor.gif" />
-    <Content Include="Support\FCKeditor\editor\images\arrow_ltr.gif" />
-    <Content Include="Support\FCKeditor\editor\images\arrow_rtl.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\angel_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\angry_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\broken_heart.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\cake.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\confused_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\cry_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\devil_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\embaressed_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\envelope.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\heart.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\kiss.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\lightbulb.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\omg_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\regular_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\sad_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\shades_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\teeth_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\thumbs_down.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\thumbs_up.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\tounge_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\whatchutalkingabout_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\smiley\msn\wink_smile.gif" />
-    <Content Include="Support\FCKeditor\editor\images\spacer.gif" />
-    <Content Include="Support\FCKeditor\editor\js\fckeditorcode_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\js\fckeditorcode_ie.js" />
-    <Content Include="Support\FCKeditor\editor\lang\af.js" />
-    <Content Include="Support\FCKeditor\editor\lang\ar.js" />
-    <Content Include="Support\FCKeditor\editor\lang\bg.js" />
-    <Content Include="Support\FCKeditor\editor\lang\bn.js" />
-    <Content Include="Support\FCKeditor\editor\lang\bs.js" />
-    <Content Include="Support\FCKeditor\editor\lang\ca.js" />
-    <Content Include="Support\FCKeditor\editor\lang\cs.js" />
-    <Content Include="Support\FCKeditor\editor\lang\da.js" />
-    <Content Include="Support\FCKeditor\editor\lang\de.js" />
-    <Content Include="Support\FCKeditor\editor\lang\el.js" />
-    <Content Include="Support\FCKeditor\editor\lang\en-au.js" />
-    <Content Include="Support\FCKeditor\editor\lang\en-ca.js" />
-    <Content Include="Support\FCKeditor\editor\lang\en-uk.js" />
-    <Content Include="Support\FCKeditor\editor\lang\en.js" />
-    <Content Include="Support\FCKeditor\editor\lang\eo.js" />
-    <Content Include="Support\FCKeditor\editor\lang\es.js" />
-    <Content Include="Support\FCKeditor\editor\lang\et.js" />
-    <Content Include="Support\FCKeditor\editor\lang\eu.js" />
-    <Content Include="Support\FCKeditor\editor\lang\fa.js" />
-    <Content Include="Support\FCKeditor\editor\lang\fi.js" />
-    <Content Include="Support\FCKeditor\editor\lang\fo.js" />
-    <Content Include="Support\FCKeditor\editor\lang\fr.js" />
-    <Content Include="Support\FCKeditor\editor\lang\gl.js" />
-    <Content Include="Support\FCKeditor\editor\lang\he.js" />
-    <Content Include="Support\FCKeditor\editor\lang\hi.js" />
-    <Content Include="Support\FCKeditor\editor\lang\hr.js" />
-    <Content Include="Support\FCKeditor\editor\lang\hu.js" />
-    <Content Include="Support\FCKeditor\editor\lang\it.js" />
-    <Content Include="Support\FCKeditor\editor\lang\ja.js" />
-    <Content Include="Support\FCKeditor\editor\lang\km.js" />
-    <Content Include="Support\FCKeditor\editor\lang\ko.js" />
-    <Content Include="Support\FCKeditor\editor\lang\lt.js" />
-    <Content Include="Support\FCKeditor\editor\lang\lv.js" />
-    <Content Include="Support\FCKeditor\editor\lang\mn.js" />
-    <Content Include="Support\FCKeditor\editor\lang\ms.js" />
-    <Content Include="Support\FCKeditor\editor\lang\nb.js" />
-    <Content Include="Support\FCKeditor\editor\lang\nl.js" />
-    <Content Include="Support\FCKeditor\editor\lang\no.js" />
-    <Content Include="Support\FCKeditor\editor\lang\pl.js" />
-    <Content Include="Support\FCKeditor\editor\lang\pt-br.js" />
-    <Content Include="Support\FCKeditor\editor\lang\pt.js" />
-    <Content Include="Support\FCKeditor\editor\lang\ro.js" />
-    <Content Include="Support\FCKeditor\editor\lang\ru.js" />
-    <Content Include="Support\FCKeditor\editor\lang\sk.js" />
-    <Content Include="Support\FCKeditor\editor\lang\sl.js" />
-    <Content Include="Support\FCKeditor\editor\lang\sr-latn.js" />
-    <Content Include="Support\FCKeditor\editor\lang\sr.js" />
-    <Content Include="Support\FCKeditor\editor\lang\sv.js" />
-    <Content Include="Support\FCKeditor\editor\lang\th.js" />
-    <Content Include="Support\FCKeditor\editor\lang\tr.js" />
-    <Content Include="Support\FCKeditor\editor\lang\uk.js" />
-    <Content Include="Support\FCKeditor\editor\lang\vi.js" />
-    <Content Include="Support\FCKeditor\editor\lang\zh-cn.js" />
-    <Content Include="Support\FCKeditor\editor\lang\zh.js" />
-    <Content Include="Support\FCKeditor\editor\lang\_getfontformat.html" />
-    <Content Include="Support\FCKeditor\editor\lang\_translationstatus.txt" />
-    <Content Include="Support\FCKeditor\editor\plugins\autogrow\fckplugin.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\bbcode\fckplugin.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\bbcode\_sample\sample.config.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\bbcode\_sample\sample.html" />
-    <Content Include="Support\FCKeditor\editor\plugins\dragresizetable\fckplugin.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\placeholder\fckplugin.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\placeholder\fck_placeholder.html" />
-    <Content Include="Support\FCKeditor\editor\plugins\placeholder\lang\de.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\placeholder\lang\en.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\placeholder\lang\fr.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\placeholder\lang\it.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\placeholder\lang\pl.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\placeholder\placeholder.gif" />
-    <Content Include="Support\FCKeditor\editor\plugins\simplecommands\fckplugin.js" />
-    <Content Include="Support\FCKeditor\editor\plugins\tablecommands\fckplugin.js" />
-    <Content Include="Support\FCKeditor\editor\skins\default\fck_dialog.css" />
-    <Content Include="Support\FCKeditor\editor\skins\default\fck_editor.css" />
-    <Content Include="Support\FCKeditor\editor\skins\default\fck_strip.gif" />
-    <Content Include="Support\FCKeditor\editor\skins\default\images\toolbar.arrowright.gif" />
-    <Content Include="Support\FCKeditor\editor\skins\default\images\toolbar.buttonarrow.gif" />
-    <Content Include="Support\FCKeditor\editor\skins\default\images\toolbar.collapse.gif" />
-    <Content Include="Support\FCKeditor\editor\skins\default\images\toolbar.end.gif" />
-    <Content Include="Support\FCKeditor\editor\skins\default\images\toolbar.expand.gif" />
-    <Content Include="Support\FCKeditor\editor\skins\default\images\toolbar.separator.gif" />
-    <Content Include="Support\FCKeditor\editor\skins\default\images\toolbar.start.gif" />
-    <Content Include="Support\FCKeditor\editor\skins\_fckviewstrips.html" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckcontextmenu.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckeditingarea.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckevents.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckicon.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckiecleanup.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckmenublock.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckmenublockpanel.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckmenuitem.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckpanel.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckplugin.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckspecialcombo.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckstyledef.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckstyledef_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckstyledef_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckstylesloader.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbar.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarbreak_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarbreak_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarbutton.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarbuttonui.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarfontformatcombo.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarfontscombo.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarfontsizecombo.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarpanelbutton.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarspecialcombo.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fcktoolbarstylecombo.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckxml_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\classes\fckxml_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fckfitwindow.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fcknamedcommand.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fckpasteplaintextcommand.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fckpastewordcommand.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fckspellcheckcommand_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fckspellcheckcommand_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fckstylecommand.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fcktablecommand.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fcktextcolorcommand.js" />
-    <Content Include="Support\FCKeditor\editor\_source\commandclasses\fck_othercommands.js" />
-    <Content Include="Support\FCKeditor\editor\_source\fckconstants.js" />
-    <Content Include="Support\FCKeditor\editor\_source\fckeditorapi.js" />
-    <Content Include="Support\FCKeditor\editor\_source\fckjscoreextensions.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fck.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckbrowserinfo.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckcodeformatter.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckcommands.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckconfig.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckdebug.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckdialog.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckdialog_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckdialog_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckdocumentprocessor.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcklanguagemanager.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckplugins.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckregexlib.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckselection.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckselection_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckselection_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcktablehandler.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcktablehandler_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcktablehandler_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcktoolbaritems.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcktoolbarset.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcktools.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcktools_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fcktools_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckundo_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckundo_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckurlparams.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckxhtml.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckxhtmlentities.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckxhtml_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fckxhtml_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fck_1.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fck_1_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fck_1_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fck_2.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fck_2_gecko.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fck_2_ie.js" />
-    <Content Include="Support\FCKeditor\editor\_source\internals\fck_contextmenu.js" />
-    <Content Include="Support\FCKeditor\fckconfig.js" />
-    <Content Include="Support\FCKeditor\fckeditor.js" />
-    <Content Include="Support\FCKeditor\fckstyles.xml" />
-    <Content Include="Support\FCKeditor\fcktemplates.xml" />
-    <Content Include="Support\FCKeditor\license.txt" />
+    <Content Include="Support\ckeditor\adapters\jquery.js" />
+    <Content Include="Support\ckeditor\build-config.js" />
+    <Content Include="Support\ckeditor\ckeditor.js" />
+    <Content Include="Support\ckeditor\config.js" />
+    <Content Include="Support\ckeditor\contents.css" />
+    <Content Include="Support\ckeditor\lang\af.js" />
+    <Content Include="Support\ckeditor\lang\ar.js" />
+    <Content Include="Support\ckeditor\lang\bg.js" />
+    <Content Include="Support\ckeditor\lang\bn.js" />
+    <Content Include="Support\ckeditor\lang\bs.js" />
+    <Content Include="Support\ckeditor\lang\ca.js" />
+    <Content Include="Support\ckeditor\lang\cs.js" />
+    <Content Include="Support\ckeditor\lang\cy.js" />
+    <Content Include="Support\ckeditor\lang\da.js" />
+    <Content Include="Support\ckeditor\lang\de.js" />
+    <Content Include="Support\ckeditor\lang\el.js" />
+    <Content Include="Support\ckeditor\lang\en-au.js" />
+    <Content Include="Support\ckeditor\lang\en-ca.js" />
+    <Content Include="Support\ckeditor\lang\en-gb.js" />
+    <Content Include="Support\ckeditor\lang\en.js" />
+    <Content Include="Support\ckeditor\lang\eo.js" />
+    <Content Include="Support\ckeditor\lang\es.js" />
+    <Content Include="Support\ckeditor\lang\et.js" />
+    <Content Include="Support\ckeditor\lang\eu.js" />
+    <Content Include="Support\ckeditor\lang\fa.js" />
+    <Content Include="Support\ckeditor\lang\fi.js" />
+    <Content Include="Support\ckeditor\lang\fo.js" />
+    <Content Include="Support\ckeditor\lang\fr-ca.js" />
+    <Content Include="Support\ckeditor\lang\fr.js" />
+    <Content Include="Support\ckeditor\lang\gl.js" />
+    <Content Include="Support\ckeditor\lang\gu.js" />
+    <Content Include="Support\ckeditor\lang\he.js" />
+    <Content Include="Support\ckeditor\lang\hi.js" />
+    <Content Include="Support\ckeditor\lang\hr.js" />
+    <Content Include="Support\ckeditor\lang\hu.js" />
+    <Content Include="Support\ckeditor\lang\id.js" />
+    <Content Include="Support\ckeditor\lang\is.js" />
+    <Content Include="Support\ckeditor\lang\it.js" />
+    <Content Include="Support\ckeditor\lang\ja.js" />
+    <Content Include="Support\ckeditor\lang\ka.js" />
+    <Content Include="Support\ckeditor\lang\km.js" />
+    <Content Include="Support\ckeditor\lang\ko.js" />
+    <Content Include="Support\ckeditor\lang\ku.js" />
+    <Content Include="Support\ckeditor\lang\lt.js" />
+    <Content Include="Support\ckeditor\lang\lv.js" />
+    <Content Include="Support\ckeditor\lang\mk.js" />
+    <Content Include="Support\ckeditor\lang\mn.js" />
+    <Content Include="Support\ckeditor\lang\ms.js" />
+    <Content Include="Support\ckeditor\lang\nb.js" />
+    <Content Include="Support\ckeditor\lang\nl.js" />
+    <Content Include="Support\ckeditor\lang\no.js" />
+    <Content Include="Support\ckeditor\lang\pl.js" />
+    <Content Include="Support\ckeditor\lang\pt-br.js" />
+    <Content Include="Support\ckeditor\lang\pt.js" />
+    <Content Include="Support\ckeditor\lang\ro.js" />
+    <Content Include="Support\ckeditor\lang\ru.js" />
+    <Content Include="Support\ckeditor\lang\si.js" />
+    <Content Include="Support\ckeditor\lang\sk.js" />
+    <Content Include="Support\ckeditor\lang\sl.js" />
+    <Content Include="Support\ckeditor\lang\sq.js" />
+    <Content Include="Support\ckeditor\lang\sr-latn.js" />
+    <Content Include="Support\ckeditor\lang\sr.js" />
+    <Content Include="Support\ckeditor\lang\sv.js" />
+    <Content Include="Support\ckeditor\lang\th.js" />
+    <Content Include="Support\ckeditor\lang\tr.js" />
+    <Content Include="Support\ckeditor\lang\tt.js" />
+    <Content Include="Support\ckeditor\lang\ug.js" />
+    <Content Include="Support\ckeditor\lang\uk.js" />
+    <Content Include="Support\ckeditor\lang\vi.js" />
+    <Content Include="Support\ckeditor\lang\zh-cn.js" />
+    <Content Include="Support\ckeditor\lang\zh.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\a11yhelp.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\ar.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\bg.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\ca.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\cs.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\cy.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\da.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\de.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\el.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\en-gb.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\en.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\eo.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\es.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\et.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\fa.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\fi.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\fr-ca.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\fr.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\gl.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\gu.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\he.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\hi.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\hr.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\hu.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\id.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\it.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\ja.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\km.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\ko.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\ku.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\lt.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\lv.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\mk.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\mn.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\nb.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\nl.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\no.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\pl.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\pt-br.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\pt.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\ro.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\ru.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\si.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\sk.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\sl.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\sq.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\sr-latn.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\sr.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\sv.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\th.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\tr.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\tt.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\ug.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\uk.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\vi.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\zh-cn.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\zh.js" />
+    <Content Include="Support\ckeditor\plugins\a11yhelp\dialogs\lang\_translationstatus.txt" />
+    <Content Include="Support\ckeditor\plugins\about\dialogs\about.js" />
+    <Content Include="Support\ckeditor\plugins\about\dialogs\hidpi\logo_ckeditor.png" />
+    <Content Include="Support\ckeditor\plugins\about\dialogs\logo_ckeditor.png" />
+    <Content Include="Support\ckeditor\plugins\clipboard\dialogs\paste.js" />
+    <Content Include="Support\ckeditor\plugins\dialog\dialogDefinition.js" />
+    <Content Include="Support\ckeditor\plugins\icons.png" />
+    <Content Include="Support\ckeditor\plugins\icons_hidpi.png" />
+    <Content Include="Support\ckeditor\plugins\image\dialogs\image.js" />
+    <Content Include="Support\ckeditor\plugins\image\images\noimage.png" />
+    <Content Include="Support\ckeditor\plugins\link\dialogs\anchor.js" />
+    <Content Include="Support\ckeditor\plugins\link\dialogs\link.js" />
+    <Content Include="Support\ckeditor\plugins\link\images\anchor.png" />
+    <Content Include="Support\ckeditor\plugins\link\images\hidpi\anchor.png" />
+    <Content Include="Support\ckeditor\plugins\magicline\images\hidpi\icon.png" />
+    <Content Include="Support\ckeditor\plugins\magicline\images\icon.png" />
+    <Content Include="Support\ckeditor\plugins\pastefromword\filter\default.js" />
+    <Content Include="Support\ckeditor\plugins\scayt\dialogs\options.js" />
+    <Content Include="Support\ckeditor\plugins\scayt\dialogs\toolbar.css" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\ar.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\bg.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\ca.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\cs.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\cy.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\de.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\el.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\en-gb.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\en.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\eo.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\es.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\et.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\fa.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\fi.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\fr-ca.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\fr.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\gl.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\he.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\hr.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\hu.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\id.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\it.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\ja.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\km.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\ku.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\lv.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\nb.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\nl.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\no.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\pl.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\pt-br.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\pt.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\ru.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\si.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\sk.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\sl.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\sq.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\sv.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\th.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\tr.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\tt.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\ug.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\uk.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\vi.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\zh-cn.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\zh.js" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\lang\_translationstatus.txt" />
+    <Content Include="Support\ckeditor\plugins\specialchar\dialogs\specialchar.js" />
+    <Content Include="Support\ckeditor\plugins\tabletools\dialogs\tableCell.js" />
+    <Content Include="Support\ckeditor\plugins\table\dialogs\table.js" />
+    <Content Include="Support\ckeditor\plugins\wsc\dialogs\ciframe.html" />
+    <Content Include="Support\ckeditor\plugins\wsc\dialogs\tmpFrameset.html" />
+    <Content Include="Support\ckeditor\plugins\wsc\dialogs\wsc.css" />
+    <Content Include="Support\ckeditor\plugins\wsc\dialogs\wsc.js" />
+    <Content Include="Support\ckeditor\plugins\wsc\dialogs\wsc_ie.js" />
+    <Content Include="Support\ckeditor\skins\moono\dialog.css" />
+    <Content Include="Support\ckeditor\skins\moono\dialog_ie.css" />
+    <Content Include="Support\ckeditor\skins\moono\dialog_ie7.css" />
+    <Content Include="Support\ckeditor\skins\moono\dialog_ie8.css" />
+    <Content Include="Support\ckeditor\skins\moono\dialog_iequirks.css" />
+    <Content Include="Support\ckeditor\skins\moono\editor.css" />
+    <Content Include="Support\ckeditor\skins\moono\editor_gecko.css" />
+    <Content Include="Support\ckeditor\skins\moono\editor_ie.css" />
+    <Content Include="Support\ckeditor\skins\moono\editor_ie7.css" />
+    <Content Include="Support\ckeditor\skins\moono\editor_ie8.css" />
+    <Content Include="Support\ckeditor\skins\moono\editor_iequirks.css" />
+    <Content Include="Support\ckeditor\skins\moono\icons.png" />
+    <Content Include="Support\ckeditor\skins\moono\icons_hidpi.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\arrow.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\close.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\hidpi\close.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\hidpi\lock-open.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\hidpi\lock.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\hidpi\refresh.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\lock-open.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\lock.png" />
+    <Content Include="Support\ckeditor\skins\moono\images\refresh.png" />
+    <Content Include="Support\ckeditor\styles.js" />
+    <Content Include="Support\fileman\css\images\animated-overlay.gif" />
+    <Content Include="Support\fileman\css\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Support\fileman\css\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Support\fileman\css\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Support\fileman\css\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Support\fileman\css\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Support\fileman\css\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Support\fileman\css\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Support\fileman\css\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Support\fileman\css\images\ui-icons_222222_256x240.png" />
+    <Content Include="Support\fileman\css\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Support\fileman\css\images\ui-icons_454545_256x240.png" />
+    <Content Include="Support\fileman\css\images\ui-icons_888888_256x240.png" />
+    <Content Include="Support\fileman\css\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Support\fileman\css\jquery-ui-1.10.4.custom.css" />
+    <Content Include="Support\fileman\css\jquery-ui-1.10.4.custom.min.css" />
+    <Content Include="Support\fileman\css\main.css" />
+    <Content Include="Support\fileman\css\main.min.css" />
+    <Content Include="Support\fileman\dev.html" />
+    <Content Include="Support\fileman\images\action-folder-paste.png" />
+    <Content Include="Support\fileman\images\action-folder-rename.png" />
+    <Content Include="Support\fileman\images\arrow_down.png" />
+    <Content Include="Support\fileman\images\arrow_up.png" />
+    <Content Include="Support\fileman\images\blank.gif" />
+    <Content Include="Support\fileman\images\copy.png" />
+    <Content Include="Support\fileman\images\cut.png" />
+    <Content Include="Support\fileman\images\dir-minus.png" />
+    <Content Include="Support\fileman\images\dir-plus.png" />
+    <Content Include="Support\fileman\images\file-add.png" />
+    <Content Include="Support\fileman\images\file-delete.png" />
+    <Content Include="Support\fileman\images\file-download.png" />
+    <Content Include="Support\fileman\images\file-duplicate.png" />
+    <Content Include="Support\fileman\images\file-upload.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_3gp.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_7z.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ace.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ai.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_aif.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_aiff.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_amr.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_asf.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_asx.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_bat.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_bin.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_bmp.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_bup.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_cab.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_cbr.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_cda.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_cdl.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_cdr.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_chm.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_dat.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_divx.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_dll.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_dmg.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_doc.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_dss.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_dvf.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_dwg.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_eml.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_eps.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_exe.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_fla.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_flv.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_gif.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_gz.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_hqx.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_htm.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_html.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ifo.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_indd.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_iso.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_jar.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_jpeg.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_jpg.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_lnk.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_log.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_m4a.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_m4b.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_m4p.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_m4v.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mcd.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mdb.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mid.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mov.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mp2.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mp4.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mpeg.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mpg.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_msi.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_mswmm.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ogg.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_pdf.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_png.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_pps.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ps.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_psd.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_pst.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ptb.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_pub.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_qbb.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_qbw.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_qxd.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ram.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_rar.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_rm.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_rmvb.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_rtf.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_sea.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ses.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_sit.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_sitx.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ss.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_swf.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_tgz.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_thm.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_tif.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_tmp.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_torrent.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_ttf.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_txt.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_vcd.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_vob.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_wav.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_wma.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_wmv.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_wps.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_xls.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_xpi.png" />
+    <Content Include="Support\fileman\images\filetypes\big\file_extension_zip.png" />
+    <Content Include="Support\fileman\images\filetypes\big\unknown.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_3gp.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_7z.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ace.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ai.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_aif.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_aiff.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_amr.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_asf.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_asx.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_bat.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_bin.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_bmp.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_bup.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_cab.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_cbr.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_cda.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_cdl.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_cdr.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_chm.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_dat.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_divx.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_dll.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_dmg.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_doc.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_dss.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_dvf.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_dwg.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_eml.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_eps.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_exe.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_fla.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_flv.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_gif.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_gz.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_hqx.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_htm.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_html.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ifo.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_indd.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_iso.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_jar.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_jpeg.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_jpg.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_lnk.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_log.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_m4a.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_m4b.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_m4p.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_m4v.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mcd.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mdb.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mid.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mov.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mp2.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mp4.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mpeg.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mpg.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_msi.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_mswmm.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ogg.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_pdf.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_png.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_pps.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ps.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_psd.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_pst.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ptb.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_pub.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_qbb.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_qbw.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_qxd.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ram.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_rar.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_rm.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_rmvb.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_rtf.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_sea.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ses.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_sit.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_sitx.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ss.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_swf.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_tgz.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_thm.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_tif.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_tmp.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_torrent.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_ttf.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_txt.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_vcd.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_vob.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_wav.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_wma.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_wmv.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_wps.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_xls.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_xpi.png" />
+    <Content Include="Support\fileman\images\filetypes\file_extension_zip.png" />
+    <Content Include="Support\fileman\images\filetypes\unknown.png" />
+    <Content Include="Support\fileman\images\find.png" />
+    <Content Include="Support\fileman\images\folder-add.png" />
+    <Content Include="Support\fileman\images\folder-delete.png" />
+    <Content Include="Support\fileman\images\folder-download.png" />
+    <Content Include="Support\fileman\images\folder-green.png" />
+    <Content Include="Support\fileman\images\folder-opened.png" />
+    <Content Include="Support\fileman\images\folder.png" />
+    <Content Include="Support\fileman\images\loading-dir.gif" />
+    <Content Include="Support\fileman\images\loading.gif" />
+    <Content Include="Support\fileman\images\paste.png" />
+    <Content Include="Support\fileman\images\preview.png" />
+    <Content Include="Support\fileman\images\rename.png" />
+    <Content Include="Support\fileman\images\search.png" />
+    <Content Include="Support\fileman\images\select.png" />
+    <Content Include="Support\fileman\images\upload-big.png" />
+    <Content Include="Support\fileman\images\view-list.png" />
+    <Content Include="Support\fileman\images\view-tile.png" />
+    <Content Include="Support\fileman\index.html" />
+    <Content Include="Support\fileman\js\custom.js" />
+    <Content Include="Support\fileman\js\directory.js" />
+    <Content Include="Support\fileman\js\file.js" />
+    <Content Include="Support\fileman\js\filetypes.js" />
+    <Content Include="Support\fileman\js\jquery-1.10.2.min.js" />
+    <Content Include="Support\fileman\js\jquery-dateFormat.min.js" />
+    <Content Include="Support\fileman\js\jquery-ui-1.10.4.custom.min.js" />
+    <Content Include="Support\fileman\js\main.js" />
+    <Content Include="Support\fileman\js\main.min.js" />
+    <Content Include="Support\fileman\js\mini-main.js" />
+    <Content Include="Support\fileman\js\tiny_mce_popup.js" />
+    <Content Include="Support\fileman\js\utils.js" />
+    <Content Include="Support\fileman\LICENSE.txt" />
+    <Content Include="Support\fileman\Uploads\Images\DSC_2987.jpg" />
+    <Content Include="Support\fileman\Uploads\LICENSE.txt" />
+    <Content Include="Support\fileman\Uploads\roxy-fileman-logo.gif" />
     <Content Include="Support\JsCalendar\cal.gif" />
     <Content Include="Support\JsCalendar\calendar-blue.css" />
     <Content Include="Support\JsCalendar\calendar-blue2.css" />
@@ -946,7 +1097,9 @@
     <Content Include="Templates\Default\CuyahogaNew.ascx" />
     <Content Include="Templates\Default\Images\bg-header-new.gif" />
     <Content Include="Templates\Default\Images\bg-left2.gif" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <EmbeddedResource Include="Admin\ConnectionEdit.aspx.resx">
       <DependentUpon>ConnectionEdit.aspx.cs</DependentUpon>
     </EmbeddedResource>
@@ -1090,7 +1243,9 @@
       <DependentUpon>Rss.aspx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Content Include="Config\facilities.config" />
+    <Content Include="Config\facilities.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Config\properties.config" />
     <Content Include="Config\services.config" />
     <None Include="Cuyahoga.Web.build" />
@@ -1140,13 +1295,32 @@
     <None Include="Install\Modules\Database\postgresql\1.6.0.sql" />
     <None Include="Install\Modules\Database\postgresql\install.sql" />
     <None Include="Install\Web.config" />
-    <None Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\server-scripts\spellchecker.cfm" />
-    <None Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\server-scripts\spellchecker.php" />
-    <None Include="Support\FCKeditor\editor\dialog\fck_spellerpages\spellerpages\server-scripts\spellchecker.pl" />
-    <Content Include="Support\FCKeditor\editor\filemanager\Web.config" />
+    <Content Include="packages.config" />
+    <Content Include="Support\ckeditor\CHANGES.md" />
+    <Content Include="Support\ckeditor\LICENSE.md" />
+    <Content Include="Support\ckeditor\plugins\scayt\LICENSE.md" />
+    <Content Include="Support\ckeditor\plugins\scayt\README.md" />
+    <Content Include="Support\ckeditor\plugins\wsc\LICENSE.md" />
+    <Content Include="Support\ckeditor\plugins\wsc\README.md" />
+    <Content Include="Support\ckeditor\README.md" />
+    <Content Include="Support\ckeditor\skins\moono\readme.md" />
+    <Content Include="Support\fileman\asp_net\main.ashx" />
+    <Content Include="Support\fileman\conf.json" />
+    <Content Include="Support\fileman\images\filetypes\big\Thumbs.db" />
+    <Content Include="Support\fileman\images\filetypes\Thumbs.db" />
+    <Content Include="Support\fileman\images\Thumbs.db" />
+    <Content Include="Support\fileman\js\fileman-modified.zip" />
+    <Content Include="Support\fileman\lang\bg.json" />
+    <Content Include="Support\fileman\lang\de.json" />
+    <Content Include="Support\fileman\lang\en.json" />
+    <Content Include="Support\fileman\lang\fr.json" />
+    <Content Include="Support\fileman\web.config" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Modules\" />
+    <Folder Include="Support\fileman\tmp\" />
+    <Folder Include="Support\fileman\Uploads\Documents\" />
+    <Folder Include="Support\fileman\Uploads\FLV\" />
     <Folder Include="UserFiles\File\" />
     <Folder Include="UserFiles\Image\" />
   </ItemGroup>
@@ -1155,7 +1329,7 @@
     <PreBuildEvent>
     </PreBuildEvent>
     <PostBuildEvent>xcopy /s /y "$(SolutionDir)"lib\NHibernate.Caches.SysCache.dll "$(TargetDir)"
-xcopy /s /y "$(SolutionDir)"lib\Castle.Facilities.AutomaticTransactionManagement.dll "$(TargetDir)"
+xcopy /s /y "$(SolutionDir)"lib\Castle.Facilities.AutoTx.dll "$(TargetDir)"
 xcopy /s /y "$(SolutionDir)"lib\Castle.Facilities.NHibernateIntegration.dll "$(TargetDir)"</PostBuildEvent>
   </PropertyGroup>
   <ProjectExtensions>
@@ -1169,8 +1343,13 @@ xcopy /s /y "$(SolutionDir)"lib\Castle.Facilities.NHibernateIntegration.dll "$(T
           <IISUrl>
           </IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v11.0\WebApplications\Microsoft.WebApplication.targets" />
 </Project>

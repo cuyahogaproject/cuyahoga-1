@@ -96,14 +96,13 @@
 		<property overwrite="false" name="assembly.is-cls-compliant" value="false" />
 		<property overwrite="false" name="assembly.is-com-visible" value="false" />
 		<property overwrite="false" name="assembly.guid" value="" />
-		<property overwrite="false" name="assembly.allow-partially-trusted-callers" value="true" />
 		<property overwrite="false" name="assembly.description" value="" />
 		<property overwrite="false" name="assembly.product" value="${project.productname}" />
 		<property overwrite="false" name="assembly.company" value="${project.company}" />
 		<property overwrite="false" name="assembly.title" value="${project::get-name()} for ${framework::get-description(framework::get-target-framework())}" />
 		<property overwrite="false" name="assembly.version" value="${project.version}" />
 		<property overwrite="false" name="assembly.version.informational" value="${assembly.major}.${assembly.minor}.${assembly.build}.${svn.revision}" />
-		<property overwrite="false" name="assembly.copyright" value="2004-2008 Cuyahoga Project. All rights reserved." />
+		<property overwrite="false" name="assembly.copyright" value="2004-2014 Cuyahoga Project. All rights reserved." />
 	</target>
 
 	<target name="common.generate-assemblyinfo"
@@ -118,7 +117,6 @@
 				<import namespace="System.Reflection" />
 				<import namespace="System.Runtime.CompilerServices" />
 				<import namespace="System.Runtime.InteropServices" />
-				<import namespace="System.Security" if="${assembly.allow-partially-trusted-callers}" />
 			</imports>
 			<attributes>
 				<attribute type="CLSCompliantAttribute" value="${assembly.is-cls-compliant}" />
@@ -132,9 +130,6 @@
 				<attribute type="AssemblyVersionAttribute" value="${assembly.version}" />
 				<attribute type="AssemblyInformationalVersionAttribute" value="${assembly.version.informational}" />
 				<attribute type="AssemblyFileVersionAttribute" value="${assembly.version}" />
-
-				<!-- For some reason, NAnt doesn't detect that APTCA has a public no-argument constructor -->
-				<attribute asis="true" type="AllowPartiallyTrustedCallersAttribute" if="${assembly.allow-partially-trusted-callers}" />
 			</attributes>
 		</asminfo>
 	</target>

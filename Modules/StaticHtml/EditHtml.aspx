@@ -1,4 +1,3 @@
-<%@ Register TagPrefix="fckeditorv2" Namespace="FredCK.FCKeditorV2" Assembly="FredCK.FCKeditorV2" %>
 <%@ Page language="c#" Codebehind="EditHtml.aspx.cs" AutoEventWireup="True" Inherits="Cuyahoga.Modules.StaticHtml.EditHtml" ValidateRequest="false" %>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
 <html>
@@ -13,11 +12,25 @@
 		<form id="Form1" method="post" runat="server">
 			<div id="moduleadminpane">
 				<h1>Edit static content</h1>
-				<fckeditorv2:fckeditor id="fckEditor" runat="server" height="400px" width="700px"></fckeditorv2:fckeditor>
+				<asp:TextBox runat="server" id="txtEditor" TextMode="MultiLine"></asp:TextBox>
 				<br/>
 				<br/>
 				<asp:button id="btnSave" runat="server" text="Save" onclick="btnSave_Click"></asp:button>
 			</div>
+			<asp:PlaceHolder runat="server">
+				<script type="text/javascript" src="<%= ResolveUrl("~/Support/ckeditor/ckeditor.js") %>"></script>
+				<script type="text/javascript">
+					var fileManUrl = '<%= ResolveUrl("~/Support/fileman/index.html") %>';
+					CKEDITOR.replace('<%= this.txtEditor.ClientID %>', {
+						uiColor: '#6699cc',
+						height: 400,
+						filebrowserBrowseUrl: fileManUrl,
+						filebrowserUploadUrl: fileManUrl,
+						filebrowserImageBrowseUrl: fileManUrl + '?type=image',
+						filebrowserImageUploadUrl: fileManUrl + '?type=image'
+					});
+				</script>
+			</asp:PlaceHolder>
 		</form>
 	</body>
 </html>

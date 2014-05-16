@@ -18,7 +18,6 @@
 			<include name="System.XML.dll" />
 			<include name="System.Drawing.dll" />
 			<include name="NHibernate.dll" />
-			<include name="FredCK.FCKeditorV2.dll" />
 			<include name="Cuyahoga.Core.dll" />
 			<include name="Cuyahoga.Web.dll" />
 			<include name="Xylem.Controls.FlashMovieControl.dll" />

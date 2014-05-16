@@ -78,8 +78,17 @@
 				<include name="*.xml" />
 				<include name="*.license.txt" />
 			</fileset>
-
 		</copy>
+		
+		<!-- Copy assemblies from nuget packages -->
+		<foreach item="String" delim=" " property="package-basedir" in="${lib.nuget.dir.log4net} ${lib.nuget.dir.castle.core} ${lib.nuget.dir.castle.windsor} ${lib.nuget.dir.iesi.collections} ${lib.nuget.dir.nhibernate}">
+			<copy todir="${build.bin.dir}" >
+				<fileset basedir="${package-basedir}">
+					<include name="*.dll" />
+					<include name="*.xml" />
+				</fileset>
+			</copy>
+		</foreach>
 		<!-- Copy family-specific libraries -->
 		<!-- 
 			The build of log4net works just fine for all versions of .NET.
@@ -118,7 +127,7 @@
 		<property name="current.framework.saved" value="${nant.settings.currentframework}" />
 
 		<!-- Execute build for each framework -->
-		<foreach item="String" delim=" " property="framework" in="net-2.0 mono-2.0">
+		<foreach item="String" delim=" " property="framework" in="net-2.0 net-4.0 mono-2.0">
 			<call target="set-${framework}-framework-configuration" />
 			<call target="build" />
 		</foreach>

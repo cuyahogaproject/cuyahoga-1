@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 
 using NHibernate;
-using NHibernate.Expression;
+using NHibernate.Criterion;
 using Castle.Facilities.NHibernateIntegration;
 using Castle.Services.Transaction;
 
@@ -50,7 +50,7 @@ namespace Cuyahoga.Core.DataAccess
 		{
 			ISession session = this._sessionManager.OpenSession();
 			ICriteria crit = session.CreateCriteria(type);
-			crit.Add(Expression.Eq(propertyName, description));
+			crit.Add(Restrictions.Eq(propertyName, description));
 			return crit.UniqueResult();
 		}
 
@@ -82,19 +82,19 @@ namespace Cuyahoga.Core.DataAccess
 		}
 
 
-        [Transaction(TransactionMode.Requires)]
-        public virtual void SaveObject(object obj)
-        {
-            ISession session = this._sessionManager.OpenSession();
-            session.Save(obj);
-        }
+		[Transaction(TransactionMode.Requires)]
+		public virtual void SaveObject(object obj)
+		{
+			ISession session = this._sessionManager.OpenSession();
+			session.Save(obj);
+		}
 
-        [Transaction(TransactionMode.Requires)]
-        public virtual void UpdateObject(object obj)
-        {
-            ISession session = this._sessionManager.OpenSession();
-            session.Update(obj);
-        }
+		[Transaction(TransactionMode.Requires)]
+		public virtual void UpdateObject(object obj)
+		{
+			ISession session = this._sessionManager.OpenSession();
+			session.Update(obj);
+		}
 
 		[Transaction(TransactionMode.Requires)]
 		public virtual void DeleteObject(object obj)

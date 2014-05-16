@@ -31,8 +31,8 @@ namespace Cuyahoga.Modules.Flash
 		{
 			if (base.Section != null)
 			{
-				string hql = "from AlternateContent s where s.Section.Id = ? ";
-				IList results = base.NHSession.Find(hql, this.Section.Id, NHibernateUtil.Int32);
+				string hql = "from AlternateContent s where s.Section.Id = :sectionId ";
+				IList results = base.NHSession.CreateQuery(hql).SetInt32("sectionId", this.Section.Id).List();
 				if (results.Count == 1)
 				{
 					return (AlternateContent)results[0];
@@ -178,8 +178,8 @@ namespace Cuyahoga.Modules.Flash
 
 		#endregion
 	}
-    
-    /// <summary>
+	
+	/// <summary>
 	/// The MovieQuality of the Flash
 	/// </summary>
 	public enum MovieQuality

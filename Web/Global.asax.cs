@@ -36,6 +36,7 @@ namespace Cuyahoga.Web
 			
 			// Set application level flags.
 			HttpContext.Current.Application.Lock();
+			HttpContext.Current.Application["IsFirstRequest"] = true;
 			HttpContext.Current.Application["ModulesLoaded"] = false;
 			HttpContext.Current.Application["IsModuleLoading"] = false;
 			HttpContext.Current.Application["IsInstalling"] = false;
@@ -52,9 +53,6 @@ namespace Cuyahoga.Web
 
 			// Inititialize the static Windsor helper class. 
 			IoC.Initialize(container);
-
-			// Check for any new versions
-			CheckInstaller();
 		}
 
 		protected void Session_Start(Object sender, EventArgs e)
@@ -65,6 +63,19 @@ namespace Cuyahoga.Web
 
 		protected void Application_BeginRequest(Object sender, EventArgs e)
 		{
+			// Bootstrap Cuyahoga at the first request. We can't do this in Application_Start because
+			// we need the HttpContext.Response object to perform redirect. In IIS 7 integrated mode, the 
+			// Response isn't available in Application_Start.
+			if ((bool)HttpContext.Current.Application["IsFirstRequest"])
+			{
+				// Check for any new versions
+				CheckInstaller();
+
+				HttpContext.Current.Application.Lock();
+				HttpContext.Current.Application["IsFirstRequest"] = false;
+				HttpContext.Current.Application.UnLock();
+			}
+
 			// Load active modules. This can't be done in Application_Start because the Installer might kick in
 			// before modules are loaded.
 			if (! (bool)HttpContext.Current.Application["ModulesLoaded"]
@@ -119,29 +130,33 @@ namespace Cuyahoga.Web
 
 		private void CheckInstaller()
 		{
-			// Check version and redirect to install pages if neccessary.
-			DatabaseInstaller dbInstaller = new DatabaseInstaller(HttpContext.Current.Server.MapPath("~/Install/Core"), Assembly.Load("Cuyahoga.Core"));
-			if (dbInstaller.TestDatabaseConnection())
+			if (!HttpContext.Current.Request.RawUrl.Contains("Install"))
 			{
-				if (dbInstaller.CanUpgrade)
+				// Check version and redirect to install pages if neccessary.
+				DatabaseInstaller dbInstaller = new DatabaseInstaller(HttpContext.Current.Server.MapPath("~/Install/Core"),
+					Assembly.Load("Cuyahoga.Core"));
+				if (dbInstaller.TestDatabaseConnection())
 				{
-					HttpContext.Current.Application.Lock();
-					HttpContext.Current.Application["IsUpgrading"] = true;
-					HttpContext.Current.Application.UnLock();
+					if (dbInstaller.CanUpgrade)
+					{
+						HttpContext.Current.Application.Lock();
+						HttpContext.Current.Application["IsUpgrading"] = true;
+						HttpContext.Current.Application.UnLock();
 
-					HttpContext.Current.Response.Redirect("~/Install/Upgrade.aspx");
+						HttpContext.Current.Response.Redirect("~/Install/Upgrade.aspx");
+					}
+					else if (dbInstaller.CanInstall)
+					{
+						HttpContext.Current.Application.Lock();
+						HttpContext.Current.Application["IsInstalling"] = true;
+						HttpContext.Current.Application.UnLock();
+						HttpContext.Current.Response.Redirect("~/Install/Install.aspx");
+					}
 				}
-				else if (dbInstaller.CanInstall)
+				else
 				{
-					HttpContext.Current.Application.Lock();
-					HttpContext.Current.Application["IsInstalling"] = true;
-					HttpContext.Current.Application.UnLock();
-					HttpContext.Current.Response.Redirect("~/Install/Install.aspx");
+					throw new Exception("Cuyahoga can't connect to the database. Please check your application settings.");
 				}
-			}
-			else
-			{
-				throw new Exception("Cuyahoga can't connect to the database. Please check your application settings.");
 			}
 		}
 

@@ -1,6 +1,26 @@
 Cuyahoga release notes
 
 ===========================================================================
+1.7.0 - 2014-05-16
+===========================================================================
+Cuyahoga 1.7.0 is basically the same as Cuyahoga 1.6.0 but with upgraded 
+libraries and support for the latest .NET versions. 
+The .NET 4.0 Framework is required to run this version.
+
+Improvements:
+- Support for IIS Integrated mode
+- Upgraded libraries:
+	NHibernate: 3.3.3 GA
+	Castle Windsor: 3.2.1
+	Log4Net: 1.2.10
+- Custom builds of: (based on https://github.com/mahara/Castle.Facilities.NHibernateIntegration)
+	Castle.Services.Transactions,
+	Castle.Facilities.AutoTx,
+	Castle.Facilities.NHibernateIntegration
+- Replaced FCKeditor with CKeditor and a custom file manager RoxyFileMan 
+  (http://www.roxyfileman.com)
+
+===========================================================================
 1.6.0 - 2009-03-12
 ===========================================================================
 Cuyahoga 1.6.0 is a maintenance release that mostly consists of small admin

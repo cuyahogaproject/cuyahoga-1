@@ -1,23 +1,15 @@
 using System;
 using System.Collections;
-using System.Text.RegularExpressions;
 using System.Web;
-using System.Web.UI.WebControls;
-
 using NHibernate;
-using NHibernate.Expression;
-using NHibernate.Type;
-
 using Castle.Services.Transaction;
 using Castle.Facilities.NHibernateIntegration;
 
 using Cuyahoga.Core;
 using Cuyahoga.Core.Domain;
-using Cuyahoga.Core.Communication;
-
-using Cuyahoga.Core.Service;
 using Cuyahoga.Web.Util;
 using Cuyahoga.Modules.Forum.Domain;
+using NHibernate.Criterion;
 
 namespace Cuyahoga.Modules.Forum 
 {
@@ -226,7 +218,7 @@ namespace Cuyahoga.Modules.Forum
 
 			try
 			{
-                ICriteria forum = session.CreateCriteria(typeof(ForumForum)).Add(NHibernate.Expression.Expression.Eq("CategoryId", categoryid));
+                ICriteria forum = session.CreateCriteria(typeof(ForumForum)).Add(Restrictions.Eq("CategoryId", categoryid));
                 forum.AddOrder(new Order(this._forumSortBy.ToString(), this._forumSortASC));
 
                 IList forumlist = forum.List();
@@ -462,9 +454,9 @@ namespace Cuyahoga.Modules.Forum
             ISession session = this._sessionManager.OpenSession();
             try
 			{
-                ICriteria forumpost = session.CreateCriteria(typeof(ForumPost)).Add(NHibernate.Expression.Expression.Eq("ForumId", forumid));
+                ICriteria forumpost = session.CreateCriteria(typeof(ForumPost)).Add(Restrictions.Eq("ForumId", forumid));
                 forumpost.AddOrder(new Order(this._forumPostSortBy.ToString(), this._forumPostSortASC));
-                forumpost.Add(NHibernate.Expression.Expression.Eq("ReplytoId", 0));
+                forumpost.Add(Restrictions.Eq("ReplytoId", 0));
 
                 IList forumpostlist = forumpost.List();
 
@@ -522,7 +514,7 @@ namespace Cuyahoga.Modules.Forum
             ISession session = this._sessionManager.OpenSession();
             try
 			{
-                ICriteria forumpost = session.CreateCriteria(typeof(ForumPost)).Add(NHibernate.Expression.Expression.Eq("ReplytoId", postid));
+                ICriteria forumpost = session.CreateCriteria(typeof(ForumPost)).Add(Restrictions.Eq("ReplytoId", postid));
                 forumpost.AddOrder(new Order(this._forumPostSortBy.ToString(), this._forumPostSortASC));
 
                 IList forumpostlist = forumpost.List();
@@ -790,7 +782,7 @@ namespace Cuyahoga.Modules.Forum
 			ForumUser user = new ForumUser();
 			try
 			{
-                l = session.Find("from ForumUser f where f.UserId=?", tId, NHibernateUtil.Int32);
+                l = session.CreateQuery("from ForumUser f where f.UserId=:userId").SetInt32("userId", tId).List();
 				if(l.Count == 0)
 				{
 					return null;

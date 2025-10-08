@@ -9,3 +9,4 @@ _ReSharper.*
 *.resharper
 *.suo
 *.cache
+.vs/

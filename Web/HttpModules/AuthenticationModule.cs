@@ -43,11 +43,11 @@ namespace Cuyahoga.Web.HttpModules
 		public bool AuthenticateUser(string username, string password, bool persistLogin)
 		{
 			CoreRepository cr = (CoreRepository)HttpContext.Current.Items["CoreRepository"];
-			string hashedPassword = Encryption.StringToMD5Hash(password);
 			try
 			{
-				User user = cr.GetUserByUsernameAndPassword(username, hashedPassword);
-				if (user != null)
+				User user = cr.GetUserByUsername(username);
+				// CheckPassword() may upgrade the password hash. The user is saved below.
+				if (user != null && user.CheckPassword(password))
 				{
 					if (! user.IsActive)
 					{
@@ -68,7 +68,7 @@ namespace Cuyahoga.Web.HttpModules
 				}
 				else
 				{
-					log.Warn(String.Format("Invalid username-password combination: {0}:{1}.", username, password));
+					log.Warn(String.Format("Invalid username-password combination for username {0}.", username));
 					return false;
 				}
 			}

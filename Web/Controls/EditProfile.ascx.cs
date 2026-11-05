@@ -156,7 +156,7 @@ namespace Cuyahoga.Web.Controls
 					return;
 				}
 				// Check current password.
-				if (currentUser.Password != User.HashPassword(this.txtCurrentPassword.Text))
+				if (! currentUser.CheckPassword(this.txtCurrentPassword.Text))
 				{
 					ShowError(GetText("EDITPASSWORDCURRENTERROR"));
 					return;

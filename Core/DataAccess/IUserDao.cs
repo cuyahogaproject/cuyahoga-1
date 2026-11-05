@@ -11,13 +11,11 @@ namespace Cuyahoga.Core.DataAccess
 	public interface IUserDao
 	{
 		/// <summary>
-		/// Get a single user by username and password. Note that the supplied password 
-		/// has to be hashed already.
+		/// Get a single user by username. Use User.CheckPassword() to verify the password.
 		/// </summary>
 		/// <param name="username"></param>
-		/// <param name="password"></param>
 		/// <returns></returns>
-		User GetUserByUsernameAndPassword(string username, string password);
+		User GetUserByUsername(string username);
 
 		/// <summary>
 		/// Get a single user by username and email.

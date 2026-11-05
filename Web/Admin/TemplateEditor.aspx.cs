@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Web.UI.WebControls;
 using Cuyahoga.Core.Domain;
+using Cuyahoga.Core.Util;
 using Cuyahoga.Web.Admin.UI;
 
 namespace Cuyahoga.Web.Admin
@@ -31,7 +32,17 @@ namespace Cuyahoga.Web.Admin
                     {
                         string fileName = Context.Request.QueryString["file"].ToString();
                         if (!fileName.StartsWith("/")) fileName = "/" + fileName;
-                        return Server.MapPath(fileName);
+                        string physicalPath = Path.GetFullPath(Server.MapPath(fileName));
+
+                        // Only allow editing template controls and stylesheets inside the template directory.
+                        string templateDir = Path.GetFullPath(Server.MapPath(Config.GetConfiguration()["TemplateDir"]))
+                            .TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                        string extension = Path.GetExtension(physicalPath).ToLowerInvariant();
+                        if (physicalPath.StartsWith(templateDir, StringComparison.OrdinalIgnoreCase)
+                            && (extension == ".ascx" || extension == ".css"))
+                        {
+                            return physicalPath;
+                        }
                     }
                     catch (Exception)
                     {
@@ -53,6 +64,13 @@ namespace Cuyahoga.Web.Admin
             Title = "Edit file";
 
             btnSave.Attributes.Add("onclick", "return confirm('Are you sure?')");
+
+            if (FileName == string.Empty)
+            {
+                btnSave.Enabled = false;
+                ShowError("Only template controls (.ascx) and stylesheets (.css) in the template directory can be edited.");
+                return;
+            }
 
             if (!IsPostBack)
             {
@@ -77,7 +95,7 @@ namespace Cuyahoga.Web.Admin
         /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (IsValid)
+            if (IsValid && FileName != string.Empty)
             {
                 try
                 {

@@ -31,13 +31,12 @@ namespace Cuyahoga.Core.DataAccess
 
 		#region IUserDao Members
 
-		public User GetUserByUsernameAndPassword(string username, string password)
+		public User GetUserByUsername(string username)
 		{
 			ISession session = this._sessionManager.OpenSession();
 
 			ICriteria crit = session.CreateCriteria(typeof(User));
 			crit.Add(Restrictions.Eq("UserName", username));
-			crit.Add(Restrictions.Eq("Password", password));
 			IList results = crit.List();
 			if (results.Count == 1)
 			{
@@ -45,7 +44,7 @@ namespace Cuyahoga.Core.DataAccess
 			}
 			else if (results.Count > 1)
 			{
-				throw new Exception(String.Format("Multiple users found with the give username and password. Something is pretty wrong here"));
+				throw new Exception(String.Format("Multiple users found with the given username. Something is pretty wrong here"));
 			}
 			else
 			{

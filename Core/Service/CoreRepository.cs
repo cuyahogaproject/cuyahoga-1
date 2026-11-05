@@ -578,16 +578,14 @@ namespace Cuyahoga.Core.Service
 		#region User specific
 
 		/// <summary>
-		/// Get a User by username and password. Use for login.
+		/// Get a User by username. Use for login in combination with User.CheckPassword().
 		/// </summary>
 		/// <param name="username"></param>
-		/// <param name="password"></param>
 		/// <returns></returns>
-		public virtual User GetUserByUsernameAndPassword(string username, string password)
+		public virtual User GetUserByUsername(string username)
 		{
 			ICriteria crit = this._activeSession.CreateCriteria(typeof(User));
 			crit.Add(Restrictions.Eq("UserName", username));
-			crit.Add(Restrictions.Eq("Password", password));
 			IList results = crit.List();
 			if (results.Count == 1)
 			{
@@ -595,7 +593,7 @@ namespace Cuyahoga.Core.Service
 			}
 			else if (results.Count > 1)
 			{
-				throw new Exception(String.Format("Multiple users found with the give username and password. Something is pretty wrong here"));
+				throw new Exception(String.Format("Multiple users found with the given username. Something is pretty wrong here"));
 			}
 			else
 			{

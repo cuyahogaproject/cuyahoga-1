@@ -46,7 +46,7 @@ namespace Cuyahoga.Core.Domain
         }
 
 		/// <summary>
-		/// Property Password (string). Internally the MD5 hash of the password is used.
+		/// Property Password (string). Internally a salted hash of the password is used.
 		/// </summary>
 		public virtual string Password
 		{
@@ -306,20 +306,41 @@ namespace Cuyahoga.Core.Domain
 		}
 
 		/// <summary>
-		/// Create a MD5 hash of the password.
+		/// Create a salted hash of the password.
 		/// </summary>
 		/// <param name="password">The password in clear text</param>
-		/// <returns>The MD5 hash of the password</returns>
+		/// <returns>The hash of the password</returns>
 		public static string HashPassword(string password)
 		{
 			if (ValidatePassword(password))
 			{
-				return Util.Encryption.StringToMD5Hash(password);
+				return Util.Encryption.CreatePasswordHash(password);
 			}
 			else
 			{
 				throw new ArgumentException("Invalid password");
 			}
+		}
+
+		/// <summary>
+		/// Check if the given password matches the password of this user. When the stored hash
+		/// uses an outdated algorithm, it's replaced with a new hash. The caller is responsible for
+		/// saving the user in that case.
+		/// </summary>
+		/// <param name="password">The password in clear text</param>
+		/// <returns>True when the password matches</returns>
+		public virtual bool CheckPassword(string password)
+		{
+			if (! Util.Encryption.VerifyPasswordHash(password, this._password))
+			{
+				return false;
+			}
+			if (Util.Encryption.PasswordHashNeedsUpgrade(this._password))
+			{
+				// Don't use HashPassword() here: existing passwords might not satisfy the current password rules.
+				this._password = Util.Encryption.CreatePasswordHash(password);
+			}
+			return true;
 		}
 
 		/// <summary>
@@ -342,10 +363,15 @@ namespace Cuyahoga.Core.Domain
 			int length = 8;
 			string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 			string pwd = String.Empty;
-			Random rnd = new Random();
+			byte[] randomBytes = new byte[length];
+			using (System.Security.Cryptography.RNGCryptoServiceProvider rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+			{
+				rng.GetBytes(randomBytes);
+			}
 			for (int i = 0; i < length; i++)
 			{
-				pwd += chars[rnd.Next(chars.Length)];
+				// 256 % 62 introduces a negligible bias; acceptable for a temporary password.
+				pwd += chars[randomBytes[i] % chars.Length];
 			}
 			this._password = User.HashPassword(pwd);
 			return pwd;

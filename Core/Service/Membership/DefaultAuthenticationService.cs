@@ -25,15 +25,16 @@ namespace Cuyahoga.Core.Service.Membership
 
 		public User AuthenticateUser(string username, string password, string ipAddress)
 		{
-			string hashedPassword = User.HashPassword(password);
-			User user = this._userDao.GetUserByUsernameAndPassword(username, hashedPassword);
-			if (user != null)
+			User user = this._userDao.GetUserByUsername(username);
+			if (user != null && user.CheckPassword(password))
 			{
+				// Note: CheckPassword() may have upgraded the password hash, so always save the user.
 				user.LastIp = ipAddress;
 				user.LastLogin = DateTime.Now;
 				this._userDao.SaveOrUpdateUser(user);
+				return user;
 			}
-			return user;
+			return null;
 		}
 
 		#endregion

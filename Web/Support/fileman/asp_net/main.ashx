@@ -1,4 +1,4 @@
-﻿<%@ WebHandler Language="C#" Class="RoxyFilemanHandler" Debug="true" %>
+﻿<%@ WebHandler Language="C#" Class="RoxyFilemanHandler" %>
 /*
   RoxyFileman - web based file manager. Ready to use with CKEditor, TinyMCE. 
   Can be easily integrated with any other WYSIWYG editor or CMS.
@@ -226,9 +226,29 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 	}
 	protected void CheckPath(string path)
 	{
-		if (FixPath(path).IndexOf(GetFilesRoot()) != 0)
+		if (String.IsNullOrEmpty(path))
+		{
+			throw new Exception("Access denied");
+		}
+		string fullPath = Path.GetFullPath(FixPath(path)).TrimEnd(Path.DirectorySeparatorChar);
+		string root = Path.GetFullPath(GetFilesRoot()).TrimEnd(Path.DirectorySeparatorChar);
+		// Must be the root itself or below it. Comparing with the trailing separator prevents
+		// sibling directories with the same prefix (UserFiles vs UserFilesX) from passing.
+		if (!fullPath.Equals(root, StringComparison.OrdinalIgnoreCase)
+			&& !fullPath.StartsWith(root + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
 		{
 			throw new Exception("Access to " + path + " is denied");
+		}
+	}
+	// Cuyahoga-specific: new file and directory names must be plain names without path components.
+	protected void CheckName(string name)
+	{
+		if (String.IsNullOrEmpty(name)
+			|| name != Path.GetFileName(name)
+			|| name.Trim() == "." || name.Trim() == ".."
+			|| name.IndexOfAny(Path.GetInvalidFileNameChars()) > -1)
+		{
+			throw new Exception("Invalid name: " + name);
 		}
 	}
 	protected void VerifyAction(string action)
@@ -307,6 +327,7 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 	protected void CopyFile(string path, string newPath)
 	{
 		CheckPath(path);
+		CheckPath(newPath);
 		FileInfo file = new FileInfo(FixPath(path));
 		newPath = FixPath(newPath);
 		if (!file.Exists)
@@ -325,6 +346,7 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 	protected void CreateDir(string path, string name)
 	{
 		CheckPath(path);
+		CheckName(name);
 		path = FixPath(path);
 		if(!Directory.Exists(path))
 			throw new Exception(LangRes("E_CreateDirInvalidPath"));
@@ -507,6 +529,8 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 		FileInfo dest = new FileInfo(FixPath(newPath));
 		if (!source.Exists)
 			throw new Exception(LangRes("E_MoveFileInvalisPath"));
+		else if (!CanHandleFile(dest.Name))
+			throw new Exception(LangRes("E_FileExtensionForbidden"));
 		else if (dest.Exists)
 			throw new Exception(LangRes("E_MoveFileAlreadyExists"));
 		else
@@ -525,6 +549,7 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 	protected void RenameDir(string path, string name)
 	{
 		CheckPath(path);
+		CheckName(name);
 		DirectoryInfo source = new DirectoryInfo(FixPath(path));
 		DirectoryInfo dest = new DirectoryInfo(Path.Combine(source.Parent.FullName, name));
 		if(source.FullName == GetFilesRoot())
@@ -549,6 +574,7 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 	protected void RenameFile(string path, string name)
 	{
 		CheckPath(path);
+		CheckName(name);
 		FileInfo source = new FileInfo(FixPath(path));
 		FileInfo dest = new FileInfo(Path.Combine(source.Directory.FullName, name));
 		if (!source.Exists)
@@ -667,9 +693,11 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 		string res = GetSuccessRes();
 		try{
 			for(int i = 0; i < HttpContext.Current.Request.Files.Count; i++){
-				if (CanHandleFile(HttpContext.Current.Request.Files[i].FileName))
+				// Some browsers send the full client path, only keep the file name.
+				string uploadedName = Path.GetFileName(HttpContext.Current.Request.Files[i].FileName);
+				if (uploadedName != "" && CanHandleFile(uploadedName))
 				{
-					string filename = MakeUniqueFilename(path, HttpContext.Current.Request.Files[i].FileName);
+					string filename = MakeUniqueFilename(path, uploadedName);
 					string dest = Path.Combine(path, filename);
 					HttpContext.Current.Request.Files[i].SaveAs(dest);
 					if(GetFileType(new FileInfo(filename).Extension) == "image"){

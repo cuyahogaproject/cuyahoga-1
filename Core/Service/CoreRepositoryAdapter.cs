@@ -184,9 +184,9 @@ namespace Cuyahoga.Core.Service
 			return this._siteStructureDao.GetUnconnectedSections();
 		}
 
-		public override User GetUserByUsernameAndPassword(string username, string password)
+		public override User GetUserByUsername(string username)
 		{
-			return this._userDao.GetUserByUsernameAndPassword(username, password);
+			return this._userDao.GetUserByUsername(username);
 		}
 
 		public override User GetUserByUsernameAndEmail(string username, string email)

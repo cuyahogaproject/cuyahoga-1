@@ -131,7 +131,7 @@ namespace Cuyahoga.Modules.User
 					return;
 				}
 				// Check current password.
-				if (currentUser.Password != Cuyahoga.Core.Domain.User.HashPassword(this.txtCurrentPassword.Text))
+				if (! currentUser.CheckPassword(this.txtCurrentPassword.Text))
 				{
 					ShowError(GetText("EDITPASSWORDCURRENTERROR"));
 					return;

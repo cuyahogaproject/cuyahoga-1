@@ -109,7 +109,7 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 		catch(Exception ex){
 			if (action == "UPLOAD"){
 				_r.Write("<script>");
-				_r.Write("parent.fileUploaded(" + GetErrorRes(LangRes("E_UploadNoFiles")) + ");");
+				_r.Write("parent.fileUploaded(" + GetErrorRes(LangRes("E_UploadNoFiles") + " " + ex.Message) + ");");
 				_r.Write("</script>");
 			}
 			else{
@@ -265,7 +265,7 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 	}
 	protected string GetResultStr(string type, string msg)
 	{
-		return "{\"res\":\"" + type + "\",\"msg\":\"" + msg.Replace("\"","\\\"") + "\"}";
+		return "{\"res\":\"" + type + "\",\"msg\":\"" + msg.Replace("\\", "\\\\").Replace("\"","\\\"").Replace("\r", "").Replace("\n", " ") + "\"}";
 	}
 	protected string GetSuccessRes(string msg)
 	{
@@ -429,8 +429,18 @@ public class RoxyFilemanHandler : IHttpHandler, System.Web.SessionState.IRequire
 	protected void ListDirTree(string type)
 	{
 		DirectoryInfo d = new DirectoryInfo(GetFilesRoot());
+		// Cuyahoga-specific: the files root isn't part of the source tree, create it on first use.
 		if(!d.Exists)
-			throw new Exception("Invalid files root directory. Check your configuration.");
+		{
+			try
+			{
+				d.Create();
+			}
+			catch(Exception ex)
+			{
+				throw new Exception("Invalid files root directory. Check your configuration and permissions: " + ex.Message);
+			}
+		}
 			
 		ArrayList dirs = ListDirs(d.FullName);
 		dirs.Insert(0, d.FullName);

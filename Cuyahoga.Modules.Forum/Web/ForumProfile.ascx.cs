@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Web;
 using System.Web.UI.WebControls;
 
 using Cuyahoga.Core.Domain;
@@ -83,8 +84,8 @@ namespace Cuyahoga.Modules.Forum
 		private void BindUser()
 		{
 			Cuyahoga.Core.Domain.User tUser = Context.User.Identity as Cuyahoga.Core.Domain.User;
-			this.ltlUserName.Text	= tUser.UserName;
-			this.ltlRealName.Text	= tUser.FullName;
+			this.ltlUserName.Text	= HttpUtility.HtmlEncode(tUser.UserName);
+			this.ltlRealName.Text	= HttpUtility.HtmlEncode(tUser.FullName);
 
 			this.txtInterest.Text		= this._fUser.Interest;
 			this.txtAIMName.Text		= this._fUser.AIMName;

@@ -80,11 +80,11 @@ namespace Cuyahoga.Modules.Articles.Web
 			{
 				if (comment.User != null)
 				{
-					litFrom.Text = comment.User.UserName;
+					litFrom.Text = HttpUtility.HtmlEncode(comment.User.UserName);
 				}
 				else
 				{
-					litFrom.Text = comment.Name;
+					litFrom.Text = HttpUtility.HtmlEncode(comment.Name);
 				}
 			}
 			Literal litUpdateTimestamp = e.Item.FindControl("litUpdateTimestamp") as Literal;

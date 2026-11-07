@@ -18,7 +18,7 @@
 			<asp:repeater id="rptComments" runat="server">
 				<itemtemplate>
 					<li>
-						<p><%# DataBinder.Eval(Container.DataItem, "CommentText") %></p>
+						<p><%# DataBinder.Eval(Container.DataItem, "CommentTextHtml") %></p>
 						<div class="articlesub">
 							<%= base.GetText("BY") %>
 							<asp:placeholder id="plhCommentBy" runat="server"></asp:placeholder>

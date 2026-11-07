@@ -50,7 +50,7 @@ namespace Cuyahoga.Modules.User
 			{
 				if (isAuthenticated)
 				{
-					this.lblLoggedInUser.Text = ((Cuyahoga.Core.Domain.User)Context.User.Identity).UserName;
+					this.lblLoggedInUser.Text = HttpUtility.HtmlEncode(((Cuyahoga.Core.Domain.User)Context.User.Identity).UserName);
 				}
 
 				this.pnlLogin.Visible = ! isAuthenticated;

@@ -33,7 +33,7 @@
 						<%# GetTopicLink(Container.DataItem) %>
 					</td>
 					<td width="13%" valign="top" class="forumcolumn">
-						<%# DataBinder.Eval(Container.DataItem, "UserName") %>
+						<%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "UserName")) %>
 					</td>
 					<td width="8%" valign="top" class="forumcolumn">
 						<%# DataBinder.Eval(Container.DataItem,"Replies") %>
@@ -52,7 +52,7 @@
 						<%# GetTopicLink(Container.DataItem) %>
 					</td>
 					<td width="13%" valign="top" class="forumcolumn">
-						<%# DataBinder.Eval(Container.DataItem, "Username") %>
+						<%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "Username")) %>
 					</td>
 					<td width="8%" valign="top" class="forumcolumn">
 						<%# DataBinder.Eval(Container.DataItem,"Replies") %>

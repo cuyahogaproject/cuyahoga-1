@@ -27,7 +27,7 @@
 							</headertemplate>
 							<itemtemplate>
 								<tr>
-									<td><%# DataBinder.Eval(Container.DataItem, "CommentText") %></td>
+									<td><%# DataBinder.Eval(Container.DataItem, "CommentTextHtml") %></td>
 									<td><asp:literal id="litFrom" runat="server"></asp:literal></td>
 									<td><%# DataBinder.Eval(Container.DataItem, "UserIp") %></td>
 									<td><asp:literal id="litUpdateTimestamp" runat="server"></asp:literal></td>

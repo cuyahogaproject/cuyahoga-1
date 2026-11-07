@@ -7,6 +7,7 @@ namespace Cuyahoga.Modules.User
 	using System.Web.UI.WebControls;
 	using System.Web.UI.HtmlControls;
 
+	using Cuyahoga.Core.Util;
 	using Cuyahoga.Web.UI;
 
 	/// <summary>
@@ -25,7 +26,7 @@ namespace Cuyahoga.Modules.User
 				Cuyahoga.Core.Domain.User user = this._module.GetUserById(this._module.CurrentUserId);
 				if (user != null)
 				{
-					this.litTitle.Text = String.Format(GetText("VIEWPROFILETITLE"), user.UserName);
+					this.litTitle.Text = String.Format(GetText("VIEWPROFILETITLE"), HttpUtility.HtmlEncode(user.UserName));
 					BindUser(user);
 					if (!this.IsPostBack)
 					{
@@ -43,13 +44,13 @@ namespace Cuyahoga.Modules.User
 
 		private void BindUser(Cuyahoga.Core.Domain.User user)
 		{
-			this.lblUsername.Text = user.UserName;
-			this.lblFirstname.Text = user.FirstName;
-			this.lblLastname.Text = user.LastName;
-			if (user.Website != null && user.Website != string.Empty)
+			this.lblUsername.Text = HttpUtility.HtmlEncode(user.UserName);
+			this.lblFirstname.Text = HttpUtility.HtmlEncode(user.FirstName);
+			this.lblLastname.Text = HttpUtility.HtmlEncode(user.LastName);
+			if (user.Website != null && user.Website != string.Empty && Text.IsSafeUrl(user.Website))
 			{
 				this.hplWebsite.NavigateUrl = user.Website;
-				this.hplWebsite.Text = user.Website;
+				this.hplWebsite.Text = HttpUtility.HtmlEncode(user.Website);
 			}
 			this.lblRegisteredOn.Text = user.InsertTimestamp.ToShortDateString();
 			if (user.LastLogin != null)

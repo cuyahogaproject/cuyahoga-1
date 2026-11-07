@@ -81,7 +81,7 @@ namespace Cuyahoga.Web.Admin
 			if (this._activeUser.Id > 0)
 			{
 				this.txtUsername.Visible = false;
-				this.lblUsername.Text = this._activeUser.UserName;
+				this.lblUsername.Text = HttpUtility.HtmlEncode(this._activeUser.UserName);
 				this.lblUsername.Visible = true;
 				this.rfvUsername.Enabled = false;
 			}

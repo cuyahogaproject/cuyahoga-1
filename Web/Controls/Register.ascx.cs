@@ -97,7 +97,7 @@ namespace Cuyahoga.Web.Controls
 					{
 						Util.Email.Send(user.Email, site.WebmasterEmail, subject, body);
 						this.pnlConfirmation.Visible = true;
-						this.lblConfirmation.Text = String.Format(GetText("REGISTERCONFIRMATION"), user.Email);
+						this.lblConfirmation.Text = String.Format(GetText("REGISTERCONFIRMATION"), HttpUtility.HtmlEncode(user.Email));
 					}
 					catch
 					{

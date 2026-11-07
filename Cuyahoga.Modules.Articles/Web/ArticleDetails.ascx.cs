@@ -103,14 +103,10 @@ namespace Cuyahoga.Modules.Articles.Web
 		{
 			if (this.Page.IsValid)
 			{
-				// Strip any html tags.
-				string commentText = Regex.Replace(this.txtComment.Text, @"<(.|\n)*?>", string.Empty);
-				// Replace carriage returns with <br/>.
-				commentText = commentText.Replace("\r", "<br/>");
 				// Save comment.
 				Comment comment = new Comment();
 				comment.Article = this._activeArticle;
-				comment.CommentText = commentText;
+				comment.CommentText = Comment.CreateCommentText(this.txtComment.Text);
 				comment.UserIp = HttpContext.Current.Request.UserHostAddress;
 				if (this.Page.User.Identity.IsAuthenticated)
 				{
@@ -119,7 +115,11 @@ namespace Cuyahoga.Modules.Articles.Web
 				else
 				{
 					comment.Name = this.txtName.Text;
-					comment.Website = this.txtWebsite.Text;
+					// Only store website addresses that are safe to link to.
+					if (Text.IsSafeUrl(this.txtWebsite.Text))
+					{
+						comment.Website = this.txtWebsite.Text.Trim();
+					}
 				}
 				try
 				{
@@ -152,31 +152,31 @@ namespace Cuyahoga.Modules.Articles.Web
 					{
 						HyperLink hpl = new HyperLink();
 						hpl.NavigateUrl = this._module.GetProfileUrl(comment.User.Id);
-						hpl.Text = comment.User.FullName;
+						hpl.Text = HttpUtility.HtmlEncode(comment.User.FullName);
 						plhCommentBy.Controls.Add(hpl);
 					}
 					else
 					{
 						Literal lit = new Literal();
-						lit.Text = comment.User.FullName;
+						lit.Text = HttpUtility.HtmlEncode(comment.User.FullName);
 						plhCommentBy.Controls.Add(lit);
 					}
 				}
 				else
 				{
-					// Comment by unregistered user.
-					if (comment.Website != null && comment.Website != String.Empty)
+					// Comment by unregistered user. Older comments may have unsafe website addresses, so check again.
+					if (comment.Website != null && comment.Website != String.Empty && Text.IsSafeUrl(comment.Website))
 					{
 						HyperLink hpl = new HyperLink();
 						hpl.NavigateUrl = comment.Website;
 						hpl.Target = "_blank";
-						hpl.Text = comment.Name;
+						hpl.Text = HttpUtility.HtmlEncode(comment.Name);
 						plhCommentBy.Controls.Add(hpl);
 					}
 					else
 					{
 						Literal lit = new Literal();
-						lit.Text = comment.Name;
+						lit.Text = HttpUtility.HtmlEncode(comment.Name);
 						plhCommentBy.Controls.Add(lit);
 					}
 				}

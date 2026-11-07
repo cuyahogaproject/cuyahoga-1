@@ -3,6 +3,7 @@ using System.Collections;
 using System.Configuration;
 using System.Text.RegularExpressions;
 using System.Web;
+using Cuyahoga.Core.Util;
 using Cuyahoga.Modules.Forum.Domain;
 
 namespace Cuyahoga.Modules.Forum.Utils
@@ -185,10 +186,9 @@ namespace Cuyahoga.Modules.Forum.Utils
 			text = emailPattern.Replace(text, "[url=\"mailto:${theurl}\"]${theurl}[/url]");
 
 			// replace URL tags
-			text = Regex.Replace(text, @"(\[url="")(\S+?)(""\])", "<a href=\"$2\" target=\"_blank\">", RegexOptions.IgnoreCase);
-			text = Regex.Replace(text, @"(<a href=\""mailto:)(\S+?)(\"" target=\""_blank\"">)", "<a href=\"mailto:$2\">", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"\[url=""(\S+?)""\]", new MatchEvaluator(UrlTagToHtml), RegexOptions.IgnoreCase);
 			text = Regex.Replace(text, @"\[/url\]", "</a>", RegexOptions.IgnoreCase);
-			text = Regex.Replace(text, @"(\[image="")(\S+?)(""\])", "<img src=\"$2\" />", RegexOptions.IgnoreCase);
+			text = Regex.Replace(text, @"\[image=""(\S+?)""\]", new MatchEvaluator(ImageTagToHtml), RegexOptions.IgnoreCase);
 
 			// replace basic tags
 			IList tFtc = module.GetAllTags();
@@ -232,6 +232,39 @@ namespace Cuyahoga.Modules.Forum.Utils
 			text = TextParser.Censor(text);
 
 			return text.Trim();
+		}
+
+		/// <summary>
+		/// Convert a [url="..."] tag to an opening anchor. The URL is already HTML-encoded at this point
+		/// (except for quotes), so decode it first and encode it again as attribute value. Unsafe URLs
+		/// (javascript:, data:, etc.) result in an anchor without href.
+		/// </summary>
+		private static string UrlTagToHtml(Match match)
+		{
+			string url = HttpUtility.HtmlDecode(match.Groups[1].Value);
+			if (! Text.IsSafeUrl(url))
+			{
+				return "<a>";
+			}
+			string encodedUrl = HttpUtility.HtmlAttributeEncode(url);
+			if (url.StartsWith("mailto:", StringComparison.OrdinalIgnoreCase))
+			{
+				return "<a href=\"" + encodedUrl + "\">";
+			}
+			return "<a href=\"" + encodedUrl + "\" target=\"_blank\">";
+		}
+
+		/// <summary>
+		/// Convert an [image="..."] tag to an img element. Unsafe URLs are removed.
+		/// </summary>
+		private static string ImageTagToHtml(Match match)
+		{
+			string url = HttpUtility.HtmlDecode(match.Groups[1].Value);
+			if (! Text.IsSafeUrl(url))
+			{
+				return String.Empty;
+			}
+			return "<img src=\"" + HttpUtility.HtmlAttributeEncode(url) + "\" />";
 		}
 	}
 }

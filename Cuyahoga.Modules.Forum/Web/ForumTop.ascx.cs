@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Web;
 using System.Web.UI.WebControls;
 
 using Cuyahoga.Core.Util;
@@ -105,7 +106,7 @@ namespace Cuyahoga.Modules.Forum
 			{
 				this.hplPostlink.NavigateUrl	= String.Format("{0}/ForumViewPost/{1}/post/{2}",UrlHelper.GetUrlFromSection(this._module.Section), this._module.CurrentForumId,this._module.CurrentForumPostId);
 				this.hplPostlink.Visible		= true;
-				this.hplPostlink.Text			= this._module.GetForumPostById(this._module.CurrentForumPostId).Topic;
+				this.hplPostlink.Text			= HttpUtility.HtmlEncode(this._module.GetForumPostById(this._module.CurrentForumPostId).Topic);
 				this.hplPostlink.CssClass		= "forum";
 				this.lblForward_3.Visible		= true;
 			}

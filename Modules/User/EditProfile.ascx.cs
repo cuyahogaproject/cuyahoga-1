@@ -53,7 +53,7 @@ namespace Cuyahoga.Modules.User
 		private void BindUser()
 		{
 			Cuyahoga.Core.Domain.User currentUser = Context.User.Identity as Cuyahoga.Core.Domain.User;
-			this.lblUsername.Text = currentUser.UserName;
+			this.lblUsername.Text = HttpUtility.HtmlEncode(currentUser.UserName);
 			this.txtFirstname.Text = currentUser.FirstName;
 			this.txtLastname.Text = currentUser.LastName;
 			this.txtEmail.Text = currentUser.Email;

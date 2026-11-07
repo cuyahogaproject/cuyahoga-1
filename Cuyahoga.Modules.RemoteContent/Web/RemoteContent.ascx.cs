@@ -70,5 +70,32 @@ namespace Cuyahoga.Modules.RemoteContent.Web
 				lblSource.Visible = this._module.ShowSources;
 			}
 		}
+
+		// Feed contents come from external sources and can't be trusted. Never write them to the page unencoded.
+
+		/// <summary>
+		/// Encode plain text from a feed.
+		/// </summary>
+		protected string FormatText(object text)
+		{
+			return HttpUtility.HtmlEncode(text as string);
+		}
+
+		/// <summary>
+		/// Feed item contents can contain HTML. Strip it and show the contents as plain text.
+		/// </summary>
+		protected string FormatContent(object content)
+		{
+			return HttpUtility.HtmlEncode(Text.StripHtml(content as string));
+		}
+
+		/// <summary>
+		/// Only link to safe URLs (no javascript:, data:, etc.).
+		/// </summary>
+		protected string FormatUrl(object url)
+		{
+			string urlString = url as string;
+			return Text.IsSafeUrl(urlString) ? urlString : String.Empty;
+		}
 	}
 }

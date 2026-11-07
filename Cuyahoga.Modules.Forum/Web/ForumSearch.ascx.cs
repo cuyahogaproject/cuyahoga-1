@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Web;
 using System.Web.UI.WebControls;
 
 using Cuyahoga.Web.UI;
@@ -79,7 +80,7 @@ namespace Cuyahoga.Modules.Forum
 		public string GetForumPostLink(object o)
 		{
 			ForumPost post = o as ForumPost;
-			return String.Format("<a href=\"{0}/ForumViewPost/{1}/PostId/{2}\" class=\"forum\">{3}</a>",UrlHelper.GetUrlFromSection(base.ForumModule.Section), post.ForumId,post.Id,post.Topic);
+			return String.Format("<a href=\"{0}/ForumViewPost/{1}/PostId/{2}\" class=\"forum\">{3}</a>",UrlHelper.GetUrlFromSection(base.ForumModule.Section), post.ForumId,post.Id,HttpUtility.HtmlEncode(post.Topic));
 		}
 
 	}

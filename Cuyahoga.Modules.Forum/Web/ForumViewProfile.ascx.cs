@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Web;
 using System.Web.UI.WebControls;
 
 using Cuyahoga.Web.UI;
@@ -81,22 +82,22 @@ namespace Cuyahoga.Modules.Forum
 			Cuyahoga.Core.Domain.User tUser;
 
 			tUser = (Cuyahoga.Core.Domain.User)Context.User.Identity;
-			this.ltrUserName.Text		= tUser.UserName;
-			this.ltrRealName.Text		= tUser.FullName;
-			this.ltrAIMName.Text		= this._forumUser.AIMName;
+			this.ltrUserName.Text		= HttpUtility.HtmlEncode(tUser.UserName);
+			this.ltrRealName.Text		= HttpUtility.HtmlEncode(tUser.FullName);
+			this.ltrAIMName.Text		= HttpUtility.HtmlEncode(this._forumUser.AIMName);
 
 			if(this._forumUser.Gender == 0)
                 this.ltrGender.Text		= GetText("female");
 			else
 				this.ltrGender.Text		= GetText("male");
 
-			this.ltrHomepage.Text		= this._forumUser.Homepage;
-			this.ltrICQNumber.Text		= this._forumUser.ICQNumber;
-			this.ltrInterest.Text		= this._forumUser.Interest;
-			this.ltrLocation.Text		= this._forumUser.Location;
-			this.ltrMSN.Text			= this._forumUser.MSN;
-			this.ltroccupation.Text		= this._forumUser.Occupation;
-			this.ltrYahooMessenger.Text	= this._forumUser.YahooMessenger;
+			this.ltrHomepage.Text		= HttpUtility.HtmlEncode(this._forumUser.Homepage);
+			this.ltrICQNumber.Text		= HttpUtility.HtmlEncode(this._forumUser.ICQNumber);
+			this.ltrInterest.Text		= HttpUtility.HtmlEncode(this._forumUser.Interest);
+			this.ltrLocation.Text		= HttpUtility.HtmlEncode(this._forumUser.Location);
+			this.ltrMSN.Text			= HttpUtility.HtmlEncode(this._forumUser.MSN);
+			this.ltroccupation.Text		= HttpUtility.HtmlEncode(this._forumUser.Occupation);
+			this.ltrYahooMessenger.Text	= HttpUtility.HtmlEncode(this._forumUser.YahooMessenger);
 		}
 
 		#region Web Form Designer generated code

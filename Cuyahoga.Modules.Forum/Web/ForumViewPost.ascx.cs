@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Web;
 using System.Web.UI.WebControls;
 using System.IO;
 
@@ -124,7 +125,7 @@ namespace Cuyahoga.Modules.Forum
 			this._forumPost	= this._module.GetForumPostById(this._module.CurrentForumPostId);
 			this._forumPost.Views++;
 			this._module.SaveForumPost(this._forumPost);
-			this.lblTopic.Text	= this._forumPost.Topic;
+			this.lblTopic.Text	= HttpUtility.HtmlEncode(this._forumPost.Topic);
 
 			if(this._forumPost.UserId == 0)
 			{
@@ -134,7 +135,7 @@ namespace Cuyahoga.Modules.Forum
 			}
 			else
 			{
-				this.hplAuthor.Text			= this._forumPost.UserName;
+				this.hplAuthor.Text			= HttpUtility.HtmlEncode(this._forumPost.UserName);
 				this.hplAuthor.NavigateUrl	= String.Format("{0}/ForumViewProfile/{1}",UrlHelper.GetUrlFromSection(this._module.Section), this._forumPost.UserId);
 				this.hplAuthor.CssClass		= "forum";
 				this.lblUserInfo.Text		= "&nbsp;";
@@ -255,11 +256,11 @@ namespace Cuyahoga.Modules.Forum
 			ForumPost tPost = o as ForumPost;
 			if(tPost.UserId != 0)
 			{
-				return String.Format("<a href=\"{0}/ForumViewProfile/{1}\" class=\"forum\">{2}</a>",UrlHelper.GetUrlFromSection(this._module.Section),tPost.UserId,tPost.UserName);
+				return String.Format("<a href=\"{0}/ForumViewProfile/{1}\" class=\"forum\">{2}</a>",UrlHelper.GetUrlFromSection(this._module.Section),tPost.UserId,HttpUtility.HtmlEncode(tPost.UserName));
 			}
 			else
 			{
-				return String.Format("<a href=\"#\" class=\"forum\">{0}</a>",tPost.UserName);
+				return String.Format("<a href=\"#\" class=\"forum\">{0}</a>",HttpUtility.HtmlEncode(tPost.UserName));
 			}
 		}
 		public string GetQuoteLink(object o)

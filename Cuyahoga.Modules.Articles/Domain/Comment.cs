@@ -1,4 +1,6 @@
 using System;
+using System.Text.RegularExpressions;
+using System.Web;
 
 namespace Cuyahoga.Modules.Articles.Domain
 {
@@ -64,12 +66,46 @@ namespace Cuyahoga.Modules.Articles.Domain
 		}
 
 		/// <summary>
-		/// Property CommentText (string)
+		/// Property CommentText (string). HTML-encoded text with &lt;br/&gt; for line breaks.
+		/// Use CreateCommentText() to create it from user input.
 		/// </summary>
 		public virtual string CommentText
 		{
 			get { return this._commentText; }
 			set { this._commentText = value; }
+		}
+
+		/// <summary>
+		/// The comment text that is safe to write to a page. Comments are stored as HTML, but older
+		/// comments may contain HTML that wasn't stripped properly, so everything except the line
+		/// breaks is (re-)encoded.
+		/// </summary>
+		public virtual string CommentTextHtml
+		{
+			get
+			{
+				if (this._commentText == null)
+				{
+					return String.Empty;
+				}
+				string[] lines = Regex.Split(this._commentText, @"<br\s*/?>", RegexOptions.IgnoreCase);
+				for (int i = 0; i < lines.Length; i++)
+				{
+					lines[i] = HttpUtility.HtmlEncode(HttpUtility.HtmlDecode(lines[i]));
+				}
+				return String.Join("<br/>", lines);
+			}
+		}
+
+		/// <summary>
+		/// Create the stored comment text from user input.
+		/// </summary>
+		/// <param name="text">The comment as entered by the user</param>
+		/// <returns></returns>
+		public static string CreateCommentText(string text)
+		{
+			string normalizedText = text.Replace("\r\n", "\n").Replace("\r", "\n");
+			return HttpUtility.HtmlEncode(normalizedText).Replace("\n", "<br/>");
 		}
 
 		/// <summary>

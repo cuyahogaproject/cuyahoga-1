@@ -36,7 +36,7 @@
 						<%# GetForumPostLink(Container.DataItem) %>
 					</td>
 					<td width="19%" valign="top" class="forumcolumn">
-						<%# DataBinder.Eval(Container.DataItem, "UserName") %>
+						<%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "UserName")) %>
 					</td>
 					<td width="30%" valign="top" class="forumcolumn">
 						<%# DataBinder.Eval(Container.DataItem, "DateCreated") %>
@@ -51,7 +51,7 @@
 						<%# GetForumPostLink(Container.DataItem) %>
 					</td>
 					<td width="19%" valign="top" class="forumcolumn">
-						<%# DataBinder.Eval(Container.DataItem, "UserName") %>
+						<%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "UserName")) %>
 					</td>
 					<td width="30%" valign="top" class="forumcolumn">
 						<%# DataBinder.Eval(Container.DataItem, "DateCreated") %>

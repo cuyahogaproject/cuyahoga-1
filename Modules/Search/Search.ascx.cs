@@ -3,6 +3,7 @@ using log4net;
 namespace Cuyahoga.Modules.Search
 {
 	using System;
+	using System.Web;
 	using System.Web.UI.WebControls;
 	using Cuyahoga.Core.Search;
 	using Cuyahoga.Core.Util;
@@ -58,7 +59,7 @@ namespace Cuyahoga.Modules.Search
 					this.lblFrom.Text = (start + 1).ToString();
 					this.lblTo.Text = end.ToString();
 					this.lblTotal.Text = results.Count.ToString();
-					this.lblQueryText.Text = this._module.SearchQuery != null ? this._module.SearchQuery : this.txtSearchText.Text;
+					this.lblQueryText.Text = HttpUtility.HtmlEncode(this._module.SearchQuery != null ? this._module.SearchQuery : this.txtSearchText.Text);
 					float duration = results.ExecutionTime*0.0000001F;
 					this.lblDuration.Text = duration.ToString();
 					this.rptResults.DataSource = results;

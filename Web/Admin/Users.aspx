@@ -34,11 +34,11 @@
 							</headertemplate>
 							<itemtemplate>
 								<tr>
-									<td><%# DataBinder.Eval(Container.DataItem, "UserName") %></td>
-									<td><%# DataBinder.Eval(Container.DataItem, "FirstName") %></td>
-									<td><%# DataBinder.Eval(Container.DataItem, "LastName") %></td>
-									<td><%# DataBinder.Eval(Container.DataItem, "Email") %></td>
-									<td><%# DataBinder.Eval(Container.DataItem, "Website") %></td>
+									<td><%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "UserName")) %></td>
+									<td><%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "FirstName")) %></td>
+									<td><%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "LastName")) %></td>
+									<td><%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "Email")) %></td>
+									<td><%# HttpUtility.HtmlEncode(DataBinder.Eval(Container.DataItem, "Website")) %></td>
 									<td><asp:label id="lblLastLogin" runat="server"></asp:label></td>
 									<td style="text-align:right"><%# DataBinder.Eval(Container.DataItem, "LastIp") %></td>
 									<td>

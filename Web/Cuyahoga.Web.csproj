@@ -1100,6 +1100,9 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
     <EmbeddedResource Include="Admin\ConnectionEdit.aspx.resx">
       <DependentUpon>ConnectionEdit.aspx.cs</DependentUpon>
     </EmbeddedResource>

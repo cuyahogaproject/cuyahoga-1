@@ -23,6 +23,8 @@ namespace Cuyahoga.Core.Search
 		/// </summary>
 		public IndexQuery(string physicalIndexDir)
 		{
+			// The index directory isn't part of the source tree, create it on first use.
+			System.IO.Directory.CreateDirectory(physicalIndexDir);
 			this._indexDirectory = FSDirectory.GetDirectory(physicalIndexDir, false);
 		}
 

@@ -291,10 +291,17 @@ namespace Cuyahoga.Modules.Downloads
 
 		private void CheckPhysicalDirectory(string physicalDir)
 		{
-			// Check existence
+			// Check existence, try to create the directory when it doesn't exist.
 			if (!System.IO.Directory.Exists(physicalDir))
 			{
-				throw new Exception(String.Format("The Downloads module didn't find the physical directory {0} on the server.", physicalDir));
+				try
+				{
+					System.IO.Directory.CreateDirectory(physicalDir);
+				}
+				catch (Exception ex)
+				{
+					throw new Exception(String.Format("The Downloads module didn't find the physical directory {0} on the server and was unable to create it.", physicalDir), ex);
+				}
 			}
 
 			// Check if the diretory is writable

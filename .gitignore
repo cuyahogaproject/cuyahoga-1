@@ -10,3 +10,6 @@ _ReSharper.*
 *.suo
 *.cache
 .vs/
+Web/UserFiles/
+Web/files/
+Web/index/

@@ -32,6 +32,8 @@ namespace Cuyahoga.Core.Search
 		/// </param>
 		public IndexBuilder(string physicalIndexDir, bool rebuildIndex)
 		{
+			// The index directory isn't part of the source tree, create it on first use.
+			System.IO.Directory.CreateDirectory(physicalIndexDir);
 			this._indexDirectory = FSDirectory.GetDirectory(physicalIndexDir, false);
 			this._rebuildIndex = rebuildIndex;
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Security.Cryptography;
 using System.Security.Principal;
 
 namespace Cuyahoga.Core.Domain
@@ -364,7 +365,7 @@ namespace Cuyahoga.Core.Domain
 			string chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
 			string pwd = String.Empty;
 			byte[] randomBytes = new byte[length];
-			using (System.Security.Cryptography.RNGCryptoServiceProvider rng = new System.Security.Cryptography.RNGCryptoServiceProvider())
+			using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
 			{
 				rng.GetBytes(randomBytes);
 			}

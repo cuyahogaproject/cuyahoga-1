@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { adminCredentials, expectHealthyPage } from './helpers';
-
-test.skip(!adminCredentials(), 'CUYAHOGA_ADMIN_USERNAME / CUYAHOGA_ADMIN_PASSWORD not set');
+import { expectHealthyPage } from './helpers';
 
 // Exercises the NHibernate write path (insert, update, delete within a request transaction),
 // which the data access upgrades are most likely to break.

@@ -1,7 +1,5 @@
 import { test, expect, type APIRequestContext, type Page } from '@playwright/test';
-import { adminCredentials, expectHealthyPage, extractPageLinks } from './helpers';
-
-test.skip(!adminCredentials(), 'CUYAHOGA_ADMIN_USERNAME / CUYAHOGA_ADMIN_PASSWORD not set');
+import { expectHealthyPage, extractPageLinks } from './helpers';
 
 // These tests go through the transactional methods of module classes ([Transaction] on a proxied module),
 // including files that are only moved into place when the database transaction commits.
@@ -33,23 +31,9 @@ async function clickAndAcceptConfirm(page: Page, selector: string) {
   await page.locator(selector).click();
 }
 
-/** Deletes items that an earlier, failed run left behind (rows on a module admin page with the given prefix). */
-async function deleteLeftovers(page: Page, adminUrl: string, titlePrefix: string) {
-  for (let i = 0; i < 10; i++) {
-    await page.goto(adminUrl);
-    const leftover = page.locator('tr', { hasText: titlePrefix }).first();
-    if ((await leftover.count()) === 0) return;
-    await leftover.locator('a', { hasText: 'Edit' }).click();
-    await clickAndAcceptConfirm(page, '[id$="btnDelete"]');
-    await page.waitForURL(/Admin|EditDownloads/i);
-  }
-}
-
 test('articles: create and delete an article', async ({ page, baseURL }) => {
   const adminUrl = await findModuleAdminUrl(page.request, baseURL!, /Modules\/Articles\/AdminArticles\.aspx/i);
-  test.skip(!adminUrl, 'no Articles section on the site');
-
-  await deleteLeftovers(page, adminUrl!, 'e2e article ');
+  expect(adminUrl, 'the site has an Articles section').toBeTruthy();
 
   const title = `e2e article ${Date.now().toString(36)}`;
   await page.goto(adminUrl!);
@@ -78,10 +62,8 @@ test('articles: create and delete an article', async ({ page, baseURL }) => {
 
 test('downloads: upload, download and delete a file', async ({ page, baseURL }) => {
   const adminUrl = await findModuleAdminUrl(page.request, baseURL!, /Modules\/Downloads\/EditDownloads\.aspx/i);
-  test.skip(!adminUrl, 'no Downloads section on the site');
+  expect(adminUrl, 'the site has a Downloads section').toBeTruthy();
   const sectionId = /SectionId=(\d+)/i.exec(adminUrl!)![1];
-  await deleteLeftovers(page, adminUrl!, 'e2e download ');
-
   const stamp = Date.now().toString(36);
   const title = `e2e download ${stamp}`;
   const contents = `e2e file contents ${stamp}`;

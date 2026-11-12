@@ -7,7 +7,8 @@ namespace Cuyahoga.Core.Util
 {
 	/// <summary>
 	/// The Cuyahoga settings from the appSettings section of Web.config (keys starting with 'Cuyahoga.').
-	/// Machine-specific values can be overridden in the optional, git-ignored Web.local.config.
+	/// Machine-specific values can be overridden in the optional, git-ignored Web.local.config, and environment
+	/// variables override both (for example CUYAHOGA_CONNECTIONSTRING; the e2e tests use these).
 	/// </summary>
 	public class CuyahogaAppSettings
 	{
@@ -107,11 +108,26 @@ namespace Cuyahoga.Core.Util
 			return value != null ? Boolean.Parse(value) : defaultValue;
 		}
 
-		/// <summary>Returns the trimmed value, or null when the setting is missing or empty.</summary>
+		/// <summary>
+		/// Returns the trimmed value, or null when the setting is missing or empty. An environment variable with the
+		/// key in upper case and '.' replaced by '_' (for example CUYAHOGA_CONNECTIONSTRING) overrides the appSetting.
+		/// </summary>
 		private static string Get(NameValueCollection appSettings, string key)
 		{
-			string value = appSettings[key];
+			string value = Environment.GetEnvironmentVariable(EnvironmentVariableName(key));
+			if (String.IsNullOrWhiteSpace(value))
+			{
+				value = appSettings[key];
+			}
 			return String.IsNullOrWhiteSpace(value) ? null : value.Trim();
+		}
+
+		/// <summary>
+		/// The name of the environment variable that overrides an appSetting (Cuyahoga.ConnectionString -> CUYAHOGA_CONNECTIONSTRING).
+		/// </summary>
+		public static string EnvironmentVariableName(string key)
+		{
+			return key.Replace('.', '_').ToUpperInvariant();
 		}
 	}
 }

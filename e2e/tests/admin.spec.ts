@@ -1,7 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { adminCredentials, crawl, expectHealthyPage, trackPageErrors } from './helpers';
-
-test.skip(!adminCredentials(), 'CUYAHOGA_ADMIN_USERNAME / CUYAHOGA_ADMIN_PASSWORD not set');
+import { crawl, expectHealthyPage, trackPageErrors } from './helpers';
 
 const adminPages = [
   'Default.aspx',

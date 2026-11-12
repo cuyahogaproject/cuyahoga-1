@@ -3,10 +3,48 @@ import { expect, type APIRequestContext, type Page, type Response } from '@playw
 /** Markers of an ASP.NET error page or Cuyahoga's own error page. */
 const errorMarkers = [/Server Error in '/i, /Runtime Error/i, /Exception Details:/i, /An error occured/i];
 
+/** The administrator account of the test site (the installer creates 'admin' with this password). */
 export function adminCredentials() {
-  const username = process.env.CUYAHOGA_ADMIN_USERNAME;
-  const password = process.env.CUYAHOGA_ADMIN_PASSWORD;
-  return username && password ? { username, password } : undefined;
+  return { username: 'admin', password: 'e2e-admin-password' };
+}
+
+/** The id of the first root node (the home page of the sample site). */
+export async function homeNodeId(page: Page): Promise<string> {
+  await page.goto('/Admin/Default.aspx');
+  const href = await page.locator('a[href*="NodeEdit.aspx?NodeId="]').first().getAttribute('href');
+  return /NodeId=(\d+)/i.exec(href!)![1];
+}
+
+/** Creates a page node under the parent and returns its id. */
+export async function createNode(page: Page, parentId: string, title: string): Promise<string> {
+  await page.goto(`/Admin/NodeEdit.aspx?NodeId=-1&ParentNodeId=${parentId}`);
+  await page.locator('[id$="txtTitle"]').fill(title);
+  await page.locator('[id$="btnSave"]').click();
+  await expect(page).toHaveURL(/NodeEdit\.aspx\?NodeId=\d+&message=/i);
+  return /NodeId=(\d+)/i.exec(page.url())![1];
+}
+
+/**
+ * Adds a section with the given module to a node. Settings are module settings by name: strings fill a text box,
+ * booleans set a checkbox.
+ */
+export async function createSection(page: Page, nodeId: string, title: string, moduleName: string,
+  settings: Record<string, string | boolean> = {}) {
+  await page.goto(`/Admin/SectionEdit.aspx?SectionId=-1&NodeId=${nodeId}`);
+  await page.locator('[id$="txtTitle"]').fill(title);
+  await page.locator('[id$="ddlModule"]').selectOption({ label: moduleName });
+  await page.waitForLoadState();
+  for (const [name, value] of Object.entries(settings)) {
+    const control = page.locator(`[id$="${name}"]`);
+    await expect(control, `setting ${name} of ${moduleName}`).toBeVisible();
+    if (typeof value === 'boolean') {
+      await control.setChecked(value);
+    } else {
+      await control.fill(value);
+    }
+  }
+  await page.locator('[id$="btnSave"]').click();
+  await expect(page, `section ${title} saved`).toHaveURL(new RegExp(`NodeEdit\\.aspx\\?NodeId=${nodeId}`, 'i'));
 }
 
 /** Collects uncaught JavaScript errors on a page so a test can assert there were none. */

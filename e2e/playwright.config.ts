@@ -2,16 +2,15 @@ import { defineConfig, devices } from '@playwright/test';
 import * as fs from 'node:fs';
 import * as path from 'node:path';
 
-// Optional local settings (credentials, base url). See .env.example.
+// Optional local settings (database type, port). See .env.example.
 const envFile = path.join(__dirname, '.env');
 if (fs.existsSync(envFile)) {
   process.loadEnvFile(envFile);
 }
 
-const baseURL = process.env.CUYAHOGA_BASE_URL ?? 'http://localhost:8080';
-const port = new URL(baseURL).port || '80';
-const webRoot = path.resolve(__dirname, '..', 'Web');
-const iisExpress = process.env.IIS_EXPRESS_PATH ?? 'C:\\Program Files\\IIS Express\\iisexpress.exe';
+// The test site runs next to the development site (port 8080) on its own empty database.
+const port = process.env.CUYAHOGA_E2E_PORT ?? '8081';
+const baseURL = `http://localhost:${port}`;
 
 export const adminStorageState = path.join(__dirname, '.auth', 'admin.json');
 
@@ -31,26 +30,36 @@ export default defineConfig({
     trace: 'retain-on-failure',
     screenshot: 'only-on-failure',
   },
+  // A fresh site for every run: install (web installer with the sample site) -> log in -> add test content -> tests.
   projects: [
-    { name: 'setup', testMatch: /auth\.setup\.ts/ },
+    { name: 'install', testMatch: /install\.setup\.ts/ },
+    { name: 'login', testMatch: /auth\.setup\.ts/, dependencies: ['install'] },
+    {
+      name: 'seed',
+      testMatch: /seed\.setup\.ts/,
+      dependencies: ['login'],
+      use: { storageState: adminStorageState },
+    },
     {
       name: 'public',
       testMatch: /public\.spec\.ts/,
+      dependencies: ['seed'],
       use: { ...devices['Desktop Chrome'] },
     },
     {
       name: 'admin',
       testMatch: /admin.*\.spec\.ts/,
-      dependencies: ['setup'],
+      dependencies: ['seed'],
       use: { ...devices['Desktop Chrome'], storageState: adminStorageState },
     },
   ],
-  // Starts IIS Express on the Web folder unless the site is already running.
+  // Creates an empty database (CUYAHOGA_E2E_DB: mssql) and starts IIS Express on the Web folder.
   // The site must be built first (Web/bin).
   webServer: {
-    command: `"${iisExpress}" /path:"${webRoot}" /port:${port} /systray:false`,
+    command: 'node scripts/start-site.mjs',
     url: `${baseURL}/Default.aspx`,
-    reuseExistingServer: true,
+    reuseExistingServer: false,
     timeout: 180_000,
+    stdout: 'pipe',
   },
 });

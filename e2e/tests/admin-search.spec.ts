@@ -1,7 +1,5 @@
 import { test, expect, type APIRequestContext, type Page } from '@playwright/test';
-import { adminCredentials, extractPageLinks } from './helpers';
-
-test.skip(!adminCredentials(), 'CUYAHOGA_ADMIN_USERNAME / CUYAHOGA_ADMIN_PASSWORD not set');
+import { extractPageLinks } from './helpers';
 
 // Full-text search: instant indexing when content changes, rebuilding the index and querying it.
 
@@ -35,7 +33,8 @@ async function search(page: Page, searchPageUrl: string, text: string) {
 test('search finds new articles, also after rebuilding the index', async ({ page, baseURL }) => {
   const searchPageUrl = await findPage(page.request, baseURL!, /id="[^"]*txtSearchText"/);
   const articlesAdminPage = await findPage(page.request, baseURL!, /Modules\/Articles\/AdminArticles\.aspx/i);
-  test.skip(!searchPageUrl || !articlesAdminPage, 'the site needs a Search section and an Articles section');
+  expect(searchPageUrl, 'the site has a search page').toBeTruthy();
+  expect(articlesAdminPage, 'the site has an Articles section').toBeTruthy();
 
   // A unique word, so the search only finds this article.
   const word = `zq${Date.now().toString(36)}`;

@@ -39,8 +39,11 @@ Installing Cuyahoga from source.
           Make sure that the account that connects to the database for the first time has enough
           permissions to create the database!
 
-    End-to-end tests (Playwright) live in the e2e folder; see e2e/.env.example for the settings.
-    From the e2e folder: 'npm install', 'npx playwright install chromium', 'npx playwright test'.
+    End-to-end tests (Playwright) live in the e2e folder. Every run creates an empty database
+    (SQL Server LocalDB, needs sqlcmd), starts the site on port 8081 next to your development
+    site, installs Cuyahoga with the web installer and the sample site, and runs the tests.
+    Build the solution first. From the e2e folder: 'npm install', 'npx playwright install chromium',
+    'npx playwright test'. See e2e/.env.example for the settings.
 
     You are now ready to run the application. At the first visit, the database will be installed automatically, 
     and you'll be asked to set a password for the administrator (min. 5 characters!). 

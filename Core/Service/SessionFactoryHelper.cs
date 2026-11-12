@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using Castle.MicroKernel;
+using Castle.MicroKernel.Registration;
 using Cuyahoga.Core.Persistence;
 
 namespace Cuyahoga.Core.Service
@@ -37,8 +38,8 @@ namespace Cuyahoga.Core.Service
 		public void ConfigureLegacySessionFactory()
 		{
 			// TODO: get rid of this solution as soon as possible!
-			this._kernel.AddComponent("core.legacysessionfactory", typeof(SessionFactory));
-			SessionFactory cuyahogaSessionFactory = this._kernel[typeof(SessionFactory)] as SessionFactory;
+			this._kernel.Register(Component.For<SessionFactory>().Named("core.legacysessionfactory").LifestyleSingleton());
+			SessionFactory cuyahogaSessionFactory = this._kernel.Resolve<SessionFactory>();
 			cuyahogaSessionFactory.ExternalInitialize(this._sessionFactoryHolder.SessionFactory);
 			cuyahogaSessionFactory.SessionFactoryRebuilt += new EventHandler(cuyahogaSessionFactory_SessionFactoryRebuilt);
 		}

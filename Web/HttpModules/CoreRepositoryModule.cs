@@ -35,7 +35,7 @@ namespace Cuyahoga.Web.HttpModules
 		{
 			// Get the adapter for the 1.0 CoreRepository and store it in the HttpContext.Items collection.
 			IWindsorContainer container = ContainerAccessorUtil.GetContainer();
-			CoreRepository cr = (CoreRepository)container["corerepositoryadapter"];
+			CoreRepository cr = container.Resolve<CoreRepositoryAdapter>("corerepositoryadapter");
 			HttpContext.Current.Items.Add("CoreRepository", cr);
 		}
 	}

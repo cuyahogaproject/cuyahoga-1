@@ -52,7 +52,7 @@ namespace Cuyahoga.Core.Service
 		/// <returns></returns>
 		public static SessionFactory GetInstance()
 		{
-			return _kernel[typeof(SessionFactory)] as SessionFactory;
+			return _kernel.Resolve<SessionFactory>();
 		}
 
 		/// <summary>

@@ -2,6 +2,7 @@ using System;
 using System.Reflection;
 
 using Castle.MicroKernel;
+using Castle.MicroKernel.Registration;
 using System.Collections.Generic;
 using System.Collections;
 using System.Web;
@@ -72,7 +73,7 @@ namespace Cuyahoga.Web.Components
 			string modulekey = string.Concat("module.", moduleType.ClassName);
 			if (this._kernel.HasComponent(modulekey))
 			{
-				return (ModuleBase)this._kernel[modulekey];
+				return (ModuleBase)this._kernel.Resolve(modulekey, typeof(ModuleBase));
 			}
 			else
 			{
@@ -178,11 +179,11 @@ namespace Cuyahoga.Web.Components
 															  , moduleService.ServiceKey, moduleService.Lifestyle), ex);
 						}
 					}
-					this._kernel.AddComponent(moduleService.ServiceKey, serviceType, classType, lifestyle);
+					this._kernel.Register(Component.For(serviceType).ImplementedBy(classType).Named(moduleService.ServiceKey).LifeStyle.Is(lifestyle));
 				}
 
 				//Register the module
-				this._kernel.AddComponent("module." + moduleTypeType.FullName, moduleTypeType);
+				this._kernel.Register(Component.For(moduleTypeType).Named("module." + moduleTypeType.FullName));
 
 				//Configure NHibernate mappings and make sure we haven't already added this assembly to the NHibernate config
 				if (typeof(INHibernateModule).IsAssignableFrom(moduleTypeType) && ((HttpContext.Current.Application[moduleType.AssemblyName]) == null))

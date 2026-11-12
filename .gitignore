@@ -13,3 +13,4 @@ _ReSharper.*
 Web/UserFiles/
 Web/files/
 Web/index/
+Web/Web.local.config

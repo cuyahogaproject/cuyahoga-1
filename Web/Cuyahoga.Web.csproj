@@ -95,9 +95,9 @@
       <Project>{C64DAA00-AAB1-4AC7-ADE2-119B53B9666A}</Project>
       <Package>{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</Package>
     </ProjectReference>
-    <PackageReference Include="Castle.Core" Version="3.2.0" />
-    <PackageReference Include="Castle.Windsor" Version="3.2.1" />
-    <PackageReference Include="log4net" Version="1.2.10" />
+    <PackageReference Include="Castle.Core" Version="5.1.1" />
+    <PackageReference Include="Castle.Windsor" Version="6.0.0" />
+    <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="NHibernate" Version="5.5.2" />
     <PackageReference Include="NHibernate.Caches.SysCache" Version="5.9.0" />
     <Reference Include="System">
@@ -1233,11 +1233,6 @@
       <DependentUpon>Rss.aspx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <Content Include="Config\facilities.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Config\properties.config" />
-    <Content Include="Config\services.config" />
     <None Include="Install\Core\Database\mssql2000\0.8.2.sql" />
     <None Include="Install\Core\Database\mssql2000\0.9.0.sql" />
     <None Include="Install\Core\Database\mssql2000\0.9.1.sql" />

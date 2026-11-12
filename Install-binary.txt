@@ -17,15 +17,14 @@ Installing Cuyahoga from the binary distribution
 
 3. Create an empty database.
 
-4. Change the connection string in the /Config/properties.config (connectionString)
-   to the database that is created in step 3.
-		  
-    Example (SQL Server):
-    <connectionString>server=(local);database=Cuyahoga;uid=***;pwd=***;</connectionString>
-          
-    Example (PostgreSQL):
-    <connectionString>server=192.168.0.1;port=5432;database=Cuyahoga;uid=***;pwd=***;</connectionString>
-          
+4. Set the connection string (Cuyahoga.ConnectionString) to the database that is created in step 3.
+   Either change it in the appSettings of Web.config, or create a Web.local.config next to Web.config
+   that overrides it (Web.config has the details, also for PostgreSQL and MySQL):
+
+    <appSettings>
+      <add key="Cuyahoga.ConnectionString" value="Server=(local);Database=Cuyahoga;User Id=***;Password=***" />
+    </appSettings>
+
     Make sure that the account that connects to the database for the first time
     has enough permissions to create the database!
     

@@ -26,16 +26,17 @@ Installing Cuyahoga from source.
       module assemblies go to Web/bin and module pages to Web/Modules, so the site runs from Web.
     - Run the Web folder in IIS Express (Visual Studio does this when you start Cuyahoga.Web) or
       point an IIS application to the Web folder.
-    - Change the connection string in /Web/Config/properties.config (connectionString)
-          to the database that is created in step 2.
-		  
-          Example (SQL Server):
-		  <connectionString>server=(local);database=Cuyahoga;uid=***;pwd=***;</connectionString>
-          
-          Example (PostgreSQL):
-		  <connectionString>server=192.168.0.1;port=5432;database=Cuyahoga;uid=***;pwd=***;</connectionString>
-          
-          Make sure that the account that connects to the database for the first time has enough 
+    - Set the connection string to the database that is created in step 2. Settings are the
+      'Cuyahoga.*' appSettings in Web/Web.config. Put machine-specific values in Web/Web.local.config
+      (git-ignored, optional), which overrides the appSettings of Web.config:
+
+          <?xml version="1.0" encoding="utf-8"?>
+          <appSettings>
+            <add key="Cuyahoga.ConnectionString" value="Server=(local);Database=Cuyahoga;User Id=***;Password=***" />
+          </appSettings>
+
+          Restart the site after changing Web.local.config.
+          Make sure that the account that connects to the database for the first time has enough
           permissions to create the database!
 
     End-to-end tests (Playwright) live in the e2e folder; see e2e/.env.example for the settings.

@@ -22,16 +22,31 @@ going to perform the upgrade.
 Don't forget to check your modules for upgrades via the module administration!
 
 *****************************************************************************
+SPECIAL NOTE: CONFIGURATION MOVED TO WEB.CONFIG
+- The Castle configuration files in /Config (properties.config, facilities.config
+  and services.config) are gone. Services are registered in code, and the settings
+  are 'Cuyahoga.*' appSettings in Web.config.
+- Copy your settings from the old /Config/properties.config:
+    connectionString  -> Cuyahoga.ConnectionString
+    nhibernateDriver  -> Cuyahoga.NHibernateDriver
+    nhibernateDialect -> Cuyahoga.NHibernateDialect
+    smtpHost, smtpPort, smtpUsername, smtpPassword, emailEncoding
+                      -> Cuyahoga.SmtpHost, Cuyahoga.SmtpPort, ...
+    tempDir           -> Cuyahoga.TempDir
+  Put them in Web.config, or in a Web.local.config next to Web.config that
+  overrides the appSettings of Web.config (see the comment in Web.config).
+- Custom changes in services.config have to move to code (Windsor registrations).
+- Remove the /Config folder.
+- Cuyahoga uses Castle Windsor 6, Castle.Core 5 and log4net 2. Custom modules that
+  use the container directly: AddComponent and the kernel indexers (kernel[typeof(X)],
+  kernel["key"]) don't exist anymore; use Register(Component.For<X>()...) and Resolve.
+
+*****************************************************************************
 SPECIAL NOTE: NHIBERNATE SESSIONS AND TRANSACTIONS
 - The Castle NHibernate and AutoTx facilities have been replaced with
-  Cuyahoga.Core.Persistence. When you keep your own Web.config or
-  Config/facilities.config, update them:
-  - Web.config (httpModules and system.webServer/modules): replace the
-    NHibernateSessionWebModule entry with
+  Cuyahoga.Core.Persistence. When you keep your own Web.config, replace the
+  NHibernateSessionWebModule entry (httpModules and system.webServer/modules) with
     <add name="NHibernateSessionModule" type="Cuyahoga.Web.HttpModules.NHibernateSessionModule, Cuyahoga.Web" />
-  - Config/facilities.config: the nhibernate facility type becomes
-    "Cuyahoga.Core.Persistence.NHibernateFacility, Cuyahoga.Core" and the
-    autotransaction facility is removed.
 - Custom modules: replace 'using Castle.Facilities.NHibernateIntegration;' and
   'using Castle.Services.Transaction;' with 'using Cuyahoga.Core.Persistence;'.
   ISessionManager, [Transactional] and [Transaction] work as before.

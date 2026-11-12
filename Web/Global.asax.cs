@@ -12,7 +12,7 @@ using log4net.Config;
 
 namespace Cuyahoga.Web
 {
-	public class Global : HttpApplication, IContainerAccessor
+	public class Global : HttpApplication
 	{
 		private static ILog log = LogManager.GetLogger(typeof(Global));
 		private static readonly string ERROR_PAGE_LOCATION = "~/Error.aspx";

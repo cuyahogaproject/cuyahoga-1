@@ -25,7 +25,7 @@ namespace Cuyahoga.Web.Util
 		{
 			// Get ModuleLoader from the container. This needs to happen explicit here because
 			// this is a static method
-			ModuleLoader moduleLoader = ContainerAccessorUtil.GetContainer()[typeof(ModuleLoader)] as ModuleLoader;
+			ModuleLoader moduleLoader = ContainerAccessorUtil.GetContainer().Resolve<ModuleLoader>();
 			if (moduleLoader == null)
 			{
 				throw new NullReferenceException("Unable to find the ModuleLoader instance");

@@ -54,7 +54,7 @@ test.describe('public site', () => {
   });
 
   test('runtime folders are not served', async ({ request }) => {
-    for (const url of ['/Config/properties.config', '/index/segments', '/files/test.txt']) {
+    for (const url of ['/Web.config', '/Web.local.config', '/index/segments', '/files/test.txt']) {
       const response = await request.get(url);
       expect.soft(response.status(), url).toBeGreaterThanOrEqual(400);
     }

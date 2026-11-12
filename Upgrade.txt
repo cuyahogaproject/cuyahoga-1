@@ -22,6 +22,13 @@ going to perform the upgrade.
 Don't forget to check your modules for upgrades via the module administration!
 
 *****************************************************************************
+SPECIAL NOTE: THE FLASH MODULE HAS BEEN REMOVED
+- Browsers no longer run Flash, so the Flash module is no longer part of Cuyahoga.
+- BEFORE copying the new files, remove all Flash sections and uninstall the
+  Flash module via the module administration (Admin > Modules). After the
+  upgrade the module files are gone, so it can't be uninstalled anymore.
+
+*****************************************************************************
 SPECIAL NOTE FOR USERS UPGRADING FROM 1.5.0 to 1.5.1
 - If you have any custom modules in 1.5.0 that use NHibernate, you'll have to
   change these modules to be compatible with NHibernate 1.2.0, see

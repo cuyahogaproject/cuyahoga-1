@@ -31,8 +31,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cuyahoga.Modules.Downloads"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cuyahoga.Modules.Forum", "Cuyahoga.Modules.Forum\Cuyahoga.Modules.Forum.csproj", "{31EDA0DF-1A1B-4B42-9470-178E924C7391}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cuyahoga.Modules.Flash", "Cuyahoga.Modules.Flash\Cuyahoga.Modules.Flash.csproj", "{02784221-B558-4104-8803-E6CE580F27C9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cuyahoga.Modules.Articles", "Cuyahoga.Modules.Articles\Cuyahoga.Modules.Articles.csproj", "{9DCEC808-4FB7-47B1-ACAC-2016762BEE37}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cuyahoga.Modules.RemoteContent", "Cuyahoga.Modules.RemoteContent\Cuyahoga.Modules.RemoteContent.csproj", "{6F05541C-E08B-4806-8F3C-E06958CF3CCB}"
@@ -67,10 +65,6 @@ Global
 		{31EDA0DF-1A1B-4B42-9470-178E924C7391}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31EDA0DF-1A1B-4B42-9470-178E924C7391}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{31EDA0DF-1A1B-4B42-9470-178E924C7391}.Release|Any CPU.Build.0 = Release|Any CPU
-		{02784221-B558-4104-8803-E6CE580F27C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{02784221-B558-4104-8803-E6CE580F27C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{02784221-B558-4104-8803-E6CE580F27C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{02784221-B558-4104-8803-E6CE580F27C9}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9DCEC808-4FB7-47B1-ACAC-2016762BEE37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9DCEC808-4FB7-47B1-ACAC-2016762BEE37}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9DCEC808-4FB7-47B1-ACAC-2016762BEE37}.Release|Any CPU.ActiveCfg = Release|Any CPU

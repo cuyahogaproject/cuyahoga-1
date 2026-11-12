@@ -1,15 +1,22 @@
 {
   "name": "cuyahoga-e2e",
   "private": true,
-  "description": "Playwright smoke and regression tests for Cuyahoga",
+  "description": "Playwright end-to-end tests for Cuyahoga, on a fresh SQL Server, MySQL or PostgreSQL database",
   "scripts": {
     "test": "playwright test",
+    "test:mssql": "cross-env CUYAHOGA_E2E_DB=mssql playwright test",
+    "test:mysql": "cross-env CUYAHOGA_E2E_DB=mysql playwright test",
+    "test:postgres": "cross-env CUYAHOGA_E2E_DB=postgres playwright test",
+    "test:all": "npm run test:mssql && npm run test:mysql && npm run test:postgres",
     "test:headed": "playwright test --headed",
     "report": "playwright show-report"
   },
   "devDependencies": {
     "@playwright/test": "^1.65.0",
     "@types/node": "^22.20.5",
+    "cross-env": "^10.1.0",
+    "mysql2": "^3.24.6",
+    "pg": "^8.23.1",
     "typescript": "^7.0.2"
   }
 }

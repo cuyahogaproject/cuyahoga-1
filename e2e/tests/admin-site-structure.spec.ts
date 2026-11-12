@@ -7,10 +7,12 @@ import { createNode, createSection, expectHealthyPage, homeNodeId } from './help
 /** Deletes the sections of a node and then the node itself. */
 async function deleteNode(page: Page, nodeId: string) {
   await page.goto(`/Admin/NodeEdit.aspx?NodeId=${nodeId}`);
-  while ((await page.locator('a[id$="lbtDelete"]').count()) > 0) {
+  const deleteLinks = page.locator('a[id$="lbtDelete"]');
+  for (let count = await deleteLinks.count(); count > 0; count--) {
     page.once('dialog', (dialog) => dialog.accept());
-    await page.locator('a[id$="lbtDelete"]').first().click();
-    await page.waitForLoadState();
+    await deleteLinks.first().click();
+    // Wait for the postback to finish (the section is gone from the list).
+    await expect(deleteLinks).toHaveCount(count - 1);
   }
   page.once('dialog', (dialog) => dialog.accept());
   await page.locator('[id$="btnDelete"]').click();

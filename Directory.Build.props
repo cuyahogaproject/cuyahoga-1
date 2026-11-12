@@ -2,6 +2,5 @@
   <!-- Imported by every project in the repository (SDK-style and the legacy Web project). -->
   <PropertyGroup>
     <CuyahogaWebDir>$(MSBuildThisFileDirectory)Web\</CuyahogaWebDir>
-    <CuyahogaLibDir>$(MSBuildThisFileDirectory)lib\</CuyahogaLibDir>
   </PropertyGroup>
 </Project>

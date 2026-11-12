@@ -8,6 +8,12 @@ import { fileURLToPath } from 'node:url';
 import { recreateDatabase } from './databases.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
+
+// Playwright passes its environment (including e2e/.env); load .env too when the script runs on its own.
+const envFile = path.join(here, '..', '.env');
+if (fs.existsSync(envFile)) {
+  process.loadEnvFile(envFile);
+}
 const webRoot = path.resolve(here, '..', '..', 'Web');
 const port = process.env.CUYAHOGA_E2E_PORT ?? '8081';
 const iisExpress = process.env.IIS_EXPRESS_PATH ?? 'C:\\Program Files\\IIS Express\\iisexpress.exe';
@@ -17,7 +23,7 @@ const indexDir = 'index-e2e';
 fs.rmSync(path.join(webRoot, indexDir), { recursive: true, force: true });
 
 const siteEnvironment = {
-  ...recreateDatabase(),
+  ...(await recreateDatabase()),
   CUYAHOGA_SEARCHINDEXDIR: `~/${indexDir}`,
 };
 

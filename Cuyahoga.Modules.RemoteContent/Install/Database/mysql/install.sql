@@ -8,7 +8,7 @@ url VARCHAR(255) NOT NULL,
 title VARCHAR(100) NOT NULL,
 pubdate DATETIME NOT NULL,
 numberofitems INT NOT NULL,
-inserttimestamp TIMESTAMP NOT NULL,
+inserttimestamp TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 updatetimestamp DATETIME NOT NULL,
 FOREIGN KEY (sectionid) REFERENCES cuyahoga_section (sectionid),
 PRIMARY KEY (feedid));

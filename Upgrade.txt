@@ -76,6 +76,21 @@ SPECIAL NOTE: NHIBERNATE 5
 - NHibernate.Caches.SysCache.dll comes from the NHibernate.Caches.SysCache package now.
 
 *****************************************************************************
+SPECIAL NOTE: DATABASE DRIVERS (MYSQL AND POSTGRESQL)
+- The old MySql.Data and Npgsql assemblies in /lib are gone. Cuyahoga comes with
+  current drivers: MySqlConnector for MySQL and Npgsql 8 for PostgreSQL.
+- MySQL: set Cuyahoga.NHibernateDriver to
+  "Cuyahoga.Core.Persistence.MySqlConnectorDriver, Cuyahoga.Core", Cuyahoga.NHibernateDialect
+  to NHibernate.Dialect.MySQL55Dialect and add 'Allow User Variables=true' to the
+  connection string (the install and upgrade scripts use user variables).
+- PostgreSQL: NHibernate.Driver.NpgsqlDriver with NHibernate.Dialect.PostgreSQL83Dialect.
+  Npgsql uses 'Host=...;Username=...' in the connection string.
+- MySQL 5.6+ and MySQL 8 don't give TIMESTAMP columns a default anymore. New
+  installations get 'DEFAULT CURRENT_TIMESTAMP' for the inserttimestamp columns. For an
+  existing database that you move to a newer MySQL server, add that default to the
+  inserttimestamp columns yourself.
+
+*****************************************************************************
 SPECIAL NOTE: REBUILD THE SEARCH INDEX
 - Cuyahoga uses Lucene.Net 4.8, which can't read the search index of older
   versions. After upgrading, rebuild the index via Admin > Rebuild index.

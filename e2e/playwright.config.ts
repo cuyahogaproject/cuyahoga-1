@@ -53,7 +53,7 @@ export default defineConfig({
       use: { ...devices['Desktop Chrome'], storageState: adminStorageState },
     },
   ],
-  // Creates an empty database (CUYAHOGA_E2E_DB: mssql) and starts IIS Express on the Web folder.
+  // Creates an empty database (CUYAHOGA_E2E_DB: mssql, mysql or postgres) and starts IIS Express on the Web folder.
   // The site must be built first (Web/bin).
   webServer: {
     command: 'node scripts/start-site.mjs',

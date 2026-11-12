@@ -1,0 +1,30 @@
+<Project>
+  <!--
+  Page and control resources (Foo.aspx.resx) are named after the code-behind class, like the legacy project
+  format did (Namespace.Foo.resources instead of the SDK default Namespace.Folder.Foo.aspx.resources).
+  -->
+  <ItemGroup Condition="'$(UsingMicrosoftNETSdk)' == 'true'">
+    <EmbeddedResource Update="**\*.aspx.resx;**\*.ascx.resx" DependentUpon="%(Filename).cs" />
+  </ItemGroup>
+
+  <!--
+  Deploys a module project into the web site after each build, so the site runs straight from the Web folder:
+  - CuyahogaModuleFile items (markup, images, install scripts) are copied to Web\%(DeployTo)%(RecursiveDir).
+  - The module assembly, its pdb, its satellite (translation) assemblies and CuyahogaBinFile items go to Web\bin.
+  A project opts in by setting the CuyahogaModule property to true.
+  -->
+  <Target Name="DeployCuyahogaModule" AfterTargets="Build" Condition="'$(CuyahogaModule)' == 'true'">
+    <ItemGroup>
+      <_CuyahogaModuleBinary Include="$(TargetPath);@(CuyahogaBinFile)" />
+      <_CuyahogaModuleBinary Include="$(TargetDir)$(TargetName).pdb" Condition="Exists('$(TargetDir)$(TargetName).pdb')" />
+      <_CuyahogaModuleSatellite Include="$(TargetDir)**\$(TargetName).resources.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(CuyahogaModuleFile)"
+          DestinationFiles="@(CuyahogaModuleFile->'$(CuyahogaWebDir)%(DeployTo)%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_CuyahogaModuleBinary)" DestinationFolder="$(CuyahogaWebDir)bin\" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="@(_CuyahogaModuleSatellite)"
+          DestinationFiles="@(_CuyahogaModuleSatellite->'$(CuyahogaWebDir)bin\%(RecursiveDir)%(Filename)%(Extension)')"
+          SkipUnchangedFiles="true" />
+  </Target>
+</Project>

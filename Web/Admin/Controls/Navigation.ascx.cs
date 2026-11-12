@@ -72,7 +72,8 @@ namespace Cuyahoga.Web.Admin.Controls
 		private Control CreateNewChildNodeControl()
 		{
 			HtmlGenericControl container = new HtmlGenericControl("div");
-			if (this._page.ActiveNode != null)
+			// Only saved nodes can be a parent (a new, unsaved node has Id -1).
+			if (this._page.ActiveNode != null && this._page.ActiveNode.Id > 0)
 			{
 				container.Attributes.Add("class", "node");
 				container.Attributes.Add("style", String.Format("padding-left: {0}px", 20));

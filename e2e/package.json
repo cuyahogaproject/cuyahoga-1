@@ -1,0 +1,15 @@
+{
+  "name": "cuyahoga-e2e",
+  "private": true,
+  "description": "Playwright smoke and regression tests for Cuyahoga",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "report": "playwright show-report"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.65.0",
+    "@types/node": "^22.20.5",
+    "typescript": "^7.0.2"
+  }
+}

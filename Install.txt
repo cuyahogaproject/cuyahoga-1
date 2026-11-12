@@ -40,6 +40,10 @@ Installing Cuyahoga from source.
           Make sure that the account that connects to the database for the first time has enough
           permissions to create the database!
 
+    Unit tests for Cuyahoga.Core (xUnit v3) live in Tests/Cuyahoga.Core.Tests. Run them with
+    'dotnet test --project Tests/Cuyahoga.Core.Tests/Cuyahoga.Core.Tests.csproj', from Visual Studio,
+    or by running Tests/Cuyahoga.Core.Tests/bin/Debug/net48/Cuyahoga.Core.Tests.exe.
+
     End-to-end tests (Playwright) live in the e2e folder. Every run creates an empty database,
     starts the site on port 8081 next to your development site, installs Cuyahoga with the web
     installer and the sample site, and runs the tests. Build the solution first. From the e2e folder:

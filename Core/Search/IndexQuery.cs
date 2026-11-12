@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Globalization;
 
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
@@ -76,7 +77,8 @@ namespace Cuyahoga.Core.Search
 								result.ModuleType = doc.Get("moduletype");
 								result.Path = doc.Get("path");
 								result.Category = doc.Get("category");
-								result.DateCreated = DateTime.Parse(doc.Get("datecreated"));
+								// RoundtripKind keeps the stored time, also for dates stored with a 'Z' by older versions.
+								result.DateCreated = DateTime.Parse(doc.Get("datecreated"), CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind);
 								result.Score = scoreDoc.Score;
 								// Lucene doesn't store document boosts anymore (they were always 1.0 in search results).
 								result.Boost = 1.0f;

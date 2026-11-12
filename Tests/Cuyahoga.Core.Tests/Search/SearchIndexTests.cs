@@ -59,7 +59,7 @@ namespace Cuyahoga.Core.Tests.Search
 			Assert.Equal("/1", byContents[0].Path);
 		}
 
-		[Fact(Skip = "Known bug: the index stores DateCreated with ToString(\"u\"), which adds a 'Z' without converting to UTC, so DateTime.Parse shifts the date by the UTC offset of the server.")]
+		[Fact]
 		public void Search_results_have_the_creation_date_of_the_content()
 		{
 			Index(true, b => b.AddContent(Content("/1", "Dated content")));

@@ -101,19 +101,26 @@ namespace Cuyahoga.Core.Tests.Domain
 			Assert.Empty(home.ChildNodes);
 		}
 
-		[Fact(Skip = "Known bug: MoveDown reads ParentNode.ChildNodes before checking for a parent, so moving a root node down throws a NullReferenceException.")]
-		public void Move_down_works_for_root_nodes()
+		[Fact]
+		public void Move_up_and_down_work_for_root_nodes()
 		{
 			var first = Build.Node(1, "English");
 			var second = Build.Node(2, "Nederlands");
+			first.Position = 0;
 			second.Position = 1;
 			var rootNodes = new List<Node> { first, second };
-			first.Position = 0;
 
 			first.Move(rootNodes, NodePositionMovement.Down);
+			Assert.Equal(new[] { "Nederlands", "English" }, Titles(rootNodes));
+			Assert.Equal((0, 1), (second.Position, first.Position));
 
+			// The last node can't move further down.
+			first.Move(rootNodes, NodePositionMovement.Down);
 			Assert.Equal(1, first.Position);
-			Assert.Equal(0, second.Position);
+
+			first.Move(rootNodes, NodePositionMovement.Up);
+			Assert.Equal(new[] { "English", "Nederlands" }, Titles(rootNodes));
+			Assert.Equal((0, 1), (first.Position, second.Position));
 		}
 
 		[Theory]
@@ -159,7 +166,7 @@ namespace Cuyahoga.Core.Tests.Domain
 			Assert.False(editorsOnly.EditAllowed(anonymous));
 		}
 
-		[Fact(Skip = "Known bug: Node.AnonymousViewAllowed ignores ViewAllowed (Section checks it), so a node where anonymous users may only edit is visible to everyone.")]
+		[Fact]
 		public void Anonymous_role_without_view_permission_cant_view()
 		{
 			var node = Build.Node(1, "Page").Allow(Build.Anonymous(), view: false, edit: true);

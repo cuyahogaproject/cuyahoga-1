@@ -291,7 +291,7 @@ namespace Cuyahoga.Core.Domain
 			{
 				foreach (NodePermission np in this._nodePermissions)
 				{
-					if (Array.IndexOf(np.Role.Permissions, AccessLevel.Anonymous) > -1)
+					if (np.ViewAllowed && Array.IndexOf(np.Role.Permissions, AccessLevel.Anonymous) > -1)
 					{
 						return true;
 					}
@@ -547,11 +547,11 @@ namespace Cuyahoga.Core.Domain
 		/// <param name="rootNodes">We need these when the node has no ParentNode.</param>
 		private void MoveDown(IList<Node> rootNodes)
 		{
-			if (this._position < this.ParentNode.ChildNodes.Count - 1)
+			IList<Node> parentChildNodes = (this.ParentNode == null ? rootNodes : this.ParentNode.ChildNodes);
+			if (this._position < parentChildNodes.Count - 1)
 			{
 				// HACK: Assume that the node indexes are the same as the value of the positions.
 				this._position++;
-				IList<Node> parentChildNodes = (this.ParentNode == null ? rootNodes : this.ParentNode.ChildNodes);
 				((Node)parentChildNodes[this._position]).Position--;
 				parentChildNodes.Remove(this);
 				parentChildNodes.Insert(this._position, this);

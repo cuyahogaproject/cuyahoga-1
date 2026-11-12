@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 
 using Lucene.Net.Analysis.Standard;
@@ -175,8 +176,9 @@ namespace Cuyahoga.Core.Search
 			doc.Add(new StringField("path", searchContent.Path ?? String.Empty, Field.Store.YES));
 			doc.Add(new StringField("category", searchContent.Category ?? String.Empty, Field.Store.YES));
 			doc.Add(new StringField("site", searchContent.Site ?? String.Empty, Field.Store.YES));
-			doc.Add(new StringField("datecreated", searchContent.DateCreated.ToString("u"), Field.Store.YES));
-			doc.Add(new StringField("datemodified", searchContent.DateModified.ToString("u"), Field.Store.YES));
+			// Sortable local time without a time zone ("u" adds a 'Z' without converting to UTC, which shifted the dates).
+			doc.Add(new StringField("datecreated", searchContent.DateCreated.ToString("s", CultureInfo.InvariantCulture), Field.Store.YES));
+			doc.Add(new StringField("datemodified", searchContent.DateModified.ToString("s", CultureInfo.InvariantCulture), Field.Store.YES));
 			doc.Add(new StoredField("sectionid", searchContent.SectionId.ToString()));
 
 			return doc;

@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-using Castle.Services.Transaction;
+using Cuyahoga.Core.Persistence;
 
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.DataAccess;

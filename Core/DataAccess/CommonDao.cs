@@ -3,8 +3,7 @@ using System.Collections;
 
 using NHibernate;
 using NHibernate.Criterion;
-using Castle.Facilities.NHibernateIntegration;
-using Castle.Services.Transaction;
+using Cuyahoga.Core.Persistence;
 
 namespace Cuyahoga.Core.DataAccess
 {

@@ -22,6 +22,23 @@ going to perform the upgrade.
 Don't forget to check your modules for upgrades via the module administration!
 
 *****************************************************************************
+SPECIAL NOTE: NHIBERNATE SESSIONS AND TRANSACTIONS
+- The Castle NHibernate and AutoTx facilities have been replaced with
+  Cuyahoga.Core.Persistence. When you keep your own Web.config or
+  Config/facilities.config, update them:
+  - Web.config (httpModules and system.webServer/modules): replace the
+    NHibernateSessionWebModule entry with
+    <add name="NHibernateSessionModule" type="Cuyahoga.Web.HttpModules.NHibernateSessionModule, Cuyahoga.Web" />
+  - Config/facilities.config: the nhibernate facility type becomes
+    "Cuyahoga.Core.Persistence.NHibernateFacility, Cuyahoga.Core" and the
+    autotransaction facility is removed.
+- Custom modules: replace 'using Castle.Facilities.NHibernateIntegration;' and
+  'using Castle.Services.Transaction;' with 'using Cuyahoga.Core.Persistence;'.
+  ISessionManager, [Transactional] and [Transaction] work as before.
+- Remove Castle.Facilities.AutoTx.dll, Castle.Facilities.NHibernateIntegration.dll
+  and Castle.Services.Transaction.dll from the bin folder.
+
+*****************************************************************************
 SPECIAL NOTE: THE FLASH MODULE HAS BEEN REMOVED
 - Browsers no longer run Flash, so the Flash module is no longer part of Cuyahoga.
 - BEFORE copying the new files, remove all Flash sections and uninstall the

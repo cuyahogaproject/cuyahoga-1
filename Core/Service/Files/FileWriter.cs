@@ -2,14 +2,14 @@ using System;
 using System.IO;
 using System.Collections;
 
-using Castle.Services.Transaction;
+using Cuyahoga.Core.Persistence;
 
 namespace Cuyahoga.Core.Service.Files
 {
 	/// <summary>
 	/// The FileWriter class perform file actions in a transactional context.
 	/// </summary>
-	public class FileWriter : IResource
+	public class FileWriter : ITransactionResource
 	{
 		private string _tempDir = Environment.GetEnvironmentVariable("TEMP");
 
@@ -66,12 +66,7 @@ namespace Cuyahoga.Core.Service.Files
 			this._deletedFiles.Add(filePath);
 		}
 
-		#region IResource Members
-
-		public void Start()
-		{
-			// Nothing
-		}
+		#region ITransactionResource Members
 
 		public void Rollback()
 		{

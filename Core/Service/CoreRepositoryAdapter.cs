@@ -3,7 +3,7 @@ using System.Collections;
 
 using NHibernate;
 using log4net;
-using Castle.Facilities.NHibernateIntegration;
+using Cuyahoga.Core.Persistence;
 using Castle.Core;
 
 using Cuyahoga.Core.Domain;

@@ -14,7 +14,7 @@ using ArticleCategory = Cuyahoga.Modules.Articles.Domain.Category;
 using Cuyahoga.Web.Util;
 using Cuyahoga.Modules.Articles.DataAccess;
 using Cuyahoga.Core.DataAccess;
-using Castle.Services.Transaction;
+using Cuyahoga.Core.Persistence;
 
 namespace Cuyahoga.Modules.Articles
 {

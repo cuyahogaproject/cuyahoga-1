@@ -1,8 +1,7 @@
 using System;
 using System.Collections;
 
-using Castle.Facilities.NHibernateIntegration;
-using Castle.Services.Transaction;
+using Cuyahoga.Core.Persistence;
 using NHibernate;
 
 using Cuyahoga.Core.Domain;

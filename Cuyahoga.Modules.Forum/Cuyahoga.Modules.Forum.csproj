@@ -16,9 +16,6 @@
     <ProjectReference Include="..\Web\Cuyahoga.Web.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Castle.Facilities.AutoTx" HintPath="$(CuyahogaLibDir)Castle.Facilities.AutoTx.dll" />
-    <Reference Include="Castle.Facilities.NHibernateIntegration" HintPath="$(CuyahogaLibDir)Castle.Facilities.NHibernateIntegration.dll" />
-    <Reference Include="Castle.Services.Transaction" HintPath="$(CuyahogaLibDir)Castle.Services.Transaction.dll" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />

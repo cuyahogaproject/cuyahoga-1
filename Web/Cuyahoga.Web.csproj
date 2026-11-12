@@ -288,6 +288,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HttpHandlers\PageHandler.cs" />
+    <Compile Include="HttpModules\NHibernateSessionModule.cs" />
     <Compile Include="HttpModules\AuthenticationModule.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -1314,7 +1315,7 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- Assemblies that are only loaded at runtime (configured by name in Config\facilities.config). -->
   <Target Name="CopyRuntimeLibraries" AfterTargets="Build">
-    <Copy SourceFiles="$(CuyahogaLibDir)NHibernate.Caches.SysCache.dll;$(CuyahogaLibDir)Castle.Facilities.AutoTx.dll;$(CuyahogaLibDir)Castle.Facilities.NHibernateIntegration.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
+    <Copy SourceFiles="$(CuyahogaLibDir)NHibernate.Caches.SysCache.dll" DestinationFolder="$(OutDir)" SkipUnchangedFiles="true" />
   </Target>
   <ProjectExtensions>
     <VisualStudio>

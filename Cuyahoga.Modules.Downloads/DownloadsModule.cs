@@ -3,8 +3,7 @@ using System.Collections;
 using System.Web;
 
 using NHibernate;
-using Castle.Services.Transaction;
-using Castle.Facilities.NHibernateIntegration;
+using Cuyahoga.Core.Persistence;
 
 using Cuyahoga.Core;
 using Cuyahoga.Core.Domain;

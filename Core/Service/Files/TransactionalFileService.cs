@@ -2,8 +2,7 @@ using System;
 using System.IO;
 
 using log4net;
-using Castle.MicroKernel;
-using Castle.Services.Transaction;
+using Cuyahoga.Core.Persistence;
 
 namespace Cuyahoga.Core.Service.Files
 {
@@ -14,7 +13,6 @@ namespace Cuyahoga.Core.Service.Files
 	{
 		private static readonly ILog log = LogManager.GetLogger(typeof(TransactionalFileService));
 		private string _tempDir;
-		private IKernel _kernel;
 		
 		/// <summary>
 		/// Physical path for temporary file storage
@@ -27,10 +25,8 @@ namespace Cuyahoga.Core.Service.Files
 		/// <summary>
 		/// Constructor.
 		/// </summary>
-		public TransactionalFileService(IKernel kernel)
+		public TransactionalFileService()
 		{
-			this._kernel = kernel;
-			this._kernel.AddComponent("core.fileservice.transactionmanager", typeof(ITransactionManager), typeof(FileTransactionManager));
 		}
 
 		#region IFileService Members
@@ -56,7 +52,7 @@ namespace Cuyahoga.Core.Service.Files
 
 		public void WriteFile(string filePath, Stream fileContents)
 		{
-			ITransaction transaction = ObtainCurrentTransaction();
+			TransactionContext transaction = TransactionContext.Current;
 			if (transaction != null)
 			{
 				// We're participating in a transaction, use the FileWriter to write the file.
@@ -76,7 +72,7 @@ namespace Cuyahoga.Core.Service.Files
 
 		public void DeleteFile(string filePath)
 		{
-			ITransaction transaction = ObtainCurrentTransaction();
+			TransactionContext transaction = TransactionContext.Current;
 			if (transaction != null)
 			{
 				// We're participating in a transaction, use the FileWriter to delete the file.
@@ -120,12 +116,5 @@ namespace Cuyahoga.Core.Service.Files
 		}
 
 		#endregion
-
-		private ITransaction ObtainCurrentTransaction()
-		{
-			ITransactionManager transactionManager = this._kernel[typeof(ITransactionManager)] as ITransactionManager;
-
-			return transactionManager.CurrentTransaction;
-		}
 	}
 }

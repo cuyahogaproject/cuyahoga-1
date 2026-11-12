@@ -114,7 +114,7 @@ namespace Cuyahoga.Web.UI
 
 			// Optional indexing event handlers
 			if (this._module is ISearchable
-				&& Boolean.Parse(Config.GetConfiguration()["InstantIndexing"]))
+				&& CuyahogaAppSettings.Current.InstantIndexing)
 			{
 				ISearchable searchableModule = (ISearchable)this._module;
 				searchableModule.ContentCreated += new IndexEventHandler(searchableModule_ContentCreated);
@@ -122,16 +122,6 @@ namespace Cuyahoga.Web.UI
 				searchableModule.ContentDeleted += new IndexEventHandler(searchableModule_ContentDeleted);
 			}
 
-			// Set FCKEditor context (used by some module admin pages)
-			// It would be nicer if we could do this in the Global.asax, but there the 
-			// ultra-convenient ~/Path (ResolveUrl) isn't available :).
-			string userFilesPath = Config.GetConfiguration()["FCKeditor:UserFilesPath"];
-			if (userFilesPath != null && HttpContext.Current.Application["FCKeditor:UserFilesPath"] == null)
-			{
-				HttpContext.Current.Application.Lock();
-				HttpContext.Current.Application["FCKeditor:UserFilesPath"] = ResolveUrl(userFilesPath);
-				HttpContext.Current.Application.UnLock();
-			}
 
 			base.OnInit(e);
 		}
@@ -148,7 +138,7 @@ namespace Cuyahoga.Web.UI
 		private void IndexContent(SearchContent searchContent, IndexAction action)
 		{
 			// Index
-			string indexDir = Context.Server.MapPath(Config.GetConfiguration()["SearchIndexDir"]);
+			string indexDir = Context.Server.MapPath(CuyahogaAppSettings.Current.SearchIndexDir);
 			IndexBuilder ib = new IndexBuilder(indexDir, false);
 			switch (action)
 			{

@@ -30,7 +30,7 @@ namespace Cuyahoga.Web.Util
 			message.BodyFormat = MailFormat.Text;
 			message.Body = body;
 
-			SmtpMail.SmtpServer = Config.GetConfiguration()["SMTPServer"];
+			SmtpMail.SmtpServer = CuyahogaAppSettings.Current.SmtpHost;
 			SmtpMail.Send(message);
 		}
 	}

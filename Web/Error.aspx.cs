@@ -49,7 +49,7 @@ namespace Cuyahoga.Web
 					}
 					else if (innerException is AccessForbiddenException)
 					{
-						bool redirectToLoginPage = Boolean.Parse(Config.GetConfiguration()["RedirectToLoginWhenAccessDenied"]);
+						bool redirectToLoginPage = CuyahogaAppSettings.Current.RedirectToLoginWhenAccessDenied;
 						if (redirectToLoginPage)
 						{
 							string returnUrl = "~/Login.aspx?ReturnUrl=" 

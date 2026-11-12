@@ -30,7 +30,7 @@ namespace Cuyahoga.Web.Util
 			{
 				throw new NullReferenceException("Unable to find the ModuleLoader instance");
 			}
-			string indexDir = HttpContext.Current.Server.MapPath(Config.GetConfiguration()["SearchIndexDir"]);
+			string indexDir = HttpContext.Current.Server.MapPath(CuyahogaAppSettings.Current.SearchIndexDir);
 			IndexBuilder ib = new IndexBuilder(indexDir, false);
 
 			ModuleBase module = moduleLoader.GetModuleFromSection(section);

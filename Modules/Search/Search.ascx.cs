@@ -22,7 +22,7 @@ namespace Cuyahoga.Modules.Search
 		protected void Page_Load(object sender, System.EventArgs e)
 		{
 			this._module = this.Module as SearchModule;
-			this._indexDir = Context.Server.MapPath(Config.GetConfiguration()["SearchIndexDir"]);
+			this._indexDir = Context.Server.MapPath(CuyahogaAppSettings.Current.SearchIndexDir);
 			this.pgrResults.PageSize = this._module.ResultsPerPage;
 			this.pnlCriteria.Visible = this._module.ShowInputPanel;
 			

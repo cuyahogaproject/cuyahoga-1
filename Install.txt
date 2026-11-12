@@ -64,11 +64,11 @@ Hints and tips:
 - The search index has to be in a folder that is writable for the ASP.NET user. You can specify the
   folder in the web.config:
 
-  <CuyahogaSettings>
+  <appSettings>
     ...
-    <add setting="SearchIndexDir" value="~/index" />
-    <add setting="InstantIndexing" value="true" /> <!-- true/false -->
-  </CuyahogaSettings>
+    <add key="Cuyahoga.SearchIndexDir" value="~/index" />
+    <add key="Cuyahoga.InstantIndexing" value="true" /> <!-- true/false -->
+  </appSettings>
 
   InstantIndexing indicates that when you edit the content of a module that is searchable, the
   search index will be updated immediately. If you turn this off, you have to manually index the

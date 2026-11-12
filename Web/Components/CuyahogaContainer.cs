@@ -12,7 +12,7 @@ namespace Cuyahoga.Web.Components
 	/// </summary>
 	public class CuyahogaContainer : WindsorContainer
 	{
-		public CuyahogaContainer() : this(CuyahogaAppSettings.Load())
+		public CuyahogaContainer() : this(CuyahogaAppSettings.Current)
 		{
 		}
 

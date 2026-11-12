@@ -145,8 +145,8 @@ namespace Cuyahoga.Web.Admin
 			}
 
 			// Check if the Adminstrator role is not accidently deleted for the superuser.
-			string adminRole = Config.GetConfiguration()["AdministratorRole"];
-			if (this._activeUser.UserName == Config.GetConfiguration()["SuperUser"]
+			string adminRole = CuyahogaAppSettings.Current.AdministratorRole;
+			if (this._activeUser.UserName == CuyahogaAppSettings.Current.SuperUser
 				&& ! this._activeUser.IsInRole(adminRole))
 			{
 				throw new Exception(String.Format("The user '{0}' has to have the '{1}' role."
@@ -271,7 +271,7 @@ namespace Cuyahoga.Web.Admin
 			{
 				if (this._activeUser.Id != ((Cuyahoga.Core.Domain.User)this.Page.User.Identity).Id)
 				{
-					if (this._activeUser.UserName != Config.GetConfiguration()["SuperUser"])
+					if (this._activeUser.UserName != CuyahogaAppSettings.Current.SuperUser)
 					{
 						try
 						{

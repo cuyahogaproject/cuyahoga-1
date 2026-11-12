@@ -74,7 +74,7 @@ namespace Cuyahoga.Web.Admin
 
 		private void BuildIndex()
 		{
-			string indexDir = Context.Server.MapPath(Config.GetConfiguration()["SearchIndexDir"]);
+			string indexDir = Context.Server.MapPath(CuyahogaAppSettings.Current.SearchIndexDir);
 			IndexBuilder ib = new IndexBuilder(indexDir, true);
 			IList sites = base.CoreRepository.GetAll(typeof(Site));
 			foreach (Site site in sites)

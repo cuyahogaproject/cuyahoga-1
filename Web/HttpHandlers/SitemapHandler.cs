@@ -82,29 +82,8 @@ namespace Cuyahoga.Web.HttpHandlers
 
 			try
 			{
-				if (Config.GetConfiguration()["SitemapHandler:defaultPagePriorty"] != null)
-				{
-					double tempPagePriority =
-						Double.Parse(Config.GetConfiguration()["SitemapHandler:defaultPagePriorty"],
-									 new System.Globalization.CultureInfo("en-US"));
-					if (tempPagePriority >= 0 && tempPagePriority <= 1.0)
-					{
-						_defaultPagePriority = tempPagePriority;
-					}
-					else
-					{
-						log.ErrorFormat(
-							"SitemapHandler:defaultPagePriorty setting has wrong value [{0}]. Valid values range from 0.0 to 1.0..",
-							tempPagePriority);
-					}
-				}
-
-				if (Config.GetConfiguration()["SitemapHandler:defaultPageUpdateFrequency"] != null)
-				{
-					//set the default page update frequency
-					_defaultPageUpdateFrequency =
-						Config.GetConfiguration()["SitemapHandler:defaultPageUpdateFrequency"];
-				}
+				_defaultPagePriority = CuyahogaAppSettings.Current.SitemapDefaultPagePriority;
+				_defaultPageUpdateFrequency = CuyahogaAppSettings.Current.SitemapDefaultPageUpdateFrequency;
 
 				_container = ContainerAccessorUtil.GetContainer();
 				_siteService = Container.Resolve<ISiteService>();

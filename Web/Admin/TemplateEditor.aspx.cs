@@ -35,7 +35,7 @@ namespace Cuyahoga.Web.Admin
                         string physicalPath = Path.GetFullPath(Server.MapPath(fileName));
 
                         // Only allow editing template controls and stylesheets inside the template directory.
-                        string templateDir = Path.GetFullPath(Server.MapPath(Config.GetConfiguration()["TemplateDir"]))
+                        string templateDir = Path.GetFullPath(Server.MapPath(CuyahogaAppSettings.Current.TemplateDir))
                             .TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
                         string extension = Path.GetExtension(physicalPath).ToLowerInvariant();
                         if (physicalPath.StartsWith(templateDir, StringComparison.OrdinalIgnoreCase)

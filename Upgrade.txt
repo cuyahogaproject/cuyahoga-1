@@ -35,6 +35,14 @@ SPECIAL NOTE: CONFIGURATION MOVED TO WEB.CONFIG
     tempDir           -> Cuyahoga.TempDir
   Put them in Web.config, or in a Web.local.config next to Web.config that
   overrides the appSettings of Web.config (see the comment in Web.config).
+- The <CuyahogaSettings> section of Web.config is merged into appSettings as well:
+    TemplateDir, SuperUser, AdministratorRole, RedirectToLoginWhenAccessDenied,
+    SearchIndexDir, InstantIndexing
+                      -> Cuyahoga.TemplateDir, Cuyahoga.SuperUser, ...
+    SitemapHandler:defaultPagePriorty        -> Cuyahoga.SitemapDefaultPagePriority
+    SitemapHandler:defaultPageUpdateFrequency -> Cuyahoga.SitemapDefaultPageUpdateFrequency
+    SMTPServer                               -> Cuyahoga.SmtpHost
+  ImageDir and FCKeditor:UserFilesPath were not used and are gone.
 - Custom changes in services.config have to move to code (Windsor registrations).
 - Remove the /Config folder.
 - Cuyahoga uses Castle Windsor 6, Castle.Core 5 and log4net 2. Custom modules that

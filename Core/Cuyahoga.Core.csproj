@@ -12,9 +12,11 @@
     <PackageReference Include="Castle.Windsor" Version="6.0.0" />
     <PackageReference Include="log4net" Version="2.0.17" />
     <PackageReference Include="NHibernate" Version="5.5.2" />
+    <PackageReference Include="Lucene.Net" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00017" />
+    <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Lucene.Net" HintPath="$(CuyahogaLibDir)Lucene.Net.dll" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Web" />
   </ItemGroup>

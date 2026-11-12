@@ -1,12 +1,13 @@
 using System;
+using System.IO;
 
-using Lucene.Net.Index;
-using Lucene.Net.Documents;
 using Lucene.Net.Analysis.Standard;
+using Lucene.Net.Documents;
+using Lucene.Net.Index;
 using Lucene.Net.Store;
+using Lucene.Net.Util;
 using log4net;
 
-using Cuyahoga.Core.Util;
 using Cuyahoga.Core.Domain;
 
 namespace Cuyahoga.Core.Search
@@ -18,7 +19,13 @@ namespace Cuyahoga.Core.Search
 	{
 		private static readonly ILog log = LogManager.GetLogger(typeof(IndexBuilder));
 
-		private Directory _indexDirectory;
+		/// <summary>
+		/// The Lucene version for the analyzers and the index (the same for writing and querying).
+		/// </summary>
+		internal const LuceneVersion MatchVersion = LuceneVersion.LUCENE_48;
+
+		private readonly string _physicalIndexDir;
+		private Lucene.Net.Store.Directory _indexDirectory;
 		private IndexWriter _indexWriter;
 		private bool _isClosed = false;
 		private bool _rebuildIndex;
@@ -27,15 +34,21 @@ namespace Cuyahoga.Core.Search
 		/// Default constructor.
 		/// </summary>
 		/// <param name="physicalIndexDir">Location of the index files.</param>
-		/// <param name="rebuildIndex">Flag to indicate if the index should be rebuilt. 
+		/// <param name="rebuildIndex">Flag to indicate if the index should be rebuilt.
 		/// NOTE: you can not update or delete content when rebuilding the index.
 		/// </param>
 		public IndexBuilder(string physicalIndexDir, bool rebuildIndex)
 		{
+			this._physicalIndexDir = physicalIndexDir;
+			this._rebuildIndex = rebuildIndex;
 			// The index directory isn't part of the source tree, create it on first use.
 			System.IO.Directory.CreateDirectory(physicalIndexDir);
-			this._indexDirectory = FSDirectory.GetDirectory(physicalIndexDir, false);
-			this._rebuildIndex = rebuildIndex;
+			if (rebuildIndex)
+			{
+				// Start with an empty directory, also when it contains an index of an older Lucene version.
+				DeleteIndexFiles();
+			}
+			this._indexDirectory = FSDirectory.Open(physicalIndexDir);
 
 			InitIndexWriter();
 
@@ -65,13 +78,8 @@ namespace Cuyahoga.Core.Search
 			{
 				throw new InvalidOperationException("Cannot update documents when rebuilding the index.");
 			}
-			else
-			{
-				// First delete the old content
-				DeleteContent(searchContent);
-				// Now add the content again
-				AddContent(searchContent);
-			}
+			// The path uniquely identifies a document in the index.
+			this._indexWriter.UpdateDocument(new Term("path", searchContent.Path), BuildDocumentFromSearchContent(searchContent));
 		}
 
 		/// <summary>
@@ -84,19 +92,14 @@ namespace Cuyahoga.Core.Search
 			{
 				throw new InvalidOperationException("Cannot delete documents when rebuilding the index.");
 			}
-			else
-			{
-				this._indexWriter.Close();
-				this._indexWriter = null;
-
-				// The path uniquely identifies a document in the index.
-				Term term = new Term("path", searchContent.Path);
-				IndexReader rdr = IndexReader.Open(this._indexDirectory);
-				rdr.Delete(term);
-				rdr.Close();
-			}
+			// The path uniquely identifies a document in the index.
+			this._indexWriter.DeleteDocuments(new Term("path", searchContent.Path));
 		}
 
+		/// <summary>
+		/// Rebuild the full-text index.
+		/// </summary>
+		/// <param name="module"></param>
 		public void UpdateContentFromModule(ModuleBase module)
 		{
 			ISearchable searchableModule = module as ISearchable;
@@ -117,39 +120,64 @@ namespace Cuyahoga.Core.Search
 		{
 			if (! this._isClosed && this._indexWriter != null)
 			{
-				this._indexWriter.Optimize();
-				this._indexWriter.Close();
-				this._isClosed = true; 
+				if (this._rebuildIndex)
+				{
+					this._indexWriter.ForceMerge(1);
+				}
+				this._indexWriter.Dispose();
+				this._indexDirectory.Dispose();
+				this._isClosed = true;
 				log.Info("New or updated search index written to disk.");
 			}
 		}
 
 		private void InitIndexWriter()
 		{
-			if (! IndexReader.IndexExists(this._indexDirectory) || this._rebuildIndex)
+			try
 			{
-				this._indexWriter = new IndexWriter(this._indexDirectory, new StandardAnalyzer(), true);
+				this._indexWriter = CreateIndexWriter(this._rebuildIndex ? OpenMode.CREATE : OpenMode.CREATE_OR_APPEND);
 			}
-			else
+			catch (IndexFormatTooOldException ex)
 			{
-				this._indexWriter = new IndexWriter(this._indexDirectory, new StandardAnalyzer(), false);
+				// An index of an older Lucene version can't be updated. Start with an empty index; the content
+				// returns after rebuilding the index in the site administration.
+				log.Warn("The search index was created with an older version of Lucene and is replaced with an empty index. Rebuild the index in the site administration.", ex);
+				this._indexDirectory.Dispose();
+				DeleteIndexFiles();
+				this._indexDirectory = FSDirectory.Open(this._physicalIndexDir);
+				this._indexWriter = CreateIndexWriter(OpenMode.CREATE);
+			}
+		}
+
+		private IndexWriter CreateIndexWriter(OpenMode openMode)
+		{
+			IndexWriterConfig config = new IndexWriterConfig(MatchVersion, new StandardAnalyzer(MatchVersion));
+			config.OpenMode = openMode;
+			return new IndexWriter(this._indexDirectory, config);
+		}
+
+		private void DeleteIndexFiles()
+		{
+			foreach (string file in System.IO.Directory.GetFiles(this._physicalIndexDir))
+			{
+				File.Delete(file);
 			}
 		}
 
 		private Document BuildDocumentFromSearchContent(SearchContent searchContent)
 		{
 			Document doc = new Document();
-			doc.Add(Field.Text("title", searchContent.Title));
-			doc.Add(Field.Text("summary", searchContent.Summary));
-			doc.Add(Field.UnStored("contents", searchContent.Contents));
-			doc.Add(Field.Text("author", searchContent.Author));
-			doc.Add(Field.Keyword("moduletype", searchContent.ModuleType));
-			doc.Add(Field.Keyword("path", searchContent.Path));
-			doc.Add(Field.Keyword("category", searchContent.Category));
-			doc.Add(Field.Keyword("site", searchContent.Site));
-			doc.Add(Field.Keyword("datecreated", searchContent.DateCreated.ToString("u")));
-			doc.Add(Field.Keyword("datemodified", searchContent.DateModified.ToString("u")));
-			doc.Add(Field.UnIndexed("sectionid", searchContent.SectionId.ToString()));
+			doc.Add(new TextField("title", searchContent.Title ?? String.Empty, Field.Store.YES));
+			doc.Add(new TextField("summary", searchContent.Summary ?? String.Empty, Field.Store.YES));
+			doc.Add(new TextField("contents", searchContent.Contents ?? String.Empty, Field.Store.NO));
+			doc.Add(new TextField("author", searchContent.Author ?? String.Empty, Field.Store.YES));
+			doc.Add(new StringField("moduletype", searchContent.ModuleType ?? String.Empty, Field.Store.YES));
+			doc.Add(new StringField("path", searchContent.Path ?? String.Empty, Field.Store.YES));
+			doc.Add(new StringField("category", searchContent.Category ?? String.Empty, Field.Store.YES));
+			doc.Add(new StringField("site", searchContent.Site ?? String.Empty, Field.Store.YES));
+			doc.Add(new StringField("datecreated", searchContent.DateCreated.ToString("u"), Field.Store.YES));
+			doc.Add(new StringField("datemodified", searchContent.DateModified.ToString("u"), Field.Store.YES));
+			doc.Add(new StoredField("sectionid", searchContent.SectionId.ToString()));
 
 			return doc;
 		}

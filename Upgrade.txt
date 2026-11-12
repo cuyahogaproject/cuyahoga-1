@@ -76,6 +76,15 @@ SPECIAL NOTE: NHIBERNATE 5
 - NHibernate.Caches.SysCache.dll comes from the NHibernate.Caches.SysCache package now.
 
 *****************************************************************************
+SPECIAL NOTE: REBUILD THE SEARCH INDEX
+- Cuyahoga uses Lucene.Net 4.8, which can't read the search index of older
+  versions. After upgrading, rebuild the index via Admin > Rebuild index.
+  Until then search finds nothing; the old index is replaced automatically.
+- Lucene.Net 4.8 needs binding redirects for its dependencies (System.Memory,
+  System.Runtime.CompilerServices.Unsafe, ...); see the runtime section of the
+  Web.config that comes with Cuyahoga.
+
+*****************************************************************************
 SPECIAL NOTE: THE FLASH AND FORUM MODULES HAVE BEEN REMOVED
 - Browsers no longer run Flash, so the Flash module is no longer part of Cuyahoga.
   The Forum module has been removed as well.

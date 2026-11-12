@@ -140,7 +140,8 @@ SPECIAL NOTE FOR USERS UPGRADING FROM 1.0.x to 1.5.0 AND NEWER:
 Upgrading from versions pre-0.8.2
 *****************************************************************************
 Users upgrading from a pre-0.8.2 version must first update the database to
-the 0.8.2 version. Use the scripts in /Database directory. If you don't know
+the 0.8.2 version with the scripts in the /Database directory of Cuyahoga 1.7.0
+or an earlier release (this version doesn't include them anymore). If you don't know
 which version you are running, you can find it in the cuyahoga_version table.
 If the cuyahoga_version table doesn't exist yet, check the properties of the
 Cuyahoga.Core.dll assembly (version tab).

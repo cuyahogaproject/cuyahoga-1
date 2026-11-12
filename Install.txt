@@ -43,8 +43,9 @@ Installing Cuyahoga from source.
     End-to-end tests (Playwright) live in the e2e folder. Every run creates an empty database,
     starts the site on port 8081 next to your development site, installs Cuyahoga with the web
     installer and the sample site, and runs the tests. Build the solution first. From the e2e folder:
-    'npm install', 'npx playwright install chromium', then 'npm run test:mssql' (SQL Server LocalDB,
-    needs sqlcmd), 'npm run test:mysql', 'npm run test:postgres' or 'npm run test:all'.
+    'npm install', 'npx playwright install chromium', then 'npm test' (SQL Server LocalDB, needs
+    sqlcmd), 'npm run test:mysql', 'npm run test:postgres' or 'npm run test:all' (all three, with one
+    combined report). 'npm run report' opens the report of the last run.
     See e2e/.env.example for the database servers and other settings.
 
     You are now ready to run the application. At the first visit, the database will be installed automatically, 

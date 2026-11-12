@@ -14,8 +14,15 @@ const baseURL = `http://localhost:${port}`;
 
 export const adminStorageState = path.join(__dirname, '.auth', 'admin.json');
 
+// The database type of this run. Project names carry it, so a report merged from runs on several databases
+// (npm run test:all) shows which database each result belongs to.
+const database = process.env.CUYAHOGA_E2E_DB ?? 'mssql';
+const project = (name: string) => `${name}-${database}`;
+
 export default defineConfig({
   testDir: './tests',
+  // Separate results per database type, so a run on one database doesn't remove those of another.
+  outputDir: `test-results/${database}`,
   // Tests share one database, so they run one at a time.
   fullyParallel: false,
   workers: 1,
@@ -24,7 +31,13 @@ export default defineConfig({
   // The first request after a build compiles the app and can take a while.
   timeout: 60_000,
   expect: { timeout: 10_000 },
-  reporter: [['list'], ['html', { open: 'never' }]],
+  // The blob report of each database type is merged into one HTML report by scripts/test-all.mjs.
+  reporter: [
+    ['list'],
+    ['html', { open: 'never' }],
+    ['blob', { outputDir: 'blob-report', fileName: `report-${database}.zip` }],
+  ],
+  metadata: { database },
   use: {
     baseURL,
     trace: 'retain-on-failure',
@@ -32,24 +45,24 @@ export default defineConfig({
   },
   // A fresh site for every run: install (web installer with the sample site) -> log in -> add test content -> tests.
   projects: [
-    { name: 'install', testMatch: /install\.setup\.ts/ },
-    { name: 'login', testMatch: /auth\.setup\.ts/, dependencies: ['install'] },
+    { name: project('install'), testMatch: /install\.setup\.ts/ },
+    { name: project('login'), testMatch: /auth\.setup\.ts/, dependencies: [project('install')] },
     {
-      name: 'seed',
+      name: project('seed'),
       testMatch: /seed\.setup\.ts/,
-      dependencies: ['login'],
+      dependencies: [project('login')],
       use: { storageState: adminStorageState },
     },
     {
-      name: 'public',
+      name: project('public'),
       testMatch: /public\.spec\.ts/,
-      dependencies: ['seed'],
+      dependencies: [project('seed')],
       use: { ...devices['Desktop Chrome'] },
     },
     {
-      name: 'admin',
+      name: project('admin'),
       testMatch: /admin.*\.spec\.ts/,
-      dependencies: ['seed'],
+      dependencies: [project('seed')],
       use: { ...devices['Desktop Chrome'], storageState: adminStorageState },
     },
   ],

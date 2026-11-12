@@ -39,11 +39,14 @@ SPECIAL NOTE: NHIBERNATE SESSIONS AND TRANSACTIONS
   and Castle.Services.Transaction.dll from the bin folder.
 
 *****************************************************************************
-SPECIAL NOTE: THE FLASH MODULE HAS BEEN REMOVED
+SPECIAL NOTE: THE FLASH AND FORUM MODULES HAVE BEEN REMOVED
 - Browsers no longer run Flash, so the Flash module is no longer part of Cuyahoga.
-- BEFORE copying the new files, remove all Flash sections and uninstall the
-  Flash module via the module administration (Admin > Modules). After the
-  upgrade the module files are gone, so it can't be uninstalled anymore.
+  The Forum module has been removed as well.
+- BEFORE copying the new files, remove all Flash and Forum sections and uninstall
+  these modules via the module administration (Admin > Modules). After the
+  upgrade the module files are gone, so they can't be uninstalled anymore.
+  Uninstalling the Forum module deletes all forum posts, so back up the
+  database first if you want to keep them.
 
 *****************************************************************************
 SPECIAL NOTE FOR USERS UPGRADING FROM 1.5.0 to 1.5.1

@@ -337,10 +337,10 @@ namespace Cuyahoga.Web.UI
 				// # added for v1.6.0
 
 					// Load sections that are related to the template
-					foreach (DictionaryEntry sectionEntry in this.ActiveNode.Template.Sections)
+					foreach (KeyValuePair<string, Section> sectionEntry in this.ActiveNode.Template.Sections)
 					{
-						string placeholder = sectionEntry.Key.ToString();
-						Section section = sectionEntry.Value as Section;
+						string placeholder = sectionEntry.Key;
+						Section section = sectionEntry.Value;
 						if (section != null)
 						{
 							BaseModuleControl moduleControl = CreateModuleControlForSection(section);

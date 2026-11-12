@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 
 using log4net;
@@ -315,14 +316,14 @@ namespace Cuyahoga.Core.Service
 		/// Retrieve the root nodes for a given site.
 		/// </summary>
 		/// <returns></returns>
-		public virtual IList GetRootNodes(Site site)
+		public virtual IList<Node> GetRootNodes(Site site)
 		{
 			string hql = "from Node n where n.ParentNode is null and n.Site.Id = :siteId order by n.Position";
 			IQuery q = this._activeSession.CreateQuery(hql);
 			q.SetInt32("siteId", site.Id);
 			q.SetCacheable(true);
 			q.SetCacheRegion("Nodes");
-			return q.List();
+			return q.List<Node>();
 		}
 
 		public virtual Node GetRootNodeByCultureAndSite(string culture, Site site)
@@ -511,12 +512,12 @@ namespace Cuyahoga.Core.Service
 		/// </summary>
 		/// <param name="node"></param>
 		/// <returns></returns>
-		public virtual IList GetSortedSectionsByNode(Node node)
+		public virtual IList<Section> GetSortedSectionsByNode(Node node)
 		{
 			string hql = "from Section s where s.Node.Id = :nodeId order by s.PlaceholderId, s.Position ";
 			IQuery q = this._activeSession.CreateQuery(hql);
 			q.SetInt32("nodeId", node.Id);
-			return q.List();
+			return q.List<Section>();
 		}
 
 		/// <summary>

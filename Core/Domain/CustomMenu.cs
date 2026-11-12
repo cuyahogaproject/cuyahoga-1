@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Cuyahoga.Core.Domain
 {
@@ -13,7 +14,7 @@ namespace Cuyahoga.Core.Domain
 		private string _name;
 		private string _placeholder;
 		private Node _rootNode;
-		private IList _nodes;
+		private IList<Node> _nodes;
 		private DateTime _updateTimestamp;
 
 		/// <summary>
@@ -55,7 +56,7 @@ namespace Cuyahoga.Core.Domain
 		/// <summary>
 		/// Property Nodes (IList)
 		/// </summary>
-		public virtual IList Nodes
+		public virtual IList<Node> Nodes
 		{
 			get { return this._nodes; }
 			set { this._nodes = value; }
@@ -76,7 +77,7 @@ namespace Cuyahoga.Core.Domain
 		public CustomMenu()
 		{
 			this._id = -1;
-			this._nodes = new ArrayList();
+			this._nodes = new List<Node>();
 		}
 	}
 }

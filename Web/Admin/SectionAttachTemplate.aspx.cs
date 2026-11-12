@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using Cuyahoga.Core.Util;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -101,7 +103,7 @@ namespace Cuyahoga.Web.Admin
 				{
 					// Check if the placeholder isn't taken by another section
 					bool isTaken = false;
-					Section section = template.Sections[entry.Key] as Section;
+					Section section = template.Sections.GetValueOrDefault(entry.Key.ToString());
 					if (section != null)
 					{
 						if (section == this._activeSection)
@@ -155,11 +157,11 @@ namespace Cuyahoga.Web.Admin
 					string selectedPlaceholderId = ddlPlaceHolders.SelectedValue;
 					// Find to find if the current section is already attached to the template
 					string attachedPlaceholderId = null;
-					foreach (DictionaryEntry entry in template.Sections)
+					foreach (KeyValuePair<string, Section> entry in template.Sections)
 					{
 						if (entry.Value == this._activeSection)
 						{
-							attachedPlaceholderId = entry.Key.ToString();
+							attachedPlaceholderId = entry.Key;
 							break;
 						}
 					}

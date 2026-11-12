@@ -104,7 +104,7 @@ namespace Cuyahoga.Modules.Articles.Web
 			if (e.Item.ItemType == ListItemType.Item || e.Item.ItemType == ListItemType.AlternatingItem)
 			{
 				Article article = e.Item.DataItem as Article;
-				DisplayType displayType = (DisplayType)Enum.Parse(typeof(DisplayType), this._module.Section.Settings["DISPLAY_TYPE"].ToString());
+				DisplayType displayType = (DisplayType)Enum.Parse(typeof(DisplayType), this._module.Section.Settings.GetValueOrDefault("DISPLAY_TYPE").ToString());
 
 				HyperLink hpl = e.Item.FindControl("hplTitle") as HyperLink;
 				string articleUrl = UrlHelper.GetUrlFromSection(this._module.Section) + "/" + article.Id;

@@ -1,6 +1,7 @@
 using System;
 using System.Security.Principal;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Cuyahoga.Core.Domain
 {
@@ -18,9 +19,9 @@ namespace Cuyahoga.Core.Domain
 		private bool _showTitle;
 		private ModuleType _moduleType;
 		private Node _node;
-		private IList _sectionPermissions;
-		private IDictionary _settings;
-		private IDictionary _connections;
+		private IList<SectionPermission> _sectionPermissions;
+		private IDictionary<string, string> _settings;
+		private IDictionary<string, Section> _connections;
 
 		#region properties
 
@@ -109,7 +110,7 @@ namespace Cuyahoga.Core.Domain
 		/// <summary>
 		/// Property SectionPermissions (IList)
 		/// </summary>
-		public virtual IList SectionPermissions
+		public virtual IList<SectionPermission> SectionPermissions
 		{
 			get { return this._sectionPermissions; }
 			set { this._sectionPermissions = value; }
@@ -118,7 +119,7 @@ namespace Cuyahoga.Core.Domain
 		/// <summary>
 		/// Property Settings (IDictionary)
 		/// </summary>
-		public virtual IDictionary Settings
+		public virtual IDictionary<string, string> Settings
 		{
 			get { return this._settings; }
 			set { this._settings = value; }
@@ -127,7 +128,7 @@ namespace Cuyahoga.Core.Domain
 		/// <summary>
 		/// Connection points to other sections. The keys are actions and the values the other sections.
 		/// </summary>
-		public virtual IDictionary Connections
+		public virtual IDictionary<string, Section> Connections
 		{
 			get { return this._connections; }
 			set { this._connections = value; }
@@ -202,9 +203,9 @@ namespace Cuyahoga.Core.Domain
 			this._showTitle = false;
 			this._position = -1;
 			this._cacheDuration = 0;
-			this._sectionPermissions = new ArrayList();
-			this._settings = new Hashtable();
-			this._connections = new Hashtable();
+			this._sectionPermissions = new List<SectionPermission>();
+			this._settings = new Dictionary<string, string>();
+			this._connections = new Dictionary<string, Section>();
 		}
 
 		#endregion

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Domain;
 
@@ -17,7 +18,7 @@ namespace Cuyahoga.Modules.RemoteContent.Domain
 		private int _numberOfItems;
 		private DateTime _updateTimestamp;
 		private Section _section;
-		private IList _feedItems;
+		private IList<FeedItem> _feedItems;
 
 		/// <summary>
 		/// Property Id (int)
@@ -85,7 +86,7 @@ namespace Cuyahoga.Modules.RemoteContent.Domain
 		/// <summary>
 		/// Property Items (IList)
 		/// </summary>
-		public virtual IList FeedItems
+		public virtual IList<FeedItem> FeedItems
 		{
 			get { return this._feedItems; }
 			set { this._feedItems = value; }

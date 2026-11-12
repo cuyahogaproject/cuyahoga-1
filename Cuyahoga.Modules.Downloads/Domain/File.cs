@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Security.Principal;
 
 using Cuyahoga.Core.Domain;
@@ -20,7 +21,7 @@ namespace Cuyahoga.Modules.Downloads.Domain
 		private DateTime _datePublished;
 		private Section _section;
 		private User _publisher;
-		private IList _allowedRoles;
+		private IList<Role> _allowedRoles;
 		private DateTime _updateTimestamp;
 
 		#region properties
@@ -127,7 +128,7 @@ namespace Cuyahoga.Modules.Downloads.Domain
 		/// <summary>
 		/// Property Roles (IList)
 		/// </summary>
-		public virtual IList AllowedRoles
+		public virtual IList<Role> AllowedRoles
 		{
 			get { return this._allowedRoles; }
 			set { this._allowedRoles = value; }
@@ -151,7 +152,7 @@ namespace Cuyahoga.Modules.Downloads.Domain
 		{
 			this._id = -1;
 			this._nrOfDownloads = 0;
-			this._allowedRoles = new ArrayList();
+			this._allowedRoles = new List<Role>();
 		}
 
 		/// <summary>

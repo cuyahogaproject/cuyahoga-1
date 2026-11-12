@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Domain;
 
@@ -14,7 +15,7 @@ namespace Cuyahoga.Modules.Articles.Domain
 		private string _title;
 		private string _summary;
 		private bool _syndicate;
-		private IList _articles;
+		private IList<Article> _articles;
 		private Site _site;
 		private DateTime _updateTimestamp;
 
@@ -59,7 +60,7 @@ namespace Cuyahoga.Modules.Articles.Domain
 		/// <summary>
 		/// Property Articles (IList)
 		/// </summary>
-		public virtual IList Articles
+		public virtual IList<Article> Articles
 		{
 			get { return this._articles; }
 			set { this._articles = value; }

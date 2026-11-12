@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -271,7 +272,7 @@ namespace Cuyahoga.Web.Admin
 
 		private void BindSections()
 		{
-			IList sortedSections = base.CoreRepository.GetSortedSectionsByNode(this.ActiveNode);
+			IList<Section> sortedSections = base.CoreRepository.GetSortedSectionsByNode(this.ActiveNode);
 			// Synchronize sections, otherwise we'll have two collections with the same Sections
 			this.ActiveNode.Sections = sortedSections;
 			this.rptSections.DataSource = sortedSections;
@@ -334,7 +335,7 @@ namespace Cuyahoga.Web.Admin
 			}
 			else
 			{
-				IList rootNodes = base.CoreRepository.GetRootNodes(this.ActiveNode.Site);
+				IList<Node> rootNodes = base.CoreRepository.GetRootNodes(this.ActiveNode.Site);
 				this.ActiveNode.CalculateNewPosition(rootNodes);
 				// Add node to the parent node's ChildNodes first
 				if (this.ActiveNode.ParentNode != null)
@@ -388,7 +389,7 @@ namespace Cuyahoga.Web.Admin
 		{
 			base.CoreRepository.ClearQueryCache("Nodes");
 
-			IList rootNodes = base.CoreRepository.GetRootNodes(this.ActiveNode.Site);
+			IList<Node> rootNodes = base.CoreRepository.GetRootNodes(this.ActiveNode.Site);
 			this.ActiveNode.Move(rootNodes, npm);
 			this.CoreRepository.FlushSession();
 			Context.Response.Redirect(Context.Request.RawUrl);
@@ -668,7 +669,7 @@ namespace Cuyahoga.Web.Admin
 					}
 					else
 					{
-						IList rootNodes = base.CoreRepository.GetRootNodes(this.ActiveNode.Site);
+						IList<Node> rootNodes = base.CoreRepository.GetRootNodes(this.ActiveNode.Site);
 						rootNodes.Remove(this.ActiveNode);
 					}
 					base.CoreRepository.DeleteNode(this.ActiveNode);
@@ -832,7 +833,7 @@ namespace Cuyahoga.Web.Admin
 					node.NodePermissions.Add( npNew );
 				}
 
-        		IList rootNodes = base.CoreRepository.GetRootNodes( node.Site );
+        		IList<Node> rootNodes = base.CoreRepository.GetRootNodes( node.Site );
         		node.CalculateNewPosition( rootNodes );
         		ActiveNode.ChildNodes.Add(node);
 
@@ -867,7 +868,7 @@ namespace Cuyahoga.Web.Admin
 
 				newsection.CacheDuration = section.CacheDuration;
 
-				foreach( DictionaryEntry sectionconnection in section.Connections )
+				foreach( KeyValuePair<string, Section> sectionconnection in section.Connections )
 				{
 					newsection.Connections.Add( sectionconnection.Key, sectionconnection.Value );
 				}
@@ -877,7 +878,7 @@ namespace Cuyahoga.Web.Admin
 				newsection.Position = section.Position;
 
 				// copy module settings
-				foreach( DictionaryEntry sectionitem in section.Settings )
+				foreach( KeyValuePair<string, string> sectionitem in section.Settings )
 				{
 					newsection.Settings.Add( sectionitem.Key, sectionitem.Value );
 				}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Security.Principal;
 
@@ -22,7 +23,7 @@ namespace Cuyahoga.Core.Domain
 		private DateTime? _lastLogin;
 		private string _lastIp;
 		private bool _isAuthenticated;
-		private IList _roles;
+		private IList<Role> _roles;
 		private AccessLevel[] _permissions;
 		private DateTime _insertTimestamp;
 		private DateTime _updateTimestamp;
@@ -150,7 +151,7 @@ namespace Cuyahoga.Core.Domain
 		/// <summary>
 		/// Property Roles (IList)
 		/// </summary>
-		public virtual IList Roles
+		public virtual IList<Role> Roles
 		{
 			get { return this._roles; }
 			set { this._roles = value; }
@@ -240,7 +241,7 @@ namespace Cuyahoga.Core.Domain
 			this._id = -1;
 			this._isAuthenticated = false;
 			this._permissions = new AccessLevel[0];
-			this._roles = new ArrayList();
+			this._roles = new List<Role>();
 			// Default to now, otherwise NHibernate tries to insert a NULL.
 			this._insertTimestamp = DateTime.Now;
 		}

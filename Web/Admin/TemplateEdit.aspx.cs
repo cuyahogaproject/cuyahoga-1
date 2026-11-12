@@ -6,6 +6,7 @@ using Cuyahoga.Core.Domain;
 using Cuyahoga.Web.Admin.UI;
 using Cuyahoga.Web.UI;
 using Cuyahoga.Web.Util;
+using Cuyahoga.Core.Util;
 
 namespace Cuyahoga.Web.Admin
 {
@@ -282,7 +283,7 @@ namespace Cuyahoga.Web.Admin
 				lblPlaceholder.Text = placeholder;
 
 				// Find an attached section
-				Section section = this._activeTemplate.Sections[placeholder] as Section;
+				Section section = this._activeTemplate.Sections.GetValueOrDefault(placeholder) as Section;
 				if (section != null)
 				{
 					hplSection.Text = section.Title;

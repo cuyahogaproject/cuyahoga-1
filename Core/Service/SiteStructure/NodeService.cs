@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Persistence;
 
@@ -35,7 +36,7 @@ namespace Cuyahoga.Core.Service.SiteStructure
 			return (Node)this._commonDao.GetObjectById(typeof(Node), nodeId, true);
 		}
 
-		public IList GetRootNodes(Site site)
+		public IList<Node> GetRootNodes(Site site)
 		{
 			return this._siteStructureDao.GetRootNodes(site);
 		}

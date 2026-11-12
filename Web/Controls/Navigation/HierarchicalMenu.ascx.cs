@@ -7,6 +7,7 @@ namespace Cuyahoga.Web.Templates.Controls
 	using System.Web.UI.WebControls;
 	using System.Web.UI.HtmlControls;
 	using System.Collections;
+using System.Collections.Generic;
 
 	using Cuyahoga.Core.Domain;
 	using Cuyahoga.Web.UI;
@@ -79,7 +80,7 @@ namespace Cuyahoga.Web.Templates.Controls
 			return listItem;
 		}
 
-		private HtmlControl BuildListFromNodes(IList nodes)
+		private HtmlControl BuildListFromNodes(IList<Node> nodes)
 		{
 			HtmlGenericControl list = new HtmlGenericControl("ul");
 			foreach (Node node in nodes)

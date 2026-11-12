@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Domain;
 
@@ -22,7 +23,7 @@ namespace Cuyahoga.Core.Service.SiteStructure
 		/// </summary>
 		/// <param name="site"></param>
 		/// <returns></returns>
-		IList GetRootNodes(Site site);
+		IList<Node> GetRootNodes(Site site);
 
 		/// <summary>
 		/// Get a single root node by culture and site.

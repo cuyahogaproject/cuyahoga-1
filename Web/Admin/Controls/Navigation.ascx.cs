@@ -2,6 +2,7 @@ namespace Cuyahoga.Web.Admin.Controls
 {
 	using System;
 	using System.Collections;
+using System.Collections.Generic;
 	using System.Web.UI;
 	using System.Web.UI.WebControls;
 	using System.Web.UI.HtmlControls;
@@ -91,7 +92,7 @@ namespace Cuyahoga.Web.Admin.Controls
 			return container;
 		}
 
-		private void DisplayNodes(IList nodes)
+		private void DisplayNodes(IList<Node> nodes)
 		{
 			foreach (Node node in nodes)
 			{				

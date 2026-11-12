@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Domain;
 
@@ -36,7 +37,7 @@ namespace Cuyahoga.Core.DataAccess
 		/// </summary>
 		/// <param name="site"></param>
 		/// <returns></returns>
-		IList GetRootNodes(Site site);
+		IList<Node> GetRootNodes(Site site);
 
 		/// <summary>
 		/// Get the root node for the given culture and site.
@@ -80,7 +81,7 @@ namespace Cuyahoga.Core.DataAccess
 		/// </summary>
 		/// <param name="node"></param>
 		/// <returns></returns>
-		IList GetSortedSectionsByNode(Node node);
+		IList<Section> GetSortedSectionsByNode(Node node);
 
 		/// <summary>
 		/// Get all orphaned sections (not related to any node).

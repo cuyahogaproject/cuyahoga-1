@@ -10,6 +10,7 @@ namespace Cuyahoga.Modules.Search
 	using Cuyahoga.Core.Domain;
 	using Cuyahoga.Web.UI;
 	using Cuyahoga.Web.Util;
+	using Cuyahoga.Core.Util;
 
 	/// <summary>
 	///		Summary description for SearchInput.
@@ -53,9 +54,9 @@ namespace Cuyahoga.Modules.Search
 
 		protected void btnSearch_Click(object sender, System.EventArgs e)
 		{
-			if (this.txtSearchQuery.Text.Trim().Length > 0 && this._module.Section.Connections["Search"] != null)
+			if (this.txtSearchQuery.Text.Trim().Length > 0 && this._module.Section.Connections.GetValueOrDefault("Search") != null)
 			{
-				Section sectionTo = this._module.Section.Connections["Search"] as Section;
+				Section sectionTo = this._module.Section.Connections.GetValueOrDefault("Search") as Section;
 				string query = Server.UrlEncode(this.txtSearchQuery.Text);
 				Response.Redirect(UrlHelper.GetUrlFromSection(sectionTo) + "/Search?q=" + query);
 			}

@@ -13,6 +13,7 @@ namespace Cuyahoga.Modules.User
 	using Cuyahoga.Web.Util;
 	using Cuyahoga.Web.HttpModules;
 	using Cuyahoga.Core.Domain;
+	using Cuyahoga.Core.Util;
 
 	/// <summary>
 	///	Module to enable authentication and user sign-up etc.
@@ -28,17 +29,17 @@ namespace Cuyahoga.Modules.User
 		protected void Page_Load(object sender, System.EventArgs e)
 		{
 			this._module = base.Module as UserModule;
-			if (this._module.Section.Settings["SHOW_REGISTER"] != null)
+			if (this._module.Section.Settings.GetValueOrDefault("SHOW_REGISTER") != null)
 			{
-				this._showRegister = Convert.ToBoolean(this._module.Section.Settings["SHOW_REGISTER"]);
+				this._showRegister = Convert.ToBoolean(this._module.Section.Settings.GetValueOrDefault("SHOW_REGISTER"));
 			}
-			if (this._module.Section.Settings["SHOW_RESET_PASSWORD"] != null)
+			if (this._module.Section.Settings.GetValueOrDefault("SHOW_RESET_PASSWORD") != null)
 			{
-				this._showResetPassword = Convert.ToBoolean(this._module.Section.Settings["SHOW_RESET_PASSWORD"]);
+				this._showResetPassword = Convert.ToBoolean(this._module.Section.Settings.GetValueOrDefault("SHOW_RESET_PASSWORD"));
 			}
-			if (this._module.Section.Settings["SHOW_EDIT_PROFILE"] != null)
+			if (this._module.Section.Settings.GetValueOrDefault("SHOW_EDIT_PROFILE") != null)
 			{
-				this._showEditProfile = Convert.ToBoolean(this._module.Section.Settings["SHOW_EDIT_PROFILE"]);
+				this._showEditProfile = Convert.ToBoolean(this._module.Section.Settings.GetValueOrDefault("SHOW_EDIT_PROFILE"));
 			}
 
 			bool isAuthenticated = false;
@@ -71,7 +72,7 @@ namespace Cuyahoga.Modules.User
 		{
 			// Keep static links to Profile.aspx in case there are no connections for
 			// backward compatibility.
-			Section sectionTo = this._module.Section.Connections["Register"] as Section;
+			Section sectionTo = this._module.Section.Connections.GetValueOrDefault("Register") as Section;
 			if (sectionTo != null)
 			{
 				this.hplRegister.NavigateUrl = UrlHelper.GetUrlFromSection(sectionTo) + "/Register";
@@ -80,7 +81,7 @@ namespace Cuyahoga.Modules.User
 			{
 				this.hplRegister.NavigateUrl = this.Page.ResolveUrl("~/Profile.aspx/register");
 			}
-			sectionTo = this._module.Section.Connections["ResetPassword"] as Section;
+			sectionTo = this._module.Section.Connections.GetValueOrDefault("ResetPassword") as Section;
 			if (sectionTo != null)
 			{
 				this.hplResetPassword.NavigateUrl = UrlHelper.GetUrlFromSection(sectionTo) + "/ResetPassword";
@@ -89,7 +90,7 @@ namespace Cuyahoga.Modules.User
 			{
 				this.hplResetPassword.NavigateUrl = this.Page.ResolveUrl("~/Profile.aspx/reset");
 			}
-			sectionTo = this._module.Section.Connections["EditProfile"] as Section;
+			sectionTo = this._module.Section.Connections.GetValueOrDefault("EditProfile") as Section;
 			if (sectionTo != null)
 			{
 				this.hplEdit.NavigateUrl = UrlHelper.GetUrlFromSection(sectionTo) + "/EditProfile";

@@ -6,6 +6,7 @@ using Cuyahoga.Core.Service.SiteStructure;
 using System.Collections.Generic;
 using System.Collections;
 using System.Globalization;
+using Cuyahoga.Core.Util;
 
 namespace Cuyahoga.Modules.LanguageSwitcher
 {
@@ -49,13 +50,13 @@ namespace Cuyahoga.Modules.LanguageSwitcher
 		public override void ReadSectionSettings()
 		{
 			base.ReadSectionSettings();
-			if (base.Section.Settings["DISPLAY_MODE"] != null)
+			if (base.Section.Settings.GetValueOrDefault("DISPLAY_MODE") != null)
 			{
-				this._displayMode = (DisplayMode)Enum.Parse(typeof(DisplayMode), base.Section.Settings["DISPLAY_MODE"].ToString());
+				this._displayMode = (DisplayMode)Enum.Parse(typeof(DisplayMode), base.Section.Settings.GetValueOrDefault("DISPLAY_MODE").ToString());
 			}
-			if (base.Section.Settings["REDIRECT_TO_USER_LANGUAGE"] != null)
+			if (base.Section.Settings.GetValueOrDefault("REDIRECT_TO_USER_LANGUAGE") != null)
 			{
-				this._redirectToUserLanguage = Convert.ToBoolean(base.Section.Settings["REDIRECT_TO_USER_LANGUAGE"]);
+				this._redirectToUserLanguage = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("REDIRECT_TO_USER_LANGUAGE"));
 			}
 		}
 
@@ -66,7 +67,7 @@ namespace Cuyahoga.Modules.LanguageSwitcher
 		/// <returns></returns>
 		public Dictionary<string, Node> GetCultureRootNodesBySite(Site site)
 		{
-			IList rootNodes = this._nodeService.GetRootNodes(site);
+			IList<Node> rootNodes = this._nodeService.GetRootNodes(site);
 			Dictionary<string, Node> cultureNodes = new Dictionary<string, Node>(rootNodes.Count);
 			foreach (Node node in rootNodes)
 			{

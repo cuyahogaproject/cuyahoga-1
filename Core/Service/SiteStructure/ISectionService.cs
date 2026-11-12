@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Domain;
 
@@ -22,7 +23,7 @@ namespace Cuyahoga.Core.Service.SiteStructure
 		/// </summary>
 		/// <param name="node"></param>
 		/// <returns></returns>
-		IList GetSortedSectionsByNode(Node node);
+		IList<Section> GetSortedSectionsByNode(Node node);
 
 		/// <summary>
 		/// Get all orphaned sections (sections that are not related to a node).

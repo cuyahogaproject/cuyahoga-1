@@ -10,6 +10,7 @@ using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service;
 using Cuyahoga.Core.Service.Files;
 using Cuyahoga.Modules.Downloads.Domain;
+using Cuyahoga.Core.Util;
 
 namespace Cuyahoga.Modules.Downloads
 {
@@ -112,14 +113,14 @@ namespace Cuyahoga.Modules.Downloads
 		{
 			base.ReadSectionSettings();
 			// Set dynamic module settings
-			string physicalDir = Convert.ToString(base.Section.Settings["PHYSICAL_DIR"]);
+			string physicalDir = Convert.ToString(base.Section.Settings.GetValueOrDefault("PHYSICAL_DIR"));
 			if (physicalDir != String.Empty)
 			{
 				this._physicalDir = physicalDir;
 			}
-			this._showPublisher = Convert.ToBoolean(base.Section.Settings["SHOW_PUBLISHER"]);
-			this._showDateModified = Convert.ToBoolean(base.Section.Settings["SHOW_DATE"]);
-			this._showNumberOfDownloads = Convert.ToBoolean(base.Section.Settings["SHOW_NUMBER_OF_DOWNLOADS"]);
+			this._showPublisher = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_PUBLISHER"));
+			this._showDateModified = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_DATE"));
+			this._showNumberOfDownloads = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_NUMBER_OF_DOWNLOADS"));
 		}
 
 		/// <summary>
@@ -132,7 +133,7 @@ namespace Cuyahoga.Modules.Downloads
 			// isn't saved yet.
 			if (base.Section != null)
 			{
-				string physicalDir = Convert.ToString(base.Section.Settings["PHYSICAL_DIR"]);
+				string physicalDir = Convert.ToString(base.Section.Settings.GetValueOrDefault("PHYSICAL_DIR"));
 				if (!String.IsNullOrEmpty(physicalDir))
 				{
 					CheckPhysicalDirectory(physicalDir);

@@ -8,6 +8,7 @@ using Cuyahoga.Core.Domain;
 using Cuyahoga.Web.Admin.UI;
 using Cuyahoga.Web.UI;
 using Cuyahoga.Web.Util;
+using Cuyahoga.Core.Util;
 
 namespace Cuyahoga.Web.Admin
 {
@@ -214,9 +215,9 @@ namespace Cuyahoga.Web.Admin
 				foreach (ModuleSetting ms in this._activeSection.ModuleType.ModuleSettings)
 				{
 					Control ctrl = this.TemplateControl.FindControl(ms.Name);
-					if (this._activeSection.Settings[ms.Name] != null)
+					if (this._activeSection.Settings.GetValueOrDefault(ms.Name) != null)
 					{
-						string settingValue = this._activeSection.Settings[ms.Name].ToString();
+						string settingValue = this._activeSection.Settings.GetValueOrDefault(ms.Name).ToString();
 						if (ctrl is TextBox)
 						{
 							((TextBox)ctrl).Text = settingValue;

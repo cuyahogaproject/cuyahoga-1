@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Persistence;
 
@@ -35,7 +36,7 @@ namespace Cuyahoga.Core.Service.SiteStructure
 			return (Section)this._commonDao.GetObjectById(typeof(Section), sectionId);
 		}
 
-		public IList GetSortedSectionsByNode(Node node)
+		public IList<Section> GetSortedSectionsByNode(Node node)
 		{
 			return this._siteStructureDao.GetSortedSectionsByNode(node);
 		}

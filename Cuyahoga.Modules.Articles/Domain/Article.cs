@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Domain;
 
@@ -25,7 +26,7 @@ namespace Cuyahoga.Modules.Articles.Domain
 		private Cuyahoga.Core.Domain.User _createdBy;
 		private Cuyahoga.Core.Domain.User _modifiedBy;
 		private Category _category;
-		private IList _comments;
+		private IList<Comment> _comments;
 
 		#region properties
 
@@ -166,7 +167,7 @@ namespace Cuyahoga.Modules.Articles.Domain
 		/// <summary>
 		/// Property Comments (IList)
 		/// </summary>
-		public virtual IList Comments
+		public virtual IList<Comment> Comments
 		{
 			get { return this._comments; }
 			set { this._comments = value; }
@@ -188,7 +189,7 @@ namespace Cuyahoga.Modules.Articles.Domain
 			this._dateOnline = DateTime.MinValue;
 			this._dateOffline = DateTime.MinValue;
 			this._dateCreated = DateTime.Now;
-			this._comments = new ArrayList();
+			this._comments = new List<Comment>();
 		}
 
 		#endregion

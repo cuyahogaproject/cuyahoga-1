@@ -39,6 +39,20 @@ SPECIAL NOTE: NHIBERNATE SESSIONS AND TRANSACTIONS
   and Castle.Services.Transaction.dll from the bin folder.
 
 *****************************************************************************
+SPECIAL NOTE: NHIBERNATE 5
+- Cuyahoga uses NHibernate 5.5. NHibernate 5 only supports generic collections,
+  so the collections of the domain classes are generic now (for example
+  Node.ChildNodes is IList<Node> and Section.Settings is IDictionary<string, string>).
+- Custom modules: map collections with IList<T>, ISet<T> or IDictionary<TKey, TValue>
+  instead of IList, Iesi.Collections.ISet or IDictionary.
+- The indexer of a generic dictionary throws when a key doesn't exist, where the
+  old IDictionary returned null. Read section settings and connections with
+  Section.Settings.GetValueOrDefault("NAME") (using Cuyahoga.Core.Util).
+- Web.config needs a binding redirect for NHibernate to 5.5.0.0 (see the runtime
+  section of the Web.config that comes with Cuyahoga).
+- NHibernate.Caches.SysCache.dll comes from the NHibernate.Caches.SysCache package now.
+
+*****************************************************************************
 SPECIAL NOTE: THE FLASH AND FORUM MODULES HAVE BEEN REMOVED
 - Browsers no longer run Flash, so the Flash module is no longer part of Cuyahoga.
   The Forum module has been removed as well.

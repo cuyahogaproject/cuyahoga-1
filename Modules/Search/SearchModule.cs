@@ -6,6 +6,7 @@ using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service;
 using Cuyahoga.Core.Search;
 using Cuyahoga.Core.Communication;
+using Cuyahoga.Core.Util;
 
 namespace Cuyahoga.Modules.Search
 {
@@ -68,13 +69,13 @@ namespace Cuyahoga.Modules.Search
 		public override void ReadSectionSettings()
 		{
 			base.ReadSectionSettings ();
-			if (base.Section.Settings["RESULTS_PER_PAGE"] != null)
+			if (base.Section.Settings.GetValueOrDefault("RESULTS_PER_PAGE") != null)
 			{
-				this._resultsPerPage = Convert.ToInt32(base.Section.Settings["RESULTS_PER_PAGE"]);
+				this._resultsPerPage = Convert.ToInt32(base.Section.Settings.GetValueOrDefault("RESULTS_PER_PAGE"));
 			}
-			if (base.Section.Settings["SHOW_INPUT_PANEL"] != null)
+			if (base.Section.Settings.GetValueOrDefault("SHOW_INPUT_PANEL") != null)
 			{
-				this._showInputPanel = Convert.ToBoolean(base.Section.Settings["SHOW_INPUT_PANEL"]);
+				this._showInputPanel = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_INPUT_PANEL"));
 			}
 		}
 

@@ -161,17 +161,17 @@ namespace Cuyahoga.Modules.Articles
 
 			try
 			{
-				this._allowComments = Convert.ToBoolean(base.Section.Settings["ALLOW_COMMENTS"]);
-				this._allowAnonymousComments = Convert.ToBoolean(base.Section.Settings["ALLOW_ANONYMOUS_COMMENTS"]);
-				this._allowSyndication = Convert.ToBoolean(base.Section.Settings["ALLOW_SYNDICATION"]);
-				this._showArchive = Convert.ToBoolean(base.Section.Settings["SHOW_ARCHIVE"]);
-				this._showAuthor = Convert.ToBoolean(base.Section.Settings["SHOW_AUTHOR"]);
-				this._showCategory = Convert.ToBoolean(base.Section.Settings["SHOW_CATEGORY"]);
-				this._showDateTime = Convert.ToBoolean(base.Section.Settings["SHOW_DATETIME"]);
-				this._numberOfArticlesInList = Convert.ToInt32(base.Section.Settings["NUMBER_OF_ARTICLES_IN_LIST"]);
-				this._displayType = (DisplayType)Enum.Parse(typeof(DisplayType), base.Section.Settings["DISPLAY_TYPE"].ToString());
-				this._sortBy = (SortBy)Enum.Parse(typeof(SortBy), base.Section.Settings["SORT_BY"].ToString());
-				this._sortDirection = (SortDirection)Enum.Parse(typeof(SortDirection), base.Section.Settings["SORT_DIRECTION"].ToString());
+				this._allowComments = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("ALLOW_COMMENTS"));
+				this._allowAnonymousComments = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("ALLOW_ANONYMOUS_COMMENTS"));
+				this._allowSyndication = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("ALLOW_SYNDICATION"));
+				this._showArchive = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_ARCHIVE"));
+				this._showAuthor = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_AUTHOR"));
+				this._showCategory = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_CATEGORY"));
+				this._showDateTime = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_DATETIME"));
+				this._numberOfArticlesInList = Convert.ToInt32(base.Section.Settings.GetValueOrDefault("NUMBER_OF_ARTICLES_IN_LIST"));
+				this._displayType = (DisplayType)Enum.Parse(typeof(DisplayType), base.Section.Settings.GetValueOrDefault("DISPLAY_TYPE").ToString());
+				this._sortBy = (SortBy)Enum.Parse(typeof(SortBy), base.Section.Settings.GetValueOrDefault("SORT_BY").ToString());
+				this._sortDirection = (SortDirection)Enum.Parse(typeof(SortDirection), base.Section.Settings.GetValueOrDefault("SORT_DIRECTION").ToString());
 			}
 			catch
 			{
@@ -412,7 +412,7 @@ namespace Cuyahoga.Modules.Articles
 		/// <returns></returns>
 		public string GetProfileUrl(int userId)
 		{
-			Section sectionTo = this.Section.Connections["ViewProfile"] as Section;
+			Section sectionTo = this.Section.Connections.GetValueOrDefault("ViewProfile") as Section;
 			if (sectionTo != null)
 			{
 				return UrlHelper.GetUrlFromSection(sectionTo) + "/ViewProfile/" + userId.ToString();
@@ -476,11 +476,11 @@ namespace Cuyahoga.Modules.Articles
 			}
 			else
 			{
-				int maxNumberOfItems = Int32.Parse(this.Section.Settings["NUMBER_OF_ARTICLES_IN_LIST"].ToString());
+				int maxNumberOfItems = Int32.Parse(this.Section.Settings.GetValueOrDefault("NUMBER_OF_ARTICLES_IN_LIST").ToString());
 				articles = GetRssArticles(maxNumberOfItems);
 			}
 			
-			DisplayType displayType = (DisplayType)Enum.Parse(typeof(DisplayType), this.Section.Settings["DISPLAY_TYPE"].ToString());
+			DisplayType displayType = (DisplayType)Enum.Parse(typeof(DisplayType), this.Section.Settings.GetValueOrDefault("DISPLAY_TYPE").ToString());
 			foreach (Article article in articles)
 			{
 				RssItem item = new RssItem();

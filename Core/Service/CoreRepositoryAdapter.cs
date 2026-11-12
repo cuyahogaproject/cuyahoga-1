@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using NHibernate;
 using log4net;
@@ -129,7 +130,7 @@ namespace Cuyahoga.Core.Service
 			return this._siteStructureDao.GetSiteAliasesBySite(site);
 		}
 
-		public override IList GetRootNodes(Site site)
+		public override IList<Node> GetRootNodes(Site site)
 		{
 			return this._siteStructureDao.GetRootNodes(site);
 		}
@@ -164,7 +165,7 @@ namespace Cuyahoga.Core.Service
 			return this._siteStructureDao.GetMenusByRootNode(rootNode);
 		}
 
-		public override IList GetSortedSectionsByNode(Node node)
+		public override IList<Section> GetSortedSectionsByNode(Node node)
 		{
 			return this._siteStructureDao.GetSortedSectionsByNode(node);
 		}

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Cuyahoga.Core.Domain
 {
@@ -19,7 +20,7 @@ namespace Cuyahoga.Core.Domain
 		private string _metaKeywords;
 		private string _metaDescription;
 		private Role _defaultRole;
-		private IList _rootNodes;
+		private IList<Node> _rootNodes;
 		private DateTime _updateTimestamp;
 	    // # added for v1.6.0
         private Template _offlineTemplate;
@@ -143,7 +144,7 @@ namespace Cuyahoga.Core.Domain
 		/// <summary>
 		/// Property RootNodes (IList)
 		/// </summary>
-		public virtual IList RootNodes
+		public virtual IList<Node> RootNodes
 		{
 			get { return this._rootNodes; }
 			set { this._rootNodes = value; }

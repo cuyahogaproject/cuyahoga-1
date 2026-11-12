@@ -13,6 +13,7 @@ using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Communication;
 
 using Cuyahoga.Web.Components;
+using Cuyahoga.Core.Util;
 
 namespace Cuyahoga.Web.Admin
 {
@@ -68,7 +69,7 @@ namespace Cuyahoga.Web.Admin
 			foreach (ModuleAction action in outboundModuleActions)
 			{
 				// Only add actions that are not assigned yet.
-				if (this._activeSection.Connections[action.Name] == null)
+				if (this._activeSection.Connections.GetValueOrDefault(action.Name) == null)
 				{
 					this.ddlAction.Items.Add(action.Name);
 				}
@@ -181,7 +182,7 @@ namespace Cuyahoga.Web.Admin
 		private void btnSave_Click(object sender, System.EventArgs e)
 		{
 			this._activeSection.Connections[this.ddlAction.SelectedValue] 
-				= base.CoreRepository.GetObjectById(typeof(Section)
+				= (Section)base.CoreRepository.GetObjectById(typeof(Section)
 					, Int32.Parse(this.ddlSectionTo.SelectedValue));
 			try
 			{

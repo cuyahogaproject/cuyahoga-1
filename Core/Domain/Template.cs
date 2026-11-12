@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Cuyahoga.Core.Domain
 {
@@ -16,7 +17,7 @@ namespace Cuyahoga.Core.Domain
 		private string _basePath;
 		private string _templateControl;
 		private string _css;
-		private IDictionary _sections;
+		private IDictionary<string, Section> _sections;
 
 		/// <summary>
 		/// Property Id (int)
@@ -91,7 +92,7 @@ namespace Cuyahoga.Core.Domain
 		/// The sections that are directly related to the template. The key represents the placeholder
 		/// where the section belongs.
 		/// </summary>
-		public virtual IDictionary Sections
+		public virtual IDictionary<string, Section> Sections
 		{
 			get { return this._sections; }
 			set { this._sections = value; }
@@ -103,7 +104,7 @@ namespace Cuyahoga.Core.Domain
 		public Template()
 		{
 			this._id = -1;
-			this._sections = new Hashtable();
+			this._sections = new Dictionary<string, Section>();
 		}
 	}
 }

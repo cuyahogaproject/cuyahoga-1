@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 
 using Cuyahoga.Core.Persistence;
 using NHibernate;
@@ -65,7 +66,7 @@ namespace Cuyahoga.Core.DataAccess
 			return query.List();
 		}
 
-		public IList GetRootNodes(Site site)
+		public IList<Node> GetRootNodes(Site site)
 		{
 			ISession session = this._sessionManager.OpenSession();
 
@@ -74,7 +75,7 @@ namespace Cuyahoga.Core.DataAccess
 			q.SetInt32("siteId", site.Id);
 			q.SetCacheable(true);
 			q.SetCacheRegion("Nodes");
-			return q.List();
+			return q.List<Node>();
 		}
 
 		public Node GetRootNodeByCultureAndSite(string culture, Site site)
@@ -159,14 +160,14 @@ namespace Cuyahoga.Core.DataAccess
 			return q.List();
 		}
 
-		public IList GetSortedSectionsByNode(Node node)
+		public IList<Section> GetSortedSectionsByNode(Node node)
 		{
 			ISession session = this._sessionManager.OpenSession();
 
 			string hql = "from Section s where s.Node.Id = :nodeId order by s.PlaceholderId, s.Position ";
 			IQuery q = session.CreateQuery(hql);
 			q.SetInt32("nodeId", node.Id);
-			return q.List();
+			return q.List<Section>();
 		}
 
 		public IList GetUnconnectedSections()

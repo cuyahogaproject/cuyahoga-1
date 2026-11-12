@@ -76,12 +76,12 @@ namespace Cuyahoga.Modules.RemoteContent
 		{
 			base.ReadSectionSettings ();
 			// Set dynamic module settings
-			this._cacheDuration = Convert.ToInt32(base.Section.Settings["CACHE_DURATION"]);
-			this._backgroundRefresh = Convert.ToBoolean(base.Section.Settings["BACKGROUND_REFRESH"]);
-			this._showContents = Convert.ToBoolean(base.Section.Settings["SHOW_CONTENTS"]);
-			this._showDates = Convert.ToBoolean(base.Section.Settings["SHOW_DATES"]);
-			this._showSources = Convert.ToBoolean(base.Section.Settings["SHOW_SOURCES"]);
-			this._showAuthors = Convert.ToBoolean(base.Section.Settings["SHOW_AUTHORS"]);
+			this._cacheDuration = Convert.ToInt32(base.Section.Settings.GetValueOrDefault("CACHE_DURATION"));
+			this._backgroundRefresh = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("BACKGROUND_REFRESH"));
+			this._showContents = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_CONTENTS"));
+			this._showDates = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_DATES"));
+			this._showSources = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_SOURCES"));
+			this._showAuthors = Convert.ToBoolean(base.Section.Settings.GetValueOrDefault("SHOW_AUTHORS"));
 		}
 
 

@@ -19,15 +19,9 @@ jobs:
   build-and-test:
     name: Build and test
     # Visual Studio with the ASP.NET workload (web application targets), IIS Express, SQL Server LocalDB,
-    # PostgreSQL, Node.js and the .NET Framework 4.8 targeting pack come with the image.
+    # Node.js and the .NET Framework 4.8 targeting pack come with the image.
     runs-on: windows-2025
-    timeout-minutes: 60
-    env:
-      # MySQL and PostgreSQL only live as long as the job, so these passwords are not secrets.
-      CUYAHOGA_E2E_MYSQL_USER: root
-      CUYAHOGA_E2E_MYSQL_PASSWORD: cuyahoga-ci
-      CUYAHOGA_E2E_POSTGRES_USER: postgres
-      CUYAHOGA_E2E_POSTGRES_PASSWORD: root
+    timeout-minutes: 45
 
     steps:
       - uses: actions/checkout@v5
@@ -47,19 +41,7 @@ jobs:
       - name: Unit tests
         run: Tests/Cuyahoga.Core.Tests/bin/Debug/net48/Cuyahoga.Core.Tests.exe
 
-      # End-to-end tests on SQL Server (LocalDB), MySQL and PostgreSQL.
-
-      - name: Start MySQL
-        uses: shogo82148/actions-setup-mysql@v1
-        with:
-          mysql-version: '8.4'
-          root-password: ${{ env.CUYAHOGA_E2E_MYSQL_PASSWORD }}
-
-      - name: Start PostgreSQL
-        # Installed on the image with the service disabled; the postgres user's password is 'root'.
-        run: |
-          Set-Service postgresql-x64-17 -StartupType Manual
-          Start-Service postgresql-x64-17
+      # End-to-end tests on SQL Server (LocalDB). MySQL and PostgreSQL are tested locally (npm run test:all).
 
       - name: Start SQL Server LocalDB
         run: |
@@ -80,7 +62,7 @@ jobs:
 
       - name: End-to-end tests
         working-directory: e2e
-        run: npm run test:all
+        run: npm run test:mssql
 
       - name: Upload e2e report
         if: ${{ !cancelled() }}

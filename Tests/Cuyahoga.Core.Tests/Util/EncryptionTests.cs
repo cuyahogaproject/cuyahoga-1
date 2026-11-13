@@ -18,6 +18,16 @@ namespace Cuyahoga.Core.Tests.Util
 		}
 
 		[Fact]
+		public void Hash_stored_by_earlier_versions_still_verifies()
+		{
+			// Created with .NET Framework's Rfc2898DeriveBytes (HMAC-SHA256), which hashed passwords before KeyDerivation.
+			const string storedHash = "PBKDF2$100000$AQIDBAUGBwgJCgsMDQ4PEA==$elh9tFdkbWdfSnWaME2asFLzWHBzIkbQYKo2In79s4A=";
+
+			Assert.True(Encryption.VerifyPasswordHash("s3cret-password", storedHash));
+			Assert.False(Encryption.VerifyPasswordHash("s3cret-Password", storedHash));
+		}
+
+		[Fact]
 		public void Legacy_md5_hash_verifies_and_needs_an_upgrade()
 		{
 			string legacyHash = Encryption.StringToMD5Hash("secret");

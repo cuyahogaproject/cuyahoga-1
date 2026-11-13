@@ -56,8 +56,12 @@ jobs:
       - name: Build
         run: msbuild Cuyahoga.sln -restore -m -p:Configuration=Debug -verbosity:minimal
 
-      - name: Unit tests
+      - name: Unit tests (net48)
         run: Tests/Cuyahoga.Core.Tests/bin/Debug/net48/Cuyahoga.Core.Tests.exe
+
+      # Tests the netstandard2.0 build of Cuyahoga.Core.
+      - name: Unit tests (net10.0)
+        run: dotnet Tests/Cuyahoga.Core.Tests/bin/Debug/net10.0/Cuyahoga.Core.Tests.dll
 
       # End-to-end tests on SQL Server (LocalDB). MySQL and PostgreSQL are tested locally (npm run test:all).
 

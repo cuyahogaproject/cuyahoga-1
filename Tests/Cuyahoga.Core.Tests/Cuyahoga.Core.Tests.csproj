@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <!-- net48 tests the net48 build of Core, net10.0 the netstandard2.0 build. -->
+    <TargetFrameworks>net48;net10.0</TargetFrameworks>
     <!-- xUnit v3 test projects are executables. -->
     <OutputType>Exe</OutputType>
     <LangVersion>latest</LangVersion>
@@ -17,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Cuyahoga.Core.csproj" />
   </ItemGroup>
-  <ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
     <Reference Include="System.Configuration" />
   </ItemGroup>
 </Project>

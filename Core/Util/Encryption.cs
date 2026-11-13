@@ -1,6 +1,7 @@
 using System;
 using System.Text;
 using System.Security.Cryptography;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace Cuyahoga.Core.Util
 {
@@ -115,10 +116,9 @@ namespace Cuyahoga.Core.Util
 
 		private static byte[] Pbkdf2(string password, byte[] salt, int iterations, int length)
 		{
-			using (Rfc2898DeriveBytes pbkdf2 = new Rfc2898DeriveBytes(Encoding.UTF8.GetBytes(password), salt, iterations, HashAlgorithmName.SHA256))
-			{
-				return pbkdf2.GetBytes(length);
-			}
+			// PBKDF2 with HMAC-SHA256. The Rfc2898DeriveBytes constructor that takes the hash algorithm is missing in
+			// netstandard2.0; KeyDerivation gives the same result on every target.
+			return KeyDerivation.Pbkdf2(password, salt, KeyDerivationPrf.HMACSHA256, iterations, length);
 		}
 
 		private static bool FixedTimeEquals(byte[] a, byte[] b)

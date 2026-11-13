@@ -1,12 +1,12 @@
-#if NETFRAMEWORK
 using System.Collections;
 using System.Web;
+using Cuyahoga.Core.Persistence;
 
-namespace Cuyahoga.Core.Persistence
+namespace Cuyahoga.Web.Util
 {
 	/// <summary>
-	/// Stores the objects of the current unit of work in the current HTTP request (System.Web), or in the current
-	/// thread when there is no request (background work, tests).
+	/// Stores the objects of the current unit of work in the current HTTP request, or in the current thread when
+	/// there is no request (background work). Set as ContextStorage.Current in Application_Start.
 	/// </summary>
 	public class HttpContextStorage : IContextStorage
 	{
@@ -38,4 +38,3 @@ namespace Cuyahoga.Core.Persistence
 		}
 	}
 }
-#endif

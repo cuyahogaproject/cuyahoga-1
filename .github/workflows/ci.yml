@@ -59,7 +59,7 @@ jobs:
       - name: Unit tests (net48)
         run: Tests/Cuyahoga.Core.Tests/bin/Debug/net48/Cuyahoga.Core.Tests.exe
 
-      # Tests the netstandard2.0 build of Cuyahoga.Core.
+      # Cuyahoga.Core is netstandard2.0: test it on .NET 10 as well.
       - name: Unit tests (net10.0)
         run: dotnet Tests/Cuyahoga.Core.Tests/bin/Debug/net10.0/Cuyahoga.Core.Tests.dll
 

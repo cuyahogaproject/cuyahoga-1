@@ -2,7 +2,7 @@ namespace Cuyahoga.Core.Persistence
 {
 	/// <summary>
 	/// Stores the objects of the current unit of work (the NHibernate session and transaction), for example per
-	/// web request. Set <see cref="ContextStorage.Current"/> at application start to replace the default.
+	/// web request. The host sets <see cref="ContextStorage.Current"/> at application start.
 	/// </summary>
 	public interface IContextStorage
 	{

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using Cuyahoga.Core.Domain;
+using Cuyahoga.Core.Persistence;
 using Xunit;
 
 namespace Cuyahoga.Core.Tests
@@ -86,6 +87,29 @@ namespace Cuyahoga.Core.Tests
 		{
 			section.SectionPermissions.Add(new SectionPermission { Section = section, Role = role, ViewAllowed = view, EditAllowed = edit });
 			return section;
+		}
+	}
+
+	/// <summary>
+	/// Context storage for tests that reach the unit of work (TransactionContext, SessionManager). Core has no default
+	/// storage; the web site sets HttpContextStorage at application start.
+	/// </summary>
+	public sealed class DictionaryContextStorage : IContextStorage
+	{
+		private readonly Dictionary<string, object> _items = new Dictionary<string, object>();
+
+		public object Get(string key) => _items.TryGetValue(key, out object value) ? value : null;
+
+		public void Set(string key, object value)
+		{
+			if (value == null)
+			{
+				_items.Remove(key);
+			}
+			else
+			{
+				_items[key] = value;
+			}
 		}
 	}
 

@@ -1,6 +1,6 @@
 using System;
+using System.Net;
 using System.Text.RegularExpressions;
-using System.Web;
 
 namespace Cuyahoga.Core.Util
 {
@@ -94,7 +94,7 @@ namespace Cuyahoga.Core.Util
 			text = Regex.Replace(text, @"<!--.*?-->", " ", RegexOptions.Singleline);
 			// Only tag-like constructs, so a plain "a < b" survives.
 			text = Regex.Replace(text, @"<[a-zA-Z/!?][^>]*>?", " ");
-			text = HttpUtility.HtmlDecode(text);
+			text = WebUtility.HtmlDecode(text);
 			return Regex.Replace(text, @"\s{2,}", " ").Trim();
 		}
 

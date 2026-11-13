@@ -35,6 +35,24 @@ jobs:
 
       - uses: microsoft/setup-msbuild@v2
 
+      # Fails fast, before the build, when the runner image lacks a tool that the build or the e2e tests need.
+      - name: Check tools
+        run: |
+          $missing = @()
+          foreach ($tool in 'msbuild', 'sqlcmd', 'SqlLocalDB') {
+            $command = Get-Command $tool -ErrorAction SilentlyContinue
+            if ($command) { "${tool}: $($command.Source)" } else { $missing += "$tool (not on PATH)" }
+          }
+          $iisExpress = 'C:\Program Files\IIS Express\iisexpress.exe'
+          if (Test-Path $iisExpress) { "iisexpress: $iisExpress" } else { $missing += "IIS Express ($iisExpress)" }
+          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
+          $webTargets = Get-ChildItem "$vs\MSBuild\Microsoft\VisualStudio" -Recurse -Filter Microsoft.WebApplication.targets -ErrorAction SilentlyContinue | Select-Object -First 1
+          if ($webTargets) { "web application targets: $($webTargets.FullName)" } else { $missing += "Microsoft.WebApplication.targets (ASP.NET workload) in $vs" }
+          if ($missing) {
+            $missing | ForEach-Object { "::error::Missing tool: $_" }
+            exit 1
+          }
+
       - name: Build
         run: msbuild Cuyahoga.sln -restore -m -p:Configuration=Debug -verbosity:minimal
 

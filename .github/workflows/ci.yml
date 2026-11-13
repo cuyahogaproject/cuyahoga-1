@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+# A newer push to the same branch or pull request cancels the run that is still going.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Build and test
+    # Visual Studio with the ASP.NET workload (web application targets), IIS Express, SQL Server LocalDB,
+    # PostgreSQL, Node.js and the .NET Framework 4.8 targeting pack come with the image.
+    runs-on: windows-2025
+    timeout-minutes: 60
+    env:
+      # MySQL and PostgreSQL only live as long as the job, so these passwords are not secrets.
+      CUYAHOGA_E2E_MYSQL_USER: root
+      CUYAHOGA_E2E_MYSQL_PASSWORD: cuyahoga-ci
+      CUYAHOGA_E2E_POSTGRES_USER: postgres
+      CUYAHOGA_E2E_POSTGRES_PASSWORD: root
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Cache NuGet packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Build.*') }}
+          restore-keys: nuget-${{ runner.os }}-
+
+      - uses: microsoft/setup-msbuild@v2
+
+      - name: Build
+        run: msbuild Cuyahoga.sln -restore -m -p:Configuration=Debug -verbosity:minimal
+
+      - name: Unit tests
+        run: Tests/Cuyahoga.Core.Tests/bin/Debug/net48/Cuyahoga.Core.Tests.exe
+
+      # End-to-end tests on SQL Server (LocalDB), MySQL and PostgreSQL.
+
+      - name: Start MySQL
+        uses: shogo82148/actions-setup-mysql@v1
+        with:
+          mysql-version: '8.4'
+          root-password: ${{ env.CUYAHOGA_E2E_MYSQL_PASSWORD }}
+
+      - name: Start PostgreSQL
+        # Installed on the image with the service disabled; the postgres user's password is 'root'.
+        run: |
+          Set-Service postgresql-x64-17 -StartupType Manual
+          Start-Service postgresql-x64-17
+
+      - name: Start SQL Server LocalDB
+        run: |
+          SqlLocalDB start MSSQLLocalDB
+          sqlcmd -S "(localdb)\MSSQLLocalDB" -E -b -Q "SELECT @@VERSION"
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: e2e/package-lock.json
+
+      - name: Install Playwright
+        working-directory: e2e
+        run: |
+          npm ci
+          npx playwright install chromium
+
+      - name: End-to-end tests
+        working-directory: e2e
+        run: npm run test:all
+
+      - name: Upload e2e report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: e2e/playwright-report
+          retention-days: 14
+
+      - name: Upload e2e traces
+        if: ${{ failure() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-test-results
+          path: e2e/test-results
+          retention-days: 14

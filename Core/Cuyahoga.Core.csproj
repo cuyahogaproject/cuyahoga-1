@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- net48 for the current web site (System.Web); netstandard2.0 so Core can also be used by newer .NET. -->
+    <!-- net48 for the current web site; netstandard2.0 so Core can also be used by newer .NET. -->
     <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
     <RootNamespace>Cuyahoga.Core</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -17,12 +17,6 @@
     <PackageReference Include="Lucene.Net.Analysis.Common" Version="4.8.0-beta00017" />
     <PackageReference Include="Lucene.Net.QueryParser" Version="4.8.0-beta00017" />
     <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="8.0.22" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Web" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.1" />
   </ItemGroup>
 </Project>

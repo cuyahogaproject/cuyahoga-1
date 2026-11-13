@@ -4,9 +4,11 @@ using System.Web;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.Windsor;
+using Cuyahoga.Core.Persistence;
 using Cuyahoga.Core.Service;
 using Cuyahoga.Core.Util;
 using Cuyahoga.Web.Components;
+using Cuyahoga.Web.Util;
 using log4net;
 using log4net.Config;
 
@@ -45,6 +47,12 @@ namespace Cuyahoga.Web
 
 			// Initialize log4net 
 			XmlConfigurator.Configure();
+
+			// The NHibernate session and transaction live per request. Core has no default storage, so it fails at the
+			// first database access when this is missing. HttpContext.Items is needed because AsyncLocal values don't
+			// reliably flow between the stages of a System.Web request (NHibernateSessionModule closes the session
+			// at EndRequest).
+			ContextStorage.Current = new HttpContextStorage();
 
 			// Initialize Windsor
 			IWindsorContainer container = new CuyahogaContainer();

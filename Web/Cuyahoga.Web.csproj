@@ -364,6 +364,7 @@
     <Compile Include="Util\FormFixerHtmlTextWriter.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Util\HttpContextStorage.cs" />
     <Compile Include="Util\SearchHelper.cs">
       <SubType>Code</SubType>
     </Compile>

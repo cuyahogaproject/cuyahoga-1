@@ -16,9 +16,7 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="4.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <!-- Also brings System.Configuration (ConfigurationManager package) on both targets. -->
     <ProjectReference Include="..\..\Core\Cuyahoga.Core.csproj" />
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'net48'">
-    <Reference Include="System.Configuration" />
   </ItemGroup>
 </Project>

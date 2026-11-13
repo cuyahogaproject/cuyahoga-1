@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using Cuyahoga.Core.Persistence;
 using Cuyahoga.Core.Service.Files;
 using Xunit;
 
@@ -76,6 +77,8 @@ namespace Cuyahoga.Core.Tests.Service
 		[Fact]
 		public void Without_a_transaction_the_file_service_writes_and_deletes_immediately()
 		{
+			// An empty storage: no transaction is active.
+			ContextStorage.Current = new DictionaryContextStorage();
 			var fileService = new TransactionalFileService { TempDir = _temp.Path };
 			string target = _files.File("direct.txt");
 

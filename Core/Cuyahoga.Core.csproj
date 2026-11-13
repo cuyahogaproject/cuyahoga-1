@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <!-- net48 for the current web site; netstandard2.0 so Core can also be used by newer .NET. -->
-    <TargetFrameworks>net48;netstandard2.0</TargetFrameworks>
+    <!-- netstandard2.0 runs on .NET Framework 4.8 (the current web site) and on newer .NET. -->
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Cuyahoga.Core</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>

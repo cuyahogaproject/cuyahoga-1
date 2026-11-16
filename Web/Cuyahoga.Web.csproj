@@ -240,9 +240,6 @@
     <Compile Include="Components\CuyahogaContainer.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Components\ModuleLoader.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Components\UrlRewriter.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -365,6 +362,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Util\HttpContextStorage.cs" />
+    <Compile Include="Util\HttpSectionUrlProvider.cs" />
     <Compile Include="Util\SearchHelper.cs">
       <SubType>Code</SubType>
     </Compile>

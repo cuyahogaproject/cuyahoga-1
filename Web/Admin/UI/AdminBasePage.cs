@@ -6,7 +6,7 @@ using System.Configuration;
 using Cuyahoga.Core;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service.SiteStructure;
-using Cuyahoga.Web.Components;
+using Cuyahoga.Core.Service;
 using Cuyahoga.Web.UI;
 
 namespace Cuyahoga.Web.Admin.UI

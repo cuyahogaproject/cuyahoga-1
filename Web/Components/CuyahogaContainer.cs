@@ -3,6 +3,7 @@ using Castle.Windsor;
 using Cuyahoga.Core.Persistence;
 using Cuyahoga.Core.Service;
 using Cuyahoga.Core.Util;
+using Cuyahoga.Web.Util;
 
 namespace Cuyahoga.Web.Components
 {
@@ -21,7 +22,7 @@ namespace Cuyahoga.Web.Components
 			AddFacility(new NHibernateFacility(NHibernateFacility.CreateConfiguration(settings)));
 			Install(new CoreServicesInstaller(settings));
 			Register(
-				Component.For<ModuleLoader>().LifestyleSingleton(),
+				Component.For<ISectionUrlProvider>().ImplementedBy<HttpSectionUrlProvider>().LifestyleSingleton(),
 				Component.For<SessionFactoryHelper>().LifestyleSingleton(),
 				// Legacy
 				Component.For<CoreRepositoryAdapter>().Named("corerepositoryadapter").LifestyleSingleton());

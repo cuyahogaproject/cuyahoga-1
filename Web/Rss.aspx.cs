@@ -7,7 +7,7 @@ using Cuyahoga.Core;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Util;
 using Cuyahoga.Web.Util;
-using Cuyahoga.Web.Components;
+using Cuyahoga.Core.Service;
 using Cuyahoga.Web.UI;
 using Cuyahoga.Core.Service.SiteStructure;
 

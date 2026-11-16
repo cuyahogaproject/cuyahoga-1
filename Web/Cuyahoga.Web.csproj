@@ -99,7 +99,6 @@
     <PackageReference Include="Castle.Windsor" Version="6.0.0" />
     <PackageReference Include="log4net" Version="3.5.0" />
     <PackageReference Include="NHibernate" Version="5.5.2" />
-    <PackageReference Include="NHibernate.Caches.SysCache" Version="5.9.0" />
     <!-- Database drivers, loaded by NHibernate at runtime (Cuyahoga.NHibernateDriver). -->
     <PackageReference Include="MySqlConnector" Version="2.6.2" />
     <PackageReference Include="Npgsql" Version="8.0.9" />

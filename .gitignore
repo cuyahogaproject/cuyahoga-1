@@ -14,4 +14,5 @@ Web/UserFiles/
 Web/files/
 Web/index/
 Web/Web.local.config
+Web.Core/appsettings.local.json
 Web/index-e2e/

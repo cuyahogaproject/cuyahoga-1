@@ -48,6 +48,16 @@ test.describe('public site', () => {
     expect(body).toMatch(/<loc>/);
   });
 
+  test('absolute urls use the address of the site, not the one of the forwarded WebForms site', async ({ request, baseURL }) => {
+    // The sitemap urls come from the site url, which the installer took from the install request.
+    const body = await (await request.get('/sitemap.xml')).text();
+    const locations = [...body.matchAll(/<loc>([^<]*)<\/loc>/g)].map((match) => match[1]);
+    expect(locations.length).toBeGreaterThan(0);
+    for (const location of locations) {
+      expect(location.startsWith(`${baseURL}/`), location).toBe(true);
+    }
+  });
+
   test('RSS endpoint responds', async ({ request }) => {
     const response = await request.get('/Rss.aspx');
     expect(response.status()).toBeLessThan(400);

@@ -1337,4 +1337,30 @@
   </PropertyGroup>
   <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <!--
+  Publishing only picks up files that are part of this project, but the modules are deployed into Web\Modules and
+  Web\bin by their own builds (see DeployCuyahogaModule in Directory.Build.targets). The modules reference this
+  project, so they can't be project references here. Instead, build them before publishing and add their files
+  to the publish output.
+  -->
+  <ItemGroup>
+    <CuyahogaModuleProject Include="..\Modules\Cuyahoga.Modules.csproj" />
+    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Articles\Cuyahoga.Modules.Articles.csproj" />
+    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Downloads\Cuyahoga.Modules.Downloads.csproj" />
+    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.RemoteContent\Cuyahoga.Modules.RemoteContent.csproj" />
+  </ItemGroup>
+  <PropertyGroup>
+    <CopyAllFilesToSingleFolderForPackageDependsOn>$(CopyAllFilesToSingleFolderForPackageDependsOn);IncludeCuyahogaModulesForPublish</CopyAllFilesToSingleFolderForPackageDependsOn>
+    <CopyAllFilesToSingleFolderForMsdeployDependsOn>$(CopyAllFilesToSingleFolderForMsdeployDependsOn);IncludeCuyahogaModulesForPublish</CopyAllFilesToSingleFolderForMsdeployDependsOn>
+  </PropertyGroup>
+  <Target Name="IncludeCuyahogaModulesForPublish">
+    <!-- This project and its references are already built; BuildProjectReferences=false avoids building them again. -->
+    <MSBuild Projects="@(CuyahogaModuleProject)" Targets="Build" Properties="Configuration=$(Configuration);BuildProjectReferences=false" />
+    <ItemGroup>
+      <_CuyahogaModuleContent Include="Modules\**\*" />
+      <FilesForPackagingFromProject Include="@(_CuyahogaModuleContent)" DestinationRelativePath="Modules\%(RecursiveDir)%(Filename)%(Extension)" />
+      <_CuyahogaModuleBin Include="bin\Cuyahoga.Modules*.dll;bin\*\Cuyahoga.Modules*.resources.dll" />
+      <FilesForPackagingFromProject Include="@(_CuyahogaModuleBin)" DestinationRelativePath="bin\%(RecursiveDir)%(Filename)%(Extension)" />
+    </ItemGroup>
+  </Target>
 </Project>

@@ -35,6 +35,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cuyahoga.Modules.RemoteCont
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cuyahoga.Core.Tests", "Tests\Cuyahoga.Core.Tests\Cuyahoga.Core.Tests.csproj", "{61C69A64-9A6B-4A1E-B249-F544D40DAE01}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cuyahoga.Web.Core", "Web.Core\Cuyahoga.Web.Core.csproj", "{6D10CC82-E9E1-4D88-BF6C-854D8C160B2E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -73,6 +75,10 @@ Global
 		{61C69A64-9A6B-4A1E-B249-F544D40DAE01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61C69A64-9A6B-4A1E-B249-F544D40DAE01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{61C69A64-9A6B-4A1E-B249-F544D40DAE01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D10CC82-E9E1-4D88-BF6C-854D8C160B2E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D10CC82-E9E1-4D88-BF6C-854D8C160B2E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D10CC82-E9E1-4D88-BF6C-854D8C160B2E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D10CC82-E9E1-4D88-BF6C-854D8C160B2E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

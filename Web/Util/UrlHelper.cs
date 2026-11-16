@@ -188,12 +188,34 @@ namespace Cuyahoga.Web.Util
 		
 		private static string GetHostUrl()
 		{
+			// Behind the ASP.NET Core site (Web.Core), which forwards requests to this site, use the address that the
+			// browser used. The forwarder replaces these headers when they come from the browser.
+			string forwardedHost = FirstForwardedValue("X-Forwarded-Host");
+			if (forwardedHost != null)
+			{
+				string forwardedProto = FirstForwardedValue("X-Forwarded-Proto") ?? "http";
+				return string.Format("{0}://{1}", forwardedProto, forwardedHost);
+			}
+
 			string securePort = HttpContext.Current.Request.ServerVariables["SERVER_PORT_SECURE"];
 			string protocol = securePort == null || securePort == "0" ? "http" : "https";
 			string serverPort = HttpContext.Current.Request.ServerVariables["SERVER_PORT"];
 			string port = serverPort == "80" ? string.Empty : ":" + serverPort;
 			string serverName = HttpContext.Current.Request.ServerVariables["SERVER_NAME"];
-			return string.Format("{0}://{1}{2}" , protocol, serverName, port ); 
+			return string.Format("{0}://{1}{2}" , protocol, serverName, port );
+		}
+
+		/// <summary>
+		/// The first (client side) value of an X-Forwarded-* header, or null.
+		/// </summary>
+		private static string FirstForwardedValue(string header)
+		{
+			string value = HttpContext.Current.Request.Headers[header];
+			if (string.IsNullOrWhiteSpace(value))
+			{
+				return null;
+			}
+			return value.Split(',')[0].Trim();
 		}
 	}
 }

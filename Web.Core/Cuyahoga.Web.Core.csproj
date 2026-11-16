@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <!--
+  The ASP.NET Core site. It serves the pages that are migrated from the WebForms site (Web) and forwards all other
+  requests to the WebForms site (LegacySiteUrl in appsettings.json).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Cuyahoga.Web.Core</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>5e7767ba-ef08-4439-a7bd-683121133326</UserSecretsId>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Cuyahoga.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />
+    <!--
+    Database drivers, loaded by NHibernate at runtime (Cuyahoga.NHibernateDriver). System.Data.SqlClient keeps
+    NHibernate.Driver.SqlClientDriver and the connection strings of the WebForms site working unchanged.
+    -->
+    <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
+    <PackageReference Include="MySqlConnector" Version="2.6.2" />
+    <PackageReference Include="Npgsql" Version="8.0.9" />
+  </ItemGroup>
+</Project>

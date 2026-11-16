@@ -34,8 +34,11 @@ namespace Cuyahoga.Core.Persistence
 			configuration.SetProperty(Environment.ConnectionDriver, settings.NHibernateDriver);
 			configuration.SetProperty(Environment.Dialect, settings.NHibernateDialect);
 			configuration.SetProperty(Environment.ConnectionString, settings.ConnectionString);
-			configuration.SetProperty(Environment.CacheProvider, "NHibernate.Caches.SysCache.SysCacheProvider, NHibernate.Caches.SysCache");
-			configuration.SetProperty(Environment.UseQueryCache, "true");
+			// No second-level or query cache: the WebForms site and the ASP.NET Core site share the database, and an
+			// in-memory cache in one process would serve (and write back) data that the other process has changed.
+			// The <cache> elements in the mappings and SetCacheable(true) on queries have no effect without it.
+			configuration.SetProperty(Environment.UseSecondLevelCache, "false");
+			configuration.SetProperty(Environment.UseQueryCache, "false");
 			configuration.AddAssembly(typeof(NHibernateFacility).Assembly);
 			return configuration;
 		}

@@ -9,7 +9,7 @@ using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Util;
 using Cuyahoga.Modules.RemoteContent.Domain;
 using Cuyahoga.Modules.RemoteContent.Util;
-using Cuyahoga.Web.Components;
+using Cuyahoga.Core.Service;
 using log4net;
 using NHibernate;
 

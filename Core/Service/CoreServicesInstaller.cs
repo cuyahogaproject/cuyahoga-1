@@ -12,7 +12,7 @@ namespace Cuyahoga.Core.Service
 {
 	/// <summary>
 	/// Registers the core services and data access components. Components are singletons unless their class says
-	/// otherwise (for example [Transient]).
+	/// otherwise (for example [Transient]). The host registers an <see cref="ISectionUrlProvider"/>.
 	/// </summary>
 	public class CoreServicesInstaller : IWindsorInstaller
 	{
@@ -34,6 +34,9 @@ namespace Cuyahoga.Core.Service
 				Component.For<ITemplateService>().ImplementedBy<TemplateService>().Named("core.templateservice"),
 				Component.For<IAuthenticationService>().ImplementedBy<DefaultAuthenticationService>().Named("core.authenticationservice"),
 				Component.For<IUserService>().ImplementedBy<DefaultUserService>().Named("core.userservice"),
+
+				// Modules
+				Component.For<ModuleLoader>().LifestyleSingleton(),
 
 				// Files
 				Component.For<IFileService>().Named("core.fileservice")

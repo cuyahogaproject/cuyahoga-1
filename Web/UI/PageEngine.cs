@@ -10,7 +10,7 @@ using Cuyahoga.Core;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service.SiteStructure;
 using Cuyahoga.Web.Util;
-using Cuyahoga.Web.Components;
+using Cuyahoga.Core.Service;
 
 namespace Cuyahoga.Web.UI
 {

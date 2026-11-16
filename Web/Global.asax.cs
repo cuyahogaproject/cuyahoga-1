@@ -174,10 +174,20 @@ namespace Cuyahoga.Web
 			{
 				log.Debug("Entering module loading.");
 			}
+			HttpContext.Current.Application.Lock();
+			HttpContext.Current.Application["IsModuleLoading"] = true;
+			HttpContext.Current.Application.UnLock();
+
 			// Load module types into the container.
 			ModuleLoader loader = Container.Resolve<ModuleLoader>();
 			loader.RegisterActivatedModules();
-			
+
+			// Let the application know that the modules are loaded.
+			HttpContext.Current.Application.Lock();
+			HttpContext.Current.Application["ModulesLoaded"] = true;
+			HttpContext.Current.Application["IsModuleLoading"] = false;
+			HttpContext.Current.Application.UnLock();
+
 			if (log.IsDebugEnabled)
 			{
 				log.Debug("Finished module loading. Now redirecting to self.");

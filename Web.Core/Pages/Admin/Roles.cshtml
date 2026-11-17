@@ -1,0 +1,39 @@
+@page "/Admin/Roles.aspx"
+@model RolesModel
+&nbsp;
+<table class="tbl">
+	<tr>
+		<th></th>
+		<th>Rolename</th>
+		<th>Permissionlevel(s)</th>
+		<th>Last update</th>
+		<th></th>
+	</tr>
+	@foreach (Role role in Model.Roles)
+	{
+		<tr>
+			<td>
+				@if (RolesModel.IsSystemRole(role))
+				{
+					<img src="Images/lock.png" align="middle" style="height:12px;width:14px;border-width:0px;" />
+				}
+			</td>
+			<td>@role.Name</td>
+			<td><span>@role.PermissionsString</span></td>
+			<td><span>@role.UpdateTimestamp</span></td>
+			<td>
+				@if (!RolesModel.IsSystemRole(role))
+				{
+					<a href="RoleEdit.aspx?RoleId=@role.Id">Edit</a>
+				}
+			</td>
+		</tr>
+	}
+</table>
+<br/>
+<form method="get" action="RoleEdit.aspx">
+	<div>
+		<input type="hidden" name="RoleId" value="-1" />
+		<input type="submit" value="Add new role" id="p_btnNew" />
+	</div>
+</form>

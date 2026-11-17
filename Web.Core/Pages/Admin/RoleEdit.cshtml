@@ -1,0 +1,41 @@
+@page "/Admin/RoleEdit.aspx"
+@model RoleEditModel
+@{
+	AccessLevel[] accessLevels = Enum.GetValues<AccessLevel>();
+}
+<form method="post">
+	<div class="group">
+		<h4>General</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 200px">Name</td>
+				<td><input name="Name" type="text" value="@Model.Name" id="p_txtName" style="width:200px;" />
+					@if (Model.NameError != null)
+					{
+						<span class="validator">@Model.NameError</span>
+					}
+				</td>
+			</tr>
+			<tr>
+				<td>Permissions</td>
+				<td><span id="p_cblRoles">@for (int i = 0; i < accessLevels.Length; i++)
+					{
+						int level = (int)accessLevels[i];
+						if (i > 0)
+						{
+							<br />
+						}
+						<input id="p_cblRoles_@i" type="checkbox" name="Permissions" value="@level" checked="@Model.Permissions.Contains(level)" /><label for="p_cblRoles_@i">@accessLevels[i]</label>
+					}</span>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br/>
+	<input type="submit" name="btnSave" value="Save" id="p_btnSave" />
+	<input type="submit" name="btnCancel" value="Cancel" id="p_btnCancel" />
+	@if (Model.IsExistingRole)
+	{
+		<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure?');" id="p_btnDelete" />
+	}
+</form>

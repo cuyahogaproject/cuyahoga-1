@@ -1,0 +1,59 @@
+@page "/Admin/Users.aspx"
+@model UsersModel
+<form method="get" action="Users.aspx">
+	<div class="group">
+		<h4>Find users</h4>
+		Username <input name="username" type="text" value="@Model.Username" id="p_txtUsername" /><input type="submit" value="Find" id="p_btnFind" />
+	</div>
+</form>
+<div id="p_pnlResults" class="group">
+	<h4>Search results</h4>
+	<p>
+		<table class="tbl">
+			@if (Model.HasSearched)
+			{
+				<tr>
+					<th>Username</th>
+					<th>Firstname</th>
+					<th>Lastname</th>
+					<th>Email</th>
+					<th>Website</th>
+					<th>Last login date</th>
+					<th>Last login from</th>
+					<th></th>
+				</tr>
+				@foreach (User user in Model.PageOfUsers)
+				{
+					<tr>
+						<td>@user.UserName</td>
+						<td>@user.FirstName</td>
+						<td>@user.LastName</td>
+						<td>@user.Email</td>
+						<td>@user.Website</td>
+						<td><span>@Model.FormatLastLogin(user)</span></td>
+						<td style="text-align:right">@user.LastIp</td>
+						<td>
+							<a href="UserEdit.aspx?UserId=@user.Id">Edit</a>
+						</td>
+					</tr>
+				}
+			}
+		</table>
+	</p>
+	<div class="pager">
+		@if (Model.HasSearched)
+		{
+			@await Component.InvokeAsync("Pager", new { id = "p_pgrUsers", pageIndex = Model.PageIndex, totalPages = Model.TotalPages, pageUrl = (Func<int, string>)Model.PageUrl })
+		}
+		else
+		{
+			<span id="p_pgrUsers"></span>
+		}
+	</div>
+</div>
+<form method="get" action="UserEdit.aspx">
+	<div>
+		<input type="hidden" name="UserId" value="-1" />
+		<input type="submit" value="Add new user" id="p_btnNew" />
+	</div>
+</form>

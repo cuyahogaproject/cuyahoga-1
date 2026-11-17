@@ -1,0 +1,13 @@
+@model Cuyahoga.Web.Core.Components.PagerViewModel
+@* The items touch each other, like the controls of the WebForms pager; .pager a in Admin.css adds the spacing. *@
+<span id="@Model.Id">@foreach (var item in Model.Items)
+{
+	if (item.Url != null)
+	{
+		<a href="@item.Url">@item.Text</a>
+	}
+	else
+	{
+		<span style="font-weight:bold;">@item.Text</span>
+	}
+}</span>

@@ -1,4 +1,5 @@
 using Castle.Windsor;
+using Cuyahoga.Core.DataAccess;
 using Cuyahoga.Core.Persistence;
 using Cuyahoga.Core.Service;
 using Cuyahoga.Core.Service.Email;
@@ -30,6 +31,7 @@ namespace Cuyahoga.Web.Core
 			Forward<IFileService>(services, container);
 			Forward<IEmailService>(services, container);
 			Forward<ISessionManager>(services, container);
+			Forward<ICommonDao>(services, container);
 			Forward<ModuleLoader>(services, container);
 			return services;
 		}

@@ -26,6 +26,22 @@ browser ──> Cuyahoga.Web.Core (Kestrel) ──> Cuyahoga.Web (WebForms, IIS 
 
 The e2e tests (`e2e`) run both sites: the WebForms site on port 8082 and this site in front of it on port 8081.
 
+## Migrated pages
+
+| Page | Since |
+|---|---|
+| `/Admin/Users.aspx`, `/Admin/UserEdit.aspx`, `/Admin/Roles.aspx`, `/Admin/RoleEdit.aspx` | step 3 |
+
+The pages keep their urls and the markup of the WebForms pages (`Pages/Shared/_AdminLayout.cshtml` is
+`AdminTemplate.ascx`), so links between old and new pages keep working and the admin looks the same.
+
+## Login
+
+Users log in and out on the WebForms site (Forms authentication). This site can't read that cookie, so the admin pages
+ask the WebForms site who is logged in: `LegacyAuthenticationHandler` calls `CurrentUser.axd` with the cookies of the
+browser and loads that user. Only pages that need a login make this call; forwarded requests don't. A renewed Forms
+cookie in the answer (sliding expiration) is passed on to the browser.
+
 ## Notes
 
 - Both sites must use the same database. NHibernate's second-level cache is off, because an in-memory cache in one

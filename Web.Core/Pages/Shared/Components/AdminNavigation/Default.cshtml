@@ -1,0 +1,66 @@
+@model List<Site>
+@* The same markup as Navigation.ascx of the WebForms site. The migrated pages have no active node yet, so the node
+   tree shows the root nodes only. *@
+<div class="navsection">
+	<h3>
+		<img id="p_Nav_i1" src="Images/home.gif" alt="Home" align="left" style="border-width:0px;" />
+		Sites</h3>
+	@foreach (Site site in Model)
+	{
+		<div class="site"><img src="Images/internet.gif" alt="Site" align="left" style="border-width:0px;" /><a class="nodeLink" href="SiteEdit.aspx?SiteId=@site.Id">@site.Name (@site.SiteUrl)</a></div>
+		@foreach (Node node in site.RootNodes)
+		{
+			<div class="node" style="padding-left: @(node.Level * 20 + 20)px"><img src="Images/home.gif" alt="Node" align="left" style="border-width:0px;" /><a class="nodeLink" href="NodeEdit.aspx?NodeId=@node.Id">@node.Title (@node.Culture)</a></div>
+		}
+		<br/>
+		<div class="node" style="padding-left: 20px"><img src="Images/new.gif" alt="New Node" align="left" style="border-width:0px;" /><a class="nodeLink" href="NodeEdit.aspx?SiteId=@site.Id&amp;NodeId=-1">Add a new node at root level</a></div>
+		<br/>
+	}
+	<br/>
+	<img id="p_Nav_inew" src="Images/new.gif" alt="New Site" align="left" style="border-width:0px;" /><a id="p_Nav_hplNew" class="nodelink" href="SiteEdit.aspx?SiteId=-1">Add a new site</a>
+</div>
+<br/>
+<div class="navsection">
+	<h3>
+		<img id="p_Nav_i2" src="Images/modules.gif" alt="Sections" align="left" style="border-width:0px;" />
+		Sections</h3>
+	<a id="p_Nav_hplSections" href="Sections.aspx">Manage standalone sections</a>
+</div>
+<br/>
+<div class="navsection">
+	<h3>
+		<img id="p_Nav_i3" src="Images/modules.gif" alt="Modules" align="left" style="border-width:0px;" />
+		Modules</h3>
+	<a id="p_Nav_hplModules" href="Modules.aspx">Manage modules</a>
+</div>
+<br/>
+<div class="navsection">
+	<h3>
+		<img id="p_Nav_i4" src="Images/docs.gif" alt="Templates" align="left" style="border-width:0px;" />
+		Templates</h3>
+	<a id="p_Nav_hplTemplates" href="Templates.aspx">Manage templates</a>
+</div>
+<br/>
+<div class="navsection">
+	<h3>
+		<img id="p_Nav_i5" src="Images/user.gif" alt="Users" align="left" style="border-width:0px;" />
+		Users
+	</h3>
+	<a id="p_Nav_hplUsers" href="Users.aspx">Manage users</a>
+</div>
+<br/>
+<div class="navsection">
+	<h3>
+		<img id="p_Nav_i6" src="Images/users.gif" alt="Roles" align="left" style="border-width:0px;" />
+		Roles
+	</h3>
+	<a id="p_Nav_hplRoles" href="Roles.aspx">Manage roles</a>
+</div>
+<br/>
+<div class="navsection">
+	<h3>
+		<img id="p_Nav_i7" src="Images/search.gif" alt="FullText index" align="left" style="border-width:0px;" />
+		Search
+	</h3>
+	<a id="p_Nav_hplRebuild" href="RebuildIndex.aspx">Rebuild fulltext index</a>
+</div>

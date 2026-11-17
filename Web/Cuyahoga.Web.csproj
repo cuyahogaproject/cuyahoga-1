@@ -166,14 +166,6 @@
       <DependentUpon>RebuildIndex.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\RoleEdit.aspx.cs">
-      <DependentUpon>RoleEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Roles.aspx.cs">
-      <DependentUpon>Roles.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\SectionAttachNode.aspx.cs">
       <DependentUpon>SectionAttachNode.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -223,14 +215,6 @@
     </Compile>
     <Compile Include="Admin\UI\SettingControlHelper.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Admin\UserEdit.aspx.cs">
-      <DependentUpon>UserEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Users.aspx.cs">
-      <DependentUpon>Users.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="HttpHandlers\SitemapHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -286,6 +270,7 @@
       <DependentUpon>Global.asax</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="HttpHandlers\CurrentUserHandler.cs" />
     <Compile Include="HttpHandlers\PageHandler.cs" />
     <Compile Include="HttpModules\NHibernateSessionModule.cs" />
     <Compile Include="HttpModules\AuthenticationModule.cs">
@@ -415,12 +400,6 @@
     <Content Include="Admin\RebuildIndex.aspx">
       <SubType>Form</SubType>
     </Content>
-    <Content Include="Admin\RoleEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\Roles.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Admin\SectionAttachNode.aspx">
       <SubType>Form</SubType>
     </Content>
@@ -450,12 +429,6 @@
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\TemplateSection.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\UserEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\Users.aspx">
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\Web.config" />
@@ -1121,12 +1094,6 @@
     <EmbeddedResource Include="Admin\RebuildIndex.aspx.resx">
       <DependentUpon>RebuildIndex.aspx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\RoleEdit.aspx.resx">
-      <DependentUpon>RoleEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\Roles.aspx.resx">
-      <DependentUpon>Roles.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Admin\SectionAttachNode.aspx.resx">
       <DependentUpon>SectionAttachNode.aspx.cs</DependentUpon>
     </EmbeddedResource>
@@ -1159,12 +1126,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\TemplateSection.aspx.resx">
       <DependentUpon>TemplateSection.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\UserEdit.aspx.resx">
-      <DependentUpon>UserEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\Users.aspx.resx">
-      <DependentUpon>Users.aspx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\EditProfile.ascx.resx">
       <DependentUpon>EditProfile.ascx.cs</DependentUpon>

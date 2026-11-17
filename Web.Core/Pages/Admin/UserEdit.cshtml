@@ -1,0 +1,94 @@
+@page "/Admin/UserEdit.aspx"
+@model UserEditModel
+<form method="post">
+	<div class="group">
+		<h4>General</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 200px">Username</td>
+				<td>
+					@if (Model.IsExistingUser)
+					{
+						<span id="p_lblUsername">@Model.Username</span>
+					}
+					else
+					{
+						<input name="Username" type="text" value="@Model.Username" id="p_txtUsername" style="width:200px;" />
+					}
+					@if (Model.UsernameError != null)
+					{
+						<span class="validator">@Model.UsernameError</span>
+					}
+				</td>
+			</tr>
+			<tr>
+				<td>Firstname</td>
+				<td><input name="Firstname" type="text" value="@Model.Firstname" id="p_txtFirstname" style="width:200px;" /></td>
+			</tr>
+			<tr>
+				<td>Lastname</td>
+				<td><input name="Lastname" type="text" value="@Model.Lastname" id="p_txtLastname" style="width:200px;" /></td>
+			</tr>
+			<tr>
+				<td>Email</td>
+				<td><input name="Email" type="text" value="@Model.Email" id="p_txtEmail" style="width:200px;" />@if (Model.EmailError != null)
+					{
+						<span class="validator">@Model.EmailError</span>
+					}</td>
+			</tr>
+			<tr>
+				<td>Website</td>
+				<td>
+					<input name="Website" type="text" value="@Model.Website" id="p_txtWebsite" style="width:200px;" /></td>
+			</tr>
+			<tr>
+				<td>Active</td>
+				<td><input id="p_chkActive" type="checkbox" name="Active" value="true" checked="@Model.Active" /></td>
+			</tr>
+			<tr>
+				<td>Timezone</td>
+				<td>
+					<select name="TimeZone" id="p_ddlTimeZone">
+						@foreach (System.Collections.DictionaryEntry timeZone in Model.TimeZones)
+						{
+							<option value="@timeZone.Key" selected="@((int)timeZone.Key == Model.TimeZone)">@timeZone.Value</option>
+						}
+					</select></td>
+			</tr>
+			<tr>
+				<td>Password</td>
+				<td><input name="Password1" type="password" id="p_txtPassword1" style="width:200px;" /></td>
+			</tr>
+			<tr>
+				<td>Confirm password</td>
+				<td><input name="Password2" type="password" id="p_txtPassword2" style="width:200px;" />@if (Model.PasswordError != null)
+					{
+						<span class="validator">@Model.PasswordError</span>
+					}</td>
+			</tr>
+		</table>
+	</div>
+	<div class="group">
+		<h4>Roles</h4>
+		<table class="tbl">
+			<tr>
+				<th>
+					Role</th>
+				<th>
+				</th>
+			</tr>
+			@for (int i = 0; i < Model.Roles.Count; i++)
+			{
+				Role role = Model.Roles[i];
+				<tr>
+					<td>@role.Name</td>
+					<td style="text-align:center">
+						<input id="p_rptRoles_ctl@((i + 1).ToString("00"))_chkRole" type="checkbox" name="RoleIds" value="@role.Id" checked="@Model.RoleIds.Contains(role.Id)" /></td>
+				</tr>
+			}
+		</table>
+	</div>
+	@* The buttons touch each other, like in the WebForms page. *@
+	<div><input type="submit" name="btnSave" value="Save" id="p_btnSave" /><input type="submit" name="btnCancel" value="Cancel" id="p_btnCancel" />@if (Model.IsExistingUser)
+		{<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure you want to delete this user?');" id="p_btnDelete" />}</div>
+</form>

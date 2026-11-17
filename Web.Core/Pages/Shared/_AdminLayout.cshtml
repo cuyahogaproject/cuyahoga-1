@@ -1,0 +1,37 @@
+@{
+	// The same markup as AdminTemplate.ascx (with Header.ascx and Navigation.ascx) of the WebForms site, so the
+	// migrated pages look like the other admin pages and use the same stylesheet.
+	var adminPage = ViewData.Model as AdminPageModel;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>@adminPage?.Title</title>
+		<link id="p_CssStyleSheet" rel="stylesheet" type="text/css" href="~/Admin/Css/Admin.css" />
+	</head>
+	<body>
+		<div id="header">
+			<div id="headertitle">
+				Cuyahoga Site Administration
+			</div>
+			<div id="headeruser">
+			</div>
+		</div>
+		<div id="subheader">
+			[@* View the current site: only on pages with an active site, node or section. *@]
+			[<a id="p_Header_lbtLogout" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Log out</a>]
+		</div>
+		<div id="menupane">
+			@await Component.InvokeAsync("AdminNavigation")
+		</div>
+		<div id="contentpane">
+			<h1>@adminPage?.Title</h1>
+			@if (adminPage?.Message != null)
+			{
+				<div id="p_MessageBox" class="@(adminPage.MessageIsError ? "errorbox" : "messagebox")">@adminPage.Message</div>
+			}
+			@RenderBody()
+		</div>
+		<form id="logoutForm" method="post" asp-page="/Admin/Logout" asp-route-returnUrl="@(Context.Request.Path + Context.Request.QueryString)"></form>
+	</body>
+</html>

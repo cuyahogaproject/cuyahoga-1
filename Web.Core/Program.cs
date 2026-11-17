@@ -3,6 +3,9 @@ using Cuyahoga.Core.Persistence;
 using Cuyahoga.Core.Util;
 using Cuyahoga.Web.Core;
 using Cuyahoga.Web.Core.Persistence;
+using Cuyahoga.Web.Core.Security;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,13 +24,33 @@ if (String.IsNullOrWhiteSpace(legacySiteUrl))
 }
 
 // Cuyahoga core: the unit of work lives per request, the core services come from Windsor.
+CuyahogaAppSettings settings = CuyahogaContainer.LoadSettings(builder.Configuration);
+builder.Services.AddSingleton(settings);
 var httpContextAccessor = new HttpContextAccessor();
 builder.Services.AddSingleton<IHttpContextAccessor>(httpContextAccessor);
 ContextStorage.Current = new HttpContextItemsStorage(httpContextAccessor);
-IWindsorContainer container = CuyahogaContainer.Create(CuyahogaContainer.LoadSettings(builder.Configuration), httpContextAccessor);
+IWindsorContainer container = CuyahogaContainer.Create(settings, httpContextAccessor);
 // Modules resolve services through the static IoC wrapper.
 IoC.Initialize(container);
 builder.Services.AddCuyahogaCoreServices(container);
+
+// Users log in on the WebForms site. The migrated admin pages ask it who is logged in (CurrentUser.axd). Only
+// endpoints with the Administrator policy authenticate, so forwarded requests don't make that extra call.
+builder.Services.AddHttpClient(LegacyAuthenticationHandler.HttpClientName, client =>
+		client.BaseAddress = new Uri(legacySiteUrl.TrimEnd('/') + "/"))
+	.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false });
+builder.Services.AddAuthentication()
+	.AddScheme<AuthenticationSchemeOptions, LegacyAuthenticationHandler>(LegacyAuthenticationHandler.SchemeName, null);
+builder.Services.AddSingleton<IAuthorizationHandler, AdministratorRequirement>();
+builder.Services.AddAuthorization(options =>
+	options.AddPolicy(AdministratorRequirement.PolicyName, policy => policy
+		.AddAuthenticationSchemes(LegacyAuthenticationHandler.SchemeName)
+		.RequireAuthenticatedUser()
+		.AddRequirements(new AdministratorRequirement())));
+
+// The migrated pages keep the urls of the WebForms pages (/Admin/Users.aspx).
+builder.Services.AddRazorPages(options =>
+	options.Conventions.AuthorizeFolder("/Admin", AdministratorRequirement.PolicyName));
 
 builder.Services.AddHttpForwarder();
 // Request size limits are up to the WebForms site (maxRequestLength) for the requests that it handles.
@@ -36,6 +59,10 @@ builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 
 var app = builder.Build();
 
 app.UseMiddleware<NHibernateSessionMiddleware>();
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapRazorPages();
 
 // Everything that this site doesn't handle goes to the WebForms site. The forwarder sets the X-Forwarded-Host and
 // X-Forwarded-Proto headers, which the WebForms site uses to build absolute urls (and to find the Cuyahoga site of

@@ -1,22 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+  The RemoteContent module without its WebForms pages (those are in Cuyahoga.Modules.RemoteContent.Web): the module
+  class, the domain and the NHibernate mappings. netstandard2.0, so the WebForms site and the ASP.NET Core site
+  (Web.Core) both load it.
+  -->
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Cuyahoga.Modules.RemoteContent</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CuyahogaModule>true</CuyahogaModule>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="**\*.hbm.xml" />
-    <CuyahogaModuleFile Include="Web\**\*.as?x" DeployTo="Modules\RemoteContent\" />
     <CuyahogaModuleFile Include="Install\Database\**\*.sql" DeployTo="Modules\RemoteContent\Install\Database\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Cuyahoga.Core.csproj" />
-    <ProjectReference Include="..\Web\Cuyahoga.Web.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
   </ItemGroup>
 </Project>

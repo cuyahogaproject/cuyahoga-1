@@ -1,11 +1,11 @@
 using System;
-using System.Web;
 using System.Collections.Generic;
 
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Communication;
 using Cuyahoga.Core.Service.Membership;
 using Cuyahoga.Core.Service.Email;
+using Cuyahoga.Core.Util;
 using User = Cuyahoga.Core.Domain.User;
 
 namespace Cuyahoga.Modules.User
@@ -16,7 +16,6 @@ namespace Cuyahoga.Modules.User
 	public class ProfileModule : ModuleBase, IActionConsumer
 	{
 		private static readonly string virtualEmailTemplateDir = "~/Modules/User/EmailTemplates";
-		private static readonly string userCacheKeyPrefix = "User_";
 		private ProfileModuleAction _currentAction;
 		private ModuleActionCollection _inboundModuleActions;
 		private int _currentUserId;
@@ -41,7 +40,6 @@ namespace Cuyahoga.Modules.User
 		{
 			this._userService = userService;
 			this._emailService = emailService;
-			this._emailService.TemplateDir = HttpContext.Current.Request.MapPath(virtualEmailTemplateDir);
 
 			// Set default action.
 			this._currentAction = ProfileModuleAction.EditProfile;
@@ -69,6 +67,7 @@ namespace Cuyahoga.Modules.User
 			// Create user
 			string newPassword = this._userService.CreateUser(username, emailAddress, currentSite);
 			// Send email
+			this._emailService.TemplateDir = ApplicationPaths.MapPath(virtualEmailTemplateDir);
 			this._emailService.Language = base.Section.Node.Culture.Substring(0, 2);
 			Dictionary<string, string> subjectParams = new Dictionary<string,string>(1);
 			subjectParams.Add("$site", currentSite.Name);
@@ -101,8 +100,6 @@ namespace Cuyahoga.Modules.User
 		{
 			// Save to database
 			this._userService.UpdateUser(user);
-			// Remove old user instance from the cache
-			HttpContext.Current.Cache.Remove(userCacheKeyPrefix + user.Id.ToString());
 		}
 
 		/// <summary>
@@ -114,6 +111,7 @@ namespace Cuyahoga.Modules.User
 		{
 			string newPassword = this._userService.ResetPassword(username, emailAddress);
 			// Send email
+			this._emailService.TemplateDir = ApplicationPaths.MapPath(virtualEmailTemplateDir);
 			this._emailService.Language = base.Section.Node.Culture.Substring(0, 2);
 			Dictionary<string, string> subjectParams = new Dictionary<string,string>(1);
 			subjectParams.Add("$site", this.Section.Node.Site.Name);

@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Web;
+using System.Security.Principal;
 
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service;
@@ -87,15 +87,16 @@ namespace Cuyahoga.Modules.Search
 		/// <param name="pageIndex"></param>
 		/// <param name="pageSize"></param>
 		/// <param name="indexDir"></param>
+		/// <param name="user">The current user: results in sections that the user can't view are left out.</param>
 		/// <returns></returns>
-		public SearchResultCollection GetSearchResults(string queryText, int pageIndex, int pageSize, string indexDir)
+		public SearchResultCollection GetSearchResults(string queryText, int pageIndex, int pageSize, string indexDir, IIdentity user)
 		{
 			IndexQuery query = new IndexQuery(indexDir);
 			Hashtable keywordFilter = new Hashtable();
 			keywordFilter.Add("site", this.Section.Node.Site.Name);
 			SearchResultCollection nonFilteredResults = query.Find(queryText, keywordFilter, pageIndex, pageSize);
 			// Filter results where the current user doesn't have access to.
-			return FilterResults(nonFilteredResults);
+			return FilterResults(nonFilteredResults, user);
 		}
 
 		/// <summary>
@@ -103,10 +104,11 @@ namespace Cuyahoga.Modules.Search
 		/// </summary>
 		/// <param name="queryText"></param>
 		/// <param name="indexDir"></param>
+		/// <param name="user">The current user: results in sections that the user can't view are left out.</param>
 		/// <returns></returns>
-		public SearchResultCollection GetSearchResults(string queryText, string indexDir)
+		public SearchResultCollection GetSearchResults(string queryText, string indexDir, IIdentity user)
 		{
-			return GetSearchResults(queryText, 0, 200, indexDir);
+			return GetSearchResults(queryText, 0, 200, indexDir, user);
 		}
 
 		protected override void ParsePathInfo()
@@ -118,14 +120,8 @@ namespace Cuyahoga.Modules.Search
 				{
 					// First argument is the module action
 					this._currentModuleAction = this._inboundModuleActions.FindByName(base.ModuleParams[0]);
-					if (this._currentModuleAction != null)
-					{
-						if (this._currentModuleAction.Name == "Search")
-						{
-							this._searchQuery = HttpContext.Current.Server.UrlDecode(HttpContext.Current.Request.QueryString["q"]);
-						}
-					}
-					else
+					// For the Search action, the control sets SearchQuery from the query string.
+					if (this._currentModuleAction == null)
 					{
 						throw new Exception("Error when parsing module action: " + base.ModuleParams[0]);
 					}
@@ -140,20 +136,16 @@ namespace Cuyahoga.Modules.Search
 		/// </summary>
 		/// <param name="nonFilteredResults"></param>
 		/// <returns></returns>
-		private SearchResultCollection FilterResults(SearchResultCollection nonFilteredResults)
+		private SearchResultCollection FilterResults(SearchResultCollection nonFilteredResults, IIdentity user)
 		{
 			long filterStartTicks = DateTime.Now.Ticks;
 			SearchResultCollection filteredResults = new SearchResultCollection();
-			CoreRepository cr = HttpContext.Current.Items["CoreRepository"] as CoreRepository;
-			if (cr != null)
+			foreach (SearchResult result in nonFilteredResults)
 			{
-				foreach (SearchResult result in nonFilteredResults)
+				Section section = base.NHSession.Load<Section>(result.SectionId);
+				if (section.ViewAllowed(user))
 				{
-					Section section = (Section)cr.GetObjectById(typeof(Section), result.SectionId);
-					if (section.ViewAllowed(HttpContext.Current.User.Identity))
-					{
-						filteredResults.Add(result);
-					}
+					filteredResults.Add(result);
 				}
 			}
 			filteredResults.ExecutionTime = DateTime.Now.Ticks - filterStartTicks + nonFilteredResults.ExecutionTime;

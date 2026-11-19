@@ -53,7 +53,7 @@ namespace Cuyahoga.Modules.Downloads.Web
 		private void DownloadCurrentFile()
 		{
 			Domain.File file = this._downloadsModule.GetFileById(this._downloadsModule.CurrentFileId);
-			Stream fileStream = this._downloadsModule.GetFileAsStream(file);
+			Stream fileStream = this._downloadsModule.GetFileAsStream(file, this.Page.User.Identity);
 			try
 			{
 				byte[] buffer = new byte[BUFFER_SIZE];

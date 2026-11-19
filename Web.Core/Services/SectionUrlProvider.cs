@@ -22,5 +22,13 @@ namespace Cuyahoga.Web.Core.Services
 			HttpContext httpContext = this._httpContextAccessor.HttpContext;
 			return httpContext != null ? httpContext.Request.PathBase + "/" + section.Id + "/section.aspx" : null;
 		}
+
+		public string GetFullUrlFromSection(Section section)
+		{
+			HttpContext httpContext = this._httpContextAccessor.HttpContext;
+			return httpContext != null
+				? httpContext.Request.Scheme + "://" + httpContext.Request.Host + GetUrlFromSection(section)
+				: null;
+		}
 	}
 }

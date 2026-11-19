@@ -11,7 +11,6 @@ using Cuyahoga.Core.Communication;
 using Cuyahoga.Modules.Articles.Domain;
 
 using ArticleCategory = Cuyahoga.Modules.Articles.Domain.Category;
-using Cuyahoga.Web.Util;
 using Cuyahoga.Modules.Articles.DataAccess;
 using Cuyahoga.Core.DataAccess;
 using Cuyahoga.Core.Persistence;
@@ -415,7 +414,7 @@ namespace Cuyahoga.Modules.Articles
 			Section sectionTo = this.Section.Connections.GetValueOrDefault("ViewProfile") as Section;
 			if (sectionTo != null)
 			{
-				return UrlHelper.GetUrlFromSection(sectionTo) + "/ViewProfile/" + userId.ToString();
+				return this.SectionUrlProvider.GetUrlFromSection(sectionTo) + "/ViewProfile/" + userId.ToString();
 			}
 			else
 			{
@@ -487,7 +486,7 @@ namespace Cuyahoga.Modules.Articles
 				item.ItemId = article.Id;
 				item.Title = article.Title;
 				// item.Link = "" (can't determine link here)
-                item.Link = UrlHelper.GetFullUrlFromSection(base.Section) + "/" + item.ItemId; //Why? Otherwise limits module development :)
+                item.Link = this.SectionUrlProvider.GetFullUrlFromSection(base.Section) + "/" + item.ItemId; //Why? Otherwise limits module development :)
 				if (displayType == DisplayType.FullContent)
 				{
 					item.Description = article.Content;

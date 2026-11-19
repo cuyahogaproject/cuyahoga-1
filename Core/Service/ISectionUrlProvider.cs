@@ -12,5 +12,11 @@ namespace Cuyahoga.Core.Service
 		/// The url of the section, or null when no url can be built (for example outside a web request).
 		/// </summary>
 		string GetUrlFromSection(Section section);
+
+		/// <summary>
+		/// The absolute url of the section, with the address of the current request (http://host/1/section.aspx), or
+		/// null when no url can be built (for example outside a web request).
+		/// </summary>
+		string GetFullUrlFromSection(Section section);
 	}
 }

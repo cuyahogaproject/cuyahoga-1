@@ -22,6 +22,11 @@ namespace Cuyahoga.Modules.Search
 		protected void Page_Load(object sender, System.EventArgs e)
 		{
 			this._module = this.Module as SearchModule;
+			// The Search action (from a search input) has the query in the query string.
+			if (this._module.CurrentModuleAction != null && this._module.CurrentModuleAction.Name == "Search")
+			{
+				this._module.SearchQuery = Context.Server.UrlDecode(Context.Request.QueryString["q"]);
+			}
 			this._indexDir = Context.Server.MapPath(CuyahogaAppSettings.Current.SearchIndexDir);
 			this.pgrResults.PageSize = this._module.ResultsPerPage;
 			this.pnlCriteria.Visible = this._module.ShowInputPanel;
@@ -44,7 +49,7 @@ namespace Cuyahoga.Modules.Search
 		{
 			try
 			{
-				SearchResultCollection results = this._module.GetSearchResults(queryString, this._indexDir);
+				SearchResultCollection results = this._module.GetSearchResults(queryString, this._indexDir, this.Page.User.Identity);
 				if (results.Count > 0)
 				{
 					int start = pageIndex*this._module.ResultsPerPage;

@@ -61,7 +61,9 @@ namespace Cuyahoga.Core.Service
 			string modulekey = string.Concat("module.", moduleType.ClassName);
 			if (this._kernel.HasComponent(modulekey))
 			{
-				return (ModuleBase)this._kernel.Resolve(modulekey, typeof(ModuleBase));
+				ModuleBase module = (ModuleBase)this._kernel.Resolve(modulekey, typeof(ModuleBase));
+				module.SectionUrlProvider = this._sectionUrlProvider;
+				return module;
 			}
 			if (log.IsDebugEnabled)
 			{

@@ -1,23 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-  <!-- The built-in modules (StaticHtml, User, Search, Sitemap, LanguageSwitcher). -->
+  <!--
+  The built-in modules (StaticHtml, User, Search, Sitemap, LanguageSwitcher) without their WebForms controls (those
+  are in Cuyahoga.Modules.Web): the module classes and the NHibernate mappings. netstandard2.0, so the WebForms site
+  and the ASP.NET Core site (Web.Core) both load it.
+  -->
   <PropertyGroup>
-    <TargetFramework>net48</TargetFramework>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Cuyahoga.Modules</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <CuyahogaModule>true</CuyahogaModule>
   </PropertyGroup>
   <ItemGroup>
     <EmbeddedResource Include="**\*.hbm.xml" />
-    <CuyahogaModuleFile Include="**\*.as?x;**\*.gif;**\*.png;**\*.txt" Exclude="bin\**;obj\**" DeployTo="Modules\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Cuyahoga.Core.csproj" />
-    <ProjectReference Include="..\ServerControls\Cuyahoga.ServerControls.csproj" />
-    <ProjectReference Include="..\Web\Cuyahoga.Web.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
   </ItemGroup>
 </Project>

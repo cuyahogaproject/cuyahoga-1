@@ -146,10 +146,6 @@
       <DependentUpon>Navigation.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Default.aspx.cs">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\MenuEdit.aspx.cs">
       <DependentUpon>MenuEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -180,14 +176,6 @@
     </Compile>
     <Compile Include="Admin\Sections.aspx.cs">
       <DependentUpon>Sections.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SiteAliasEdit.aspx.cs">
-      <DependentUpon>SiteAliasEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SiteEdit.aspx.cs">
-      <DependentUpon>SiteEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\TemplateEdit.aspx.cs">
@@ -271,6 +259,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HttpHandlers\CurrentUserHandler.cs" />
+    <Compile Include="HttpHandlers\TemplatePlaceholdersHandler.cs" />
     <Compile Include="HttpHandlers\PageHandler.cs" />
     <Compile Include="HttpModules\NHibernateSessionModule.cs" />
     <Compile Include="HttpModules\AuthenticationModule.cs">
@@ -369,9 +358,6 @@
       <SubType>UserControl</SubType>
     </Content>
     <Content Include="Admin\Css\Admin.css" />
-    <Content Include="Admin\Default.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Admin\Images\doc1.gif" />
     <Content Include="Admin\Images\doc2-disabled.gif" />
     <Content Include="Admin\Images\doc2.gif" />
@@ -410,12 +396,6 @@
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\Sections.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\SiteAliasEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\SiteEdit.aspx">
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\TemplateEdit.aspx">
@@ -1079,9 +1059,6 @@
     <EmbeddedResource Include="Admin\Controls\Navigation.ascx.resx">
       <DependentUpon>Navigation.ascx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\Default.aspx.resx">
-      <DependentUpon>Default.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Admin\MenuEdit.aspx.resx">
       <DependentUpon>MenuEdit.aspx.cs</DependentUpon>
     </EmbeddedResource>
@@ -1105,12 +1082,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\Sections.aspx.resx">
       <DependentUpon>Sections.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\SiteAliasEdit.aspx.resx">
-      <DependentUpon>SiteAliasEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\SiteEdit.aspx.resx">
-      <DependentUpon>SiteEdit.aspx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\TemplateEdit.aspx.resx">
       <DependentUpon>TemplateEdit.aspx.cs</DependentUpon>

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using System.Text.Encodings.Web;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service.Membership;
+using Cuyahoga.Web.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
@@ -17,19 +18,18 @@ namespace Cuyahoga.Web.Core.Security
 	public class LegacyAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 	{
 		public const string SchemeName = "CuyahogaLegacy";
-		public const string HttpClientName = "LegacySite";
 		// The name of the Forms authentication cookie (Web.config, <forms name="...">).
 		private const string FormsCookieName = "CuyahogaUser";
 		private static readonly object UserKey = new object();
 
-		private readonly IHttpClientFactory _httpClientFactory;
+		private readonly LegacySiteClient _legacySiteClient;
 		private readonly IUserService _userService;
 
 		public LegacyAuthenticationHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
-			UrlEncoder encoder, IHttpClientFactory httpClientFactory, IUserService userService)
+			UrlEncoder encoder, LegacySiteClient legacySiteClient, IUserService userService)
 			: base(options, logger, encoder)
 		{
-			this._httpClientFactory = httpClientFactory;
+			this._legacySiteClient = legacySiteClient;
 			this._userService = userService;
 		}
 
@@ -91,43 +91,20 @@ namespace Cuyahoga.Web.Core.Security
 
 		private async Task<int?> GetLegacyUserIdAsync()
 		{
-			HttpClient client = this._httpClientFactory.CreateClient(HttpClientName);
-			// The WebForms site redirects the first request after it starts to the same url (module loading), so
-			// follow that once.
-			for (int attempt = 0; attempt < 2; attempt++)
+			var (statusCode, body) = await this._legacySiteClient.GetAsync("CurrentUser.axd");
+			switch (statusCode)
 			{
-				using var request = new HttpRequestMessage(HttpMethod.Get, "CurrentUser.axd");
-				request.Headers.TryAddWithoutValidation("Cookie", Request.Headers.Cookie.ToString());
-				using HttpResponseMessage response = await client.SendAsync(request, Context.RequestAborted);
-
-				// Forms authentication renews the cookie halfway its lifetime (sliding expiration).
-				if (response.Headers.TryGetValues("Set-Cookie", out IEnumerable<string> setCookies))
-				{
-					foreach (string setCookie in setCookies)
+				case HttpStatusCode.OK:
+					if (Int32.TryParse(body.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int userId))
 					{
-						Response.Headers.Append("Set-Cookie", setCookie);
+						return userId;
 					}
-				}
-
-				switch (response.StatusCode)
-				{
-					case HttpStatusCode.OK:
-						string body = await response.Content.ReadAsStringAsync(Context.RequestAborted);
-						if (Int32.TryParse(body.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out int userId))
-						{
-							return userId;
-						}
-						throw new InvalidOperationException("CurrentUser.axd of the WebForms site returned an invalid user id.");
-					case HttpStatusCode.NoContent:
-						return null;
-					case HttpStatusCode.Found:
-						continue;
-					default:
-						throw new InvalidOperationException(
-							$"CurrentUser.axd of the WebForms site returned HTTP {(int)response.StatusCode}.");
-				}
+					throw new InvalidOperationException("CurrentUser.axd of the WebForms site returned an invalid user id.");
+				case HttpStatusCode.NoContent:
+					return null;
+				default:
+					throw new InvalidOperationException($"CurrentUser.axd of the WebForms site returned HTTP {(int)statusCode}.");
 			}
-			throw new InvalidOperationException("CurrentUser.axd of the WebForms site keeps redirecting.");
 		}
 	}
 }

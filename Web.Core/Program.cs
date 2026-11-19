@@ -4,6 +4,7 @@ using Cuyahoga.Core.Util;
 using Cuyahoga.Web.Core;
 using Cuyahoga.Web.Core.Persistence;
 using Cuyahoga.Web.Core.Security;
+using Cuyahoga.Web.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 
@@ -34,11 +35,15 @@ IWindsorContainer container = CuyahogaContainer.Create(settings, httpContextAcce
 IoC.Initialize(container);
 builder.Services.AddCuyahogaCoreServices(container);
 
-// Users log in on the WebForms site. The migrated admin pages ask it who is logged in (CurrentUser.axd). Only
-// endpoints with the Administrator policy authenticate, so forwarded requests don't make that extra call.
-builder.Services.AddHttpClient(LegacyAuthenticationHandler.HttpClientName, client =>
+// Questions for the WebForms site, asked with the cookies of the browser: who is logged in, template placeholders.
+builder.Services.AddHttpClient(LegacySiteClient.HttpClientName, client =>
 		client.BaseAddress = new Uri(legacySiteUrl.TrimEnd('/') + "/"))
 	.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false });
+builder.Services.AddScoped<LegacySiteClient>();
+builder.Services.AddScoped<TemplatePlaceholderProvider>();
+
+// Users log in on the WebForms site. The migrated admin pages ask it who is logged in (CurrentUser.axd). Only
+// endpoints with the Administrator policy authenticate, so forwarded requests don't make that extra call.
 builder.Services.AddAuthentication()
 	.AddScheme<AuthenticationSchemeOptions, LegacyAuthenticationHandler>(LegacyAuthenticationHandler.SchemeName, null);
 builder.Services.AddSingleton<IAuthorizationHandler, AdministratorRequirement>();

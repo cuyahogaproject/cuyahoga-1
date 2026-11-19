@@ -33,6 +33,7 @@ The e2e tests (`e2e`) run both sites: the WebForms site on port 8082 and this si
 | `/Admin/Users.aspx`, `/Admin/UserEdit.aspx`, `/Admin/Roles.aspx`, `/Admin/RoleEdit.aspx` | step 3 |
 | `/Admin/Default.aspx`, `/Admin/SiteEdit.aspx`, `/Admin/SiteAliasEdit.aspx` | step 4a |
 | `/Admin/Sections.aspx`, `/Admin/SectionEdit.aspx`, `/Admin/SectionAttachTemplate.aspx`, `/Admin/SectionAttachNode.aspx`, `/Admin/ConnectionEdit.aspx` | step 4b |
+| `/Admin/NodeEdit.aspx`, `/Admin/MenuEdit.aspx` | step 4c |
 
 The pages keep their urls and the markup of the WebForms pages (`Pages/Shared/_AdminLayout.cshtml` is
 `AdminTemplate.ascx`), so links between old and new pages keep working and the admin looks the same.

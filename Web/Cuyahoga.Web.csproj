@@ -142,16 +142,8 @@
       <DependentUpon>Navigation.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\MenuEdit.aspx.cs">
-      <DependentUpon>MenuEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\Modules.aspx.cs">
       <DependentUpon>Modules.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\NodeEdit.aspx.cs">
-      <DependentUpon>NodeEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\RebuildIndex.aspx.cs">
@@ -348,13 +340,7 @@
     <Content Include="Admin\Images\upred.gif" />
     <Content Include="Admin\Images\user.gif" />
     <Content Include="Admin\Images\users.gif" />
-    <Content Include="Admin\MenuEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Admin\Modules.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\NodeEdit.aspx">
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\RebuildIndex.aspx">
@@ -1018,14 +1004,8 @@
     <EmbeddedResource Include="Admin\Controls\Navigation.ascx.resx">
       <DependentUpon>Navigation.ascx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\MenuEdit.aspx.resx">
-      <DependentUpon>MenuEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Admin\Modules.aspx.resx">
       <DependentUpon>Modules.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\NodeEdit.aspx.resx">
-      <DependentUpon>NodeEdit.aspx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\RebuildIndex.aspx.resx">
       <DependentUpon>RebuildIndex.aspx.cs</DependentUpon>

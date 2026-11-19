@@ -14,5 +14,10 @@ namespace Cuyahoga.Web.Util
 		{
 			return HttpContext.Current != null ? UrlHelper.GetUrlFromSection(section) : null;
 		}
+
+		public string GetFullUrlFromSection(Section section)
+		{
+			return HttpContext.Current != null ? UrlHelper.GetFullUrlFromSection(section) : null;
+		}
 	}
 }

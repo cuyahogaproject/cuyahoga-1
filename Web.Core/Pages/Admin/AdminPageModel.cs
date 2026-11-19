@@ -33,7 +33,7 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 		/// <summary>
 		/// The node that the page is about (NodeId, or the node of the active section), or null.
 		/// </summary>
-		public Node ActiveNode { get; private set; }
+		public Node ActiveNode { get; protected set; }
 
 		/// <summary>
 		/// The section that the page is about (SectionId), or null.

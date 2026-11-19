@@ -54,6 +54,7 @@ namespace Cuyahoga.Core.Tests.Service
 			public string Url;
 
 			public string GetUrlFromSection(Section section) => Url;
+			public string GetFullUrlFromSection(Section section) => throw new NotImplementedException();
 		}
 
 		private static ModuleType ModuleTypeFor(Type moduleClass, bool autoActivate = true) =>
@@ -144,7 +145,8 @@ namespace Cuyahoga.Core.Tests.Service
 		{
 			var moduleType = ModuleTypeFor(typeof(TestModule));
 			var section = new Section { Id = 7, ModuleType = moduleType };
-			var loader = Loader(new DefaultKernel(), new FakeSectionUrlProvider { Url = "/7/section.aspx" });
+			var urlProvider = new FakeSectionUrlProvider { Url = "/7/section.aspx" };
+			var loader = Loader(new DefaultKernel(), urlProvider);
 			loader.ActivateModule(moduleType);
 
 			var module = (TestModule)loader.GetModuleFromSection(section);
@@ -152,6 +154,8 @@ namespace Cuyahoga.Core.Tests.Service
 			Assert.Same(section, module.Section);
 			Assert.Equal("/7/section.aspx", module.SectionUrl);
 			Assert.Equal(1, module.ReadSettingsCalls);
+			// For the urls of other (connected) sections.
+			Assert.Same(urlProvider, module.SectionUrlProvider);
 		}
 
 		[Fact]

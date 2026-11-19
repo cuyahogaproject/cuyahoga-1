@@ -1,4 +1,3 @@
-using System.Collections;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service.SiteStructure;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +5,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cuyahoga.Web.Core.Pages.Admin
 {
 	/// <summary>
-	/// The menu of the site administration (Navigation.ascx in the WebForms site): the sites with their node tree and
-	/// the links to the other admin sections.
+	/// The menu of the site administration (Navigation.ascx in the WebForms site): the sites with their node tree,
+	/// expanded to the active node, and the links to the other admin sections.
 	/// </summary>
 	public class AdminNavigationViewComponent : ViewComponent
 	{
@@ -18,10 +17,11 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 			this._siteService = siteService;
 		}
 
-		public IViewComponentResult Invoke()
+		public IViewComponentResult Invoke(Node activeNode)
 		{
-			IList sites = this._siteService.GetAllSites();
-			return View(sites.Cast<Site>().ToList());
+			return View(new AdminNavigationModel(this._siteService.GetAllSites().Cast<Site>().ToList(), activeNode));
 		}
 	}
+
+	public record AdminNavigationModel(List<Site> Sites, Node ActiveNode);
 }

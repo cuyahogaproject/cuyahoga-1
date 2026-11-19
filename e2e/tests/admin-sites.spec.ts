@@ -23,6 +23,19 @@ test('the admin home page', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'View the current site' })).toHaveCount(0);
 });
 
+test('the admin folder url shows the admin home page', async ({ page }) => {
+  // Like IIS serving the default document of the folder (with a redirect to add the trailing slash).
+  for (const url of ['/admin', '/Admin/']) {
+    const response = await page.goto(url);
+    await expectHealthyPage(page, response);
+    await expect(page).toHaveURL(/\/admin\/$/i);
+    await expect(page).toHaveTitle('Cuyahoga Site Administration');
+    // The relative links of the menu work from the folder url.
+    await page.getByRole('link', { name: 'Manage users' }).click();
+    await expect(page).toHaveURL(/\/Admin\/Users\.aspx$/i);
+  }
+});
+
 test('create, update and delete a site with an alias', async ({ page }) => {
   const stamp = Date.now().toString(36);
   const name = `e2e site ${stamp}`;

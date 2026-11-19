@@ -103,13 +103,19 @@ namespace Cuyahoga.Core.Domain
 		}
 
 		/// <summary>
-		/// The base url for this module. 
+		/// The base url for this module.
 		/// </summary>
 		public string SectionUrl
 		{
 			get { return this._sectionUrl; }
 			set { this._sectionUrl = value; }
 		}
+
+		/// <summary>
+		/// Builds urls of sections (for example of connected sections) for the web application that hosts Cuyahoga.
+		/// Set by the ModuleLoader.
+		/// </summary>
+		public Service.ISectionUrlProvider SectionUrlProvider { get; set; }
 
 		/// <summary>
 		/// The path of default view user control from the application root.

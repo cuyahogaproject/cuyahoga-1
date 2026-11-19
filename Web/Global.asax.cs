@@ -1,6 +1,7 @@
 using System;
 using System.Reflection;
 using System.Web;
+using System.Web.Hosting;
 using Castle.Core;
 using Castle.MicroKernel;
 using Castle.Windsor;
@@ -53,6 +54,9 @@ namespace Cuyahoga.Web
 			// reliably flow between the stages of a System.Web request (NHibernateSessionModule closes the session
 			// at EndRequest).
 			ContextStorage.Current = new HttpContextStorage();
+
+			// Modules map their virtual paths (~/files) through ApplicationPaths, they have no web context of their own.
+			ApplicationPaths.MapPath = HostingEnvironment.MapPath;
 
 			// Initialize Windsor
 			IWindsorContainer container = new CuyahogaContainer();

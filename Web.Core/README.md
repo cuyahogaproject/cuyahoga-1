@@ -21,8 +21,8 @@ browser ──> Cuyahoga.Web.Core (Kestrel) ──> Cuyahoga.Web (WebForms, IIS 
 
    The `Cuyahoga` settings have the names of the `Cuyahoga.*` appSettings in `Web/Web.config` (without the prefix)
    and the same `CUYAHOGA_*` environment variables override them.
-3. Start this project (http://localhost:5080). `LegacySiteUrl` in `appsettings.Development.json` points to the
-   WebForms site.
+3. Start this project (http://localhost:5080). `LegacySiteUrl` and `LegacySitePath` in
+   `appsettings.Development.json` point to the WebForms site and its folder.
 
 The e2e tests (`e2e`) run both sites: the WebForms site on port 8082 and this site in front of it on port 8081.
 
@@ -32,6 +32,12 @@ The e2e tests (`e2e`) run both sites: the WebForms site on port 8082 and this si
 |---|---|
 | `/Admin/Users.aspx`, `/Admin/UserEdit.aspx`, `/Admin/Roles.aspx`, `/Admin/RoleEdit.aspx` | step 3 |
 | `/Admin/Default.aspx`, `/Admin/SiteEdit.aspx`, `/Admin/SiteAliasEdit.aspx` | step 4a |
+| `/Admin/Sections.aspx`, `/Admin/SectionEdit.aspx`, `/Admin/SectionAttachTemplate.aspx`, `/Admin/SectionAttachNode.aspx`, `/Admin/ConnectionEdit.aspx` | step 4b |
+| `/Admin/NodeEdit.aspx`, `/Admin/MenuEdit.aspx` | step 4c |
+| `/Admin/Templates.aspx`, `/Admin/TemplateEdit.aspx`, `/Admin/TemplateEditor.aspx`, `/Admin/TemplateSection.aspx`, `/Admin/RebuildIndex.aspx` | step 5 |
+
+Two admin pages stay in the WebForms site until the public site moves: `Modules.aspx` (activating a module registers
+it in the process that renders the public pages) and `TemplatePreview.aspx` (it renders a WebForms template).
 
 The pages keep their urls and the markup of the WebForms pages (`Pages/Shared/_AdminLayout.cshtml` is
 `AdminTemplate.ascx`), so links between old and new pages keep working and the admin looks the same.
@@ -48,6 +54,20 @@ cookie in the answer (sliding expiration) is passed on to the browser.
 Templates are WebForms user controls, which this site can't load. Pages that list the placeholders of a template ask
 the WebForms site (`TemplatePlaceholders.axd`, administrators only) through `TemplatePlaceholderProvider`. Both calls go
 through `LegacySiteClient`, which sends the cookies of the browser along.
+
+## Modules
+
+This site references the module assemblies (the netstandard2.0 module classes, without their WebForms pages) and
+activates the modules that are activated in the database before every page (`ModuleActivation`), so modules that are
+activated on the WebForms site are picked up too. A module that can't be loaded is logged and skipped.
+
+## The folder of the WebForms site
+
+Some things live in the folder of the WebForms site: the full-text index (`~/index`), uploaded files (`~/files`) and
+the template files, which the template pages list and edit (so this site needs write access to `Templates`).
+`LegacySitePath` (absolute, or relative to this site) tells this site where that folder is, for
+`ApplicationPaths.MapPath`. Both sites write to the same full-text index; Lucene's lock keeps it consistent, but when
+both write at the same moment, one of them fails after waiting for the lock.
 
 ## Notes
 

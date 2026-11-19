@@ -1,5 +1,5 @@
 import { test, expect, type APIRequestContext, type Page } from '@playwright/test';
-import { extractPageLinks } from './helpers';
+import { extractPageLinks, homeNodeId } from './helpers';
 
 // Full-text search: instant indexing when content changes, rebuilding the index and querying it.
 
@@ -20,6 +20,14 @@ async function findPage(request: APIRequestContext, baseURL: string, pattern: Re
     }
   }
   return undefined;
+}
+
+/** The id of the search section that seed.setup.ts adds to the Search page under the home page. */
+async function searchSectionId(page: Page): Promise<string> {
+  await page.goto(`/Admin/NodeEdit.aspx?NodeId=${await homeNodeId(page)}`);
+  await page.locator('#menupane a', { hasText: /^Search$/ }).click();
+  const sectionHref = await page.locator('a[href*="SectionEdit.aspx?SectionId="]').first().getAttribute('href');
+  return /SectionId=(\d+)/i.exec(sectionHref!)![1];
 }
 
 async function search(page: Page, searchPageUrl: string, text: string) {
@@ -58,6 +66,12 @@ test('search finds new articles, also after rebuilding the index', async ({ page
   try {
     await search(page, searchPageUrl!, word);
     await expect(page.locator('a', { hasText: title }), 'found through instant indexing').toHaveCount(1);
+
+    // A search box connected to the search section sends the query in the url (/{sectionId}/section.aspx/Search?q=).
+    const sectionId = await searchSectionId(page);
+    await page.goto(`/${sectionId}/section.aspx/Search?q=${encodeURIComponent(word)}`);
+    await expect(page.locator('[id$="txtSearchText"]')).toHaveValue(word);
+    await expect(page.locator('a', { hasText: title }), 'found through the search url').toHaveCount(1);
 
     // Rebuild the index from the site administration.
     await page.goto('/Admin/RebuildIndex.aspx');

@@ -1,6 +1,6 @@
 using System;
 using System.Text.RegularExpressions;
-using System.Web;
+using System.Net;
 
 namespace Cuyahoga.Modules.Articles.Domain
 {
@@ -91,7 +91,7 @@ namespace Cuyahoga.Modules.Articles.Domain
 				string[] lines = Regex.Split(this._commentText, @"<br\s*/?>", RegexOptions.IgnoreCase);
 				for (int i = 0; i < lines.Length; i++)
 				{
-					lines[i] = HttpUtility.HtmlEncode(HttpUtility.HtmlDecode(lines[i]));
+					lines[i] = WebUtility.HtmlEncode(WebUtility.HtmlDecode(lines[i]));
 				}
 				return String.Join("<br/>", lines);
 			}
@@ -105,7 +105,7 @@ namespace Cuyahoga.Modules.Articles.Domain
 		public static string CreateCommentText(string text)
 		{
 			string normalizedText = text.Replace("\r\n", "\n").Replace("\r", "\n");
-			return HttpUtility.HtmlEncode(normalizedText).Replace("\n", "<br/>");
+			return WebUtility.HtmlEncode(normalizedText).Replace("\n", "<br/>");
 		}
 
 		/// <summary>

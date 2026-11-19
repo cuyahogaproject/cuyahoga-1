@@ -23,7 +23,7 @@
 			[<a id="p_Header_lbtLogout" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Log out</a>]
 		</div>
 		<div id="menupane">
-			@await Component.InvokeAsync("AdminNavigation")
+			@await Component.InvokeAsync("AdminNavigation", new { activeNode = adminPage?.ActiveNode })
 		</div>
 		<div id="contentpane">
 			<h1>@adminPage?.Title</h1>

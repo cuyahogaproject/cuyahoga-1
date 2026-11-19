@@ -1,0 +1,53 @@
+@page "/Admin/MenuEdit.aspx"
+@model MenuEditModel
+<form method="post">
+	@foreach (int nodeId in Model.MenuNodeIds)
+	{
+		<input type="hidden" name="MenuNodeIds" value="@nodeId" />
+	}
+	<div class="group">
+		<h4>General</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 200px">Name</td>
+				<td><input name="Name" type="text" value="@Model.Name" id="p_txtName" style="width:200px;" />@if (Model.NameError != null)
+					{<span class="validator">@Model.NameError</span>}</td>
+			</tr>
+			<tr>
+				<td>Placeholder</td>
+				<td><select name="Placeholder" id="p_ddlPlaceholder">
+					@foreach (string placeholder in Model.Placeholders)
+					{
+						<option value="@placeholder" selected="@(placeholder == Model.Placeholder)">@placeholder</option>
+					}
+				</select></td>
+			</tr>
+		</table>
+	</div>
+	<div class="group">
+		<h4>Nodes</h4>
+		<table>
+			<tr>
+				<td>Available:<br/><select size="4" name="AvailableNodeId" id="p_lbxAvailableNodes" style="height:200px;width:150px;">
+					@foreach (Node node in Model.AvailableNodes)
+					{
+						<option value="@node.Id">@SiteAliasEditModel.IndentedTitle(node)</option>
+					}
+				</select></td>
+				<td><input type="submit" name="btnAdd" value="&gt;" id="p_btnAdd" style="width:50px;" /><br/>
+					<input type="submit" name="btnRemove" value="&lt;" id="p_btnRemove" style="width:50px;" /></td>
+				<td>Selected:<br/><select size="4" name="SelectedNodeId" id="p_lbxSelectedNodes" style="height:200px;width:150px;">
+					@foreach (Node node in Model.MenuNodes)
+					{
+						<option value="@node.Id" selected="@(node.Id == Model.SelectedNodeId)">@node.Title</option>
+					}
+				</select></td>
+				<td>
+					<input type="submit" name="btnUp" value="Up" id="p_btnUp" style="width:50px;" /><br/>
+					<input type="submit" name="btnDown" value="Down" id="p_btnDown" style="width:50px;" /></td>
+			</tr>
+		</table>
+	</div>
+	<div><input type="submit" name="btnSave" value="Save" id="p_btnSave" /><input type="submit" name="btnBack" value="Back" id="p_btnBack" />@if (Model.IsExistingMenu)
+		{<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure?');" id="p_btnDelete" />}</div>
+</form>

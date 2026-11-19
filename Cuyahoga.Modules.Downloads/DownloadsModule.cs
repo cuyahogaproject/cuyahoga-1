@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Web;
+using System.Security.Principal;
 
 using NHibernate;
 using Cuyahoga.Core.Persistence;
@@ -9,6 +9,7 @@ using Cuyahoga.Core;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service;
 using Cuyahoga.Core.Service.Files;
+using Cuyahoga.Core.Util;
 using Cuyahoga.Modules.Downloads.Domain;
 using Cuyahoga.Core.Util;
 
@@ -44,7 +45,7 @@ namespace Cuyahoga.Modules.Downloads
 			{
 				if (this._physicalDir == null)
 				{
-					this._physicalDir = HttpContext.Current.Server.MapPath("~/files");
+					this._physicalDir = ApplicationPaths.MapPath("~/files");
 					CheckPhysicalDirectory(this._physicalDir);
 				}
 				return this._physicalDir;
@@ -146,9 +147,9 @@ namespace Cuyahoga.Modules.Downloads
 		/// Get the a file as stream.
 		/// </summary>
 		/// <returns></returns>
-		public System.IO.Stream GetFileAsStream(File file)
+		public System.IO.Stream GetFileAsStream(File file, IIdentity user)
 		{
-			if (file.IsDownloadAllowed(HttpContext.Current.User.Identity))
+			if (file.IsDownloadAllowed(user))
 			{
 				string physicalFilePath = System.IO.Path.Combine(this.FileDir, file.FilePath);
 				if (System.IO.File.Exists(physicalFilePath))

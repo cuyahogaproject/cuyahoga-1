@@ -50,6 +50,7 @@ const coreSite = spawn('dotnet', [coreSiteDll], {
     ASPNETCORE_ENVIRONMENT: 'Production',
     ASPNETCORE_URLS: `http://localhost:${port}`,
     LegacySiteUrl: `http://localhost:${legacyPort}`,
+    LegacySitePath: webRoot,
   },
   stdio: 'inherit',
 });

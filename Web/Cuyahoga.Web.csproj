@@ -126,10 +126,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\ConnectionEdit.aspx.cs">
-      <DependentUpon>ConnectionEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\Controls\AdminTemplate.ascx.cs">
       <DependentUpon>AdminTemplate.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -146,63 +142,16 @@
       <DependentUpon>Navigation.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\MenuEdit.aspx.cs">
-      <DependentUpon>MenuEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\Modules.aspx.cs">
       <DependentUpon>Modules.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\NodeEdit.aspx.cs">
-      <DependentUpon>NodeEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\RebuildIndex.aspx.cs">
-      <DependentUpon>RebuildIndex.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SectionAttachNode.aspx.cs">
-      <DependentUpon>SectionAttachNode.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SectionAttachTemplate.aspx.cs">
-      <DependentUpon>SectionAttachTemplate.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SectionEdit.aspx.cs">
-      <DependentUpon>SectionEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Sections.aspx.cs">
-      <DependentUpon>Sections.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TemplateEdit.aspx.cs">
-      <DependentUpon>TemplateEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TemplateEditor.aspx.cs">
-      <DependentUpon>TemplateEditor.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\TemplatePreview.aspx.cs">
       <DependentUpon>TemplatePreview.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Templates.aspx.cs">
-      <DependentUpon>Templates.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TemplateSection.aspx.cs">
-      <DependentUpon>TemplateSection.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\UI\AdminBasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\UI\SettingControlHelper.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="HttpHandlers\SitemapHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -342,9 +291,6 @@
     <Compile Include="Util\UrlHelper.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="Admin\ConnectionEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Admin\Controls\AdminTemplate.ascx">
       <SubType>UserControl</SubType>
     </Content>
@@ -374,41 +320,10 @@
     <Content Include="Admin\Images\upred.gif" />
     <Content Include="Admin\Images\user.gif" />
     <Content Include="Admin\Images\users.gif" />
-    <Content Include="Admin\MenuEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Admin\Modules.aspx">
       <SubType>Form</SubType>
     </Content>
-    <Content Include="Admin\NodeEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\RebuildIndex.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\SectionAttachNode.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\SectionAttachTemplate.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\SectionEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\Sections.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\TemplateEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\TemplateEditor.aspx" />
     <Content Include="Admin\TemplatePreview.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\Templates.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\TemplateSection.aspx">
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\Web.config" />
@@ -1044,9 +959,6 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <EmbeddedResource Include="Admin\ConnectionEdit.aspx.resx">
-      <DependentUpon>ConnectionEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Admin\Controls\AdminTemplate.ascx.resx">
       <DependentUpon>AdminTemplate.ascx.cs</DependentUpon>
     </EmbeddedResource>
@@ -1059,44 +971,11 @@
     <EmbeddedResource Include="Admin\Controls\Navigation.ascx.resx">
       <DependentUpon>Navigation.ascx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\MenuEdit.aspx.resx">
-      <DependentUpon>MenuEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Admin\Modules.aspx.resx">
       <DependentUpon>Modules.aspx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\NodeEdit.aspx.resx">
-      <DependentUpon>NodeEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\RebuildIndex.aspx.resx">
-      <DependentUpon>RebuildIndex.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\SectionAttachNode.aspx.resx">
-      <DependentUpon>SectionAttachNode.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\SectionAttachTemplate.aspx.resx">
-      <DependentUpon>SectionAttachTemplate.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\SectionEdit.aspx.resx">
-      <DependentUpon>SectionEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\Sections.aspx.resx">
-      <DependentUpon>Sections.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\TemplateEdit.aspx.resx">
-      <DependentUpon>TemplateEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\TemplateEditor.aspx.resx">
-      <DependentUpon>TemplateEditor.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Admin\TemplatePreview.aspx.resx">
       <DependentUpon>TemplatePreview.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\Templates.aspx.resx">
-      <DependentUpon>Templates.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\TemplateSection.aspx.resx">
-      <DependentUpon>TemplateSection.aspx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\EditProfile.ascx.resx">
       <DependentUpon>EditProfile.ascx.cs</DependentUpon>
@@ -1270,13 +1149,18 @@
   Publishing only picks up files that are part of this project, but the modules are deployed into Web\Modules and
   Web\bin by their own builds (see DeployCuyahogaModule in Directory.Build.targets). The modules reference this
   project, so they can't be project references here. Instead, build them before publishing and add their files
-  to the publish output.
+  to the publish output. Each module has its module classes (netstandard2.0) and its WebForms pages (.Web), in
+  that build order.
   -->
   <ItemGroup>
     <CuyahogaModuleProject Include="..\Modules\Cuyahoga.Modules.csproj" />
+    <CuyahogaModuleProject Include="..\Modules.Web\Cuyahoga.Modules.Web.csproj" />
     <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Articles\Cuyahoga.Modules.Articles.csproj" />
+    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Articles.Web\Cuyahoga.Modules.Articles.Web.csproj" />
     <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Downloads\Cuyahoga.Modules.Downloads.csproj" />
+    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Downloads.Web\Cuyahoga.Modules.Downloads.Web.csproj" />
     <CuyahogaModuleProject Include="..\Cuyahoga.Modules.RemoteContent\Cuyahoga.Modules.RemoteContent.csproj" />
+    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.RemoteContent.Web\Cuyahoga.Modules.RemoteContent.Web.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <CopyAllFilesToSingleFolderForPackageDependsOn>$(CopyAllFilesToSingleFolderForPackageDependsOn);IncludeCuyahogaModulesForPublish</CopyAllFilesToSingleFolderForPackageDependsOn>

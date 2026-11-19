@@ -7,6 +7,7 @@ using Cuyahoga.Web.Core.Security;
 using Cuyahoga.Web.Core.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -35,6 +36,20 @@ IWindsorContainer container = CuyahogaContainer.Create(settings, httpContextAcce
 IoC.Initialize(container);
 builder.Services.AddCuyahogaCoreServices(container);
 
+// Virtual paths (~/index, ~/files) are in the folder of the WebForms site (LegacySitePath, absolute or relative to
+// this site). Without it, the things that need these folders (updating the search index) fail with an error.
+string legacySitePath = builder.Configuration["LegacySitePath"];
+if (!String.IsNullOrWhiteSpace(legacySitePath))
+{
+	string legacySiteRoot = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, legacySitePath));
+	ApplicationPaths.MapPath = virtualPath =>
+		Path.Combine(legacySiteRoot, virtualPath.TrimStart('~', '/').Replace('/', Path.DirectorySeparatorChar));
+}
+
+// The modules of the database, activated before every page of this site.
+builder.Services.AddSingleton<ModuleActivation>();
+builder.Services.AddScoped<SearchIndexUpdater>();
+
 // Questions for the WebForms site, asked with the cookies of the browser: who is logged in, template placeholders.
 builder.Services.AddHttpClient(LegacySiteClient.HttpClientName, client =>
 		client.BaseAddress = new Uri(legacySiteUrl.TrimEnd('/') + "/"))
@@ -53,9 +68,13 @@ builder.Services.AddAuthorization(options =>
 		.RequireAuthenticatedUser()
 		.AddRequirements(new AdministratorRequirement())));
 
-// The migrated pages keep the urls of the WebForms pages (/Admin/Users.aspx).
+// The migrated pages keep the urls of the WebForms pages (/Admin/Users.aspx). The admin home page is also the default
+// document of the admin folder (/Admin/), like Default.aspx was in IIS.
 builder.Services.AddRazorPages(options =>
-	options.Conventions.AuthorizeFolder("/Admin", AdministratorRequirement.PolicyName));
+{
+	options.Conventions.AuthorizeFolder("/Admin", AdministratorRequirement.PolicyName);
+	options.Conventions.AddPageRoute("/Admin/Default", "Admin/");
+});
 
 builder.Services.AddHttpForwarder();
 // Request size limits are up to the WebForms site (maxRequestLength) for the requests that it handles.
@@ -64,6 +83,20 @@ builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 
 var app = builder.Build();
 
 app.UseMiddleware<NHibernateSessionMiddleware>();
+// The admin folder without trailing slash goes to the folder (like IIS does), so the relative links of the admin pages
+// work. The routes ignore the trailing slash, so this can't be left to the admin home page route.
+app.Use(async (context, next) =>
+{
+	if (String.Equals(context.Request.Path.Value, "/admin", StringComparison.OrdinalIgnoreCase))
+	{
+		context.Response.Redirect(context.Request.PathBase + context.Request.Path + "/" + context.Request.QueryString, permanent: true);
+		return;
+	}
+	await next(context);
+});
+app.UseRouting();
+// Before authentication, which opens the first NHibernate session of the request.
+app.UseMiddleware<ModuleActivationMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -71,7 +104,19 @@ app.MapRazorPages();
 
 // Everything that this site doesn't handle goes to the WebForms site. The forwarder sets the X-Forwarded-Host and
 // X-Forwarded-Proto headers, which the WebForms site uses to build absolute urls (and to find the Cuyahoga site of
-// the request) for the address that the browser used.
-app.MapForwarder("/{**catch-all}", legacySiteUrl).WithOrder(int.MaxValue);
+// the request) for the address that the browser used. Redirects that IIS itself makes (for example from a folder url
+// without trailing slash) have the address of the WebForms site, so they're changed to the address of this site.
+string legacySiteRootUrl = legacySiteUrl.TrimEnd('/') + "/";
+app.MapForwarder("/{**catch-all}", legacySiteUrl, transforms => transforms.AddResponseTransform(context =>
+{
+	string location = context.HttpContext.Response.Headers.Location;
+	if (location != null && location.StartsWith(legacySiteRootUrl, StringComparison.OrdinalIgnoreCase))
+	{
+		HttpRequest request = context.HttpContext.Request;
+		context.HttpContext.Response.Headers.Location =
+			$"{request.Scheme}://{request.Host}{request.PathBase}/{location.Substring(legacySiteRootUrl.Length)}";
+	}
+	return ValueTask.CompletedTask;
+})).WithOrder(int.MaxValue);
 
 app.Run();

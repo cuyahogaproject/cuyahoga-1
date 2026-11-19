@@ -1,0 +1,100 @@
+@page "/Admin/TemplateEdit.aspx"
+@model TemplateEditModel
+@{
+	int placeholderIndex = 0;
+}
+<form method="post" id="templateForm">
+	<input type="hidden" name="ListedBasePath" value="@Model.ListedBasePath" />
+	<input type="hidden" name="detachPlaceholder" id="detachPlaceholder" value="" />
+	<p>
+		<em>Make sure you have placed at least one template control (.ascx) in the
+			directory specified as the Base path and at least one css file in Base path/Css
+			directory.</em>
+	</p>
+	<div class="group">
+		<h4>General</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 200px">Name</td>
+				<td><input name="Name" type="text" value="@Model.Name" id="p_txtName" style="width:200px;" />
+					@if (Model.NameError != null)
+					{<span class="validator">@Model.NameError</span>}
+				</td>
+			</tr>
+			<tr>
+				<td>Base path (from app root, without beginning '/')</td>
+				<td><input name="BasePath" type="text" value="@Model.BasePath" id="p_txtBasePath" style="width:200px;" />
+					<input type="submit" name="btnVerifyBasePath" value="Verify" id="p_btnVerifyBasePath" />
+					@if (Model.BasePathError != null)
+					{<span class="validator">@Model.BasePathError</span>}
+				</td>
+			</tr>
+			<tr>
+				<td>Template control</td>
+				<td>
+					<select name="TemplateControl" id="p_ddlTemplateControls">
+						@foreach (string templateControl in Model.TemplateControls)
+						{
+							<option value="@templateControl" selected="@(templateControl == Model.TemplateControl)">@templateControl</option>
+						}
+					</select>
+					@if (Model.TemplateControlWarning != null)
+					{<span id="p_lblTemplateControlWarning" class="validator">@Model.TemplateControlWarning</span>}</td>
+			</tr>
+			<tr>
+				<td>Css</td>
+				<td><select name="Css" id="p_ddlCss">
+						@foreach (string stylesheet in Model.Stylesheets)
+						{
+							<option value="@stylesheet" selected="@(stylesheet == Model.Css)">@stylesheet</option>
+						}
+					</select>
+					@if (Model.CssWarning != null)
+					{<span id="p_lblCssWarning" class="validator">@Model.CssWarning</span>}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<br/>
+	@if (Model.IsExistingTemplate)
+	{
+		<div id="p_pnlPlaceholders" class="group">
+			<h4>Placeholders</h4>
+			<table class="tbl">
+				<tr>
+					<th>
+						Placeholder</th>
+					<th>
+						Attached section</th>
+					<th>
+					</th>
+				</tr>
+				@foreach (string placeholder in Model.Placeholders ?? new List<string>())
+				{
+					string rowId = "p_rptPlaceholders_ctl" + (placeholderIndex++).ToString("00");
+					Section attached = Model.Template.Sections.TryGetValue(placeholder, out Section s) ? s : null;
+					<tr>
+						<td>
+							<span id="@(rowId)_lblPlaceholder">@placeholder</span></td>
+						<td>
+							@if (attached != null)
+							{<a id="@(rowId)_hplSection" href="SectionEdit.aspx?SectionId=@attached.Id">@attached.Title</a>}</td>
+						<td>
+							@if (attached != null)
+							{<a id="@(rowId)_lbtDetachSection" href="#" onclick="if (confirm(&quot;Are you sure?&quot;)) { document.getElementById('detachPlaceholder').value = '@placeholder'; document.getElementById('templateForm').submit(); } return false;">Detach section</a>}
+							else
+							{<a id="@(rowId)_hplAttachSection" href="TemplateSection.aspx?TemplateId=@Model.Template.Id&amp;Placeholder=@placeholder">Attach section</a>}
+						</td>
+					</tr>
+				}
+			</table>
+		</div>
+	}
+	<br/>
+	<input type="submit" name="btnSave" value="Save" id="p_btnSave" />
+	<input type="submit" name="btnBack" value="Back" id="p_btnBack" />
+	@if (Model.CanDelete)
+	{
+		<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure?');" id="p_btnDelete" />
+	}
+</form>

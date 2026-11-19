@@ -1,0 +1,279 @@
+@page "/Admin/NodeEdit.aspx"
+@model NodeEditModel
+@{
+	Node node = Model.ActiveNode;
+	bool isOnline = node.Status == (int)NodeStatus.Online;
+	string offlineText = isOnline ? "Take Offline" : "Bring online";
+	string offlineConfirm = isOnline ? "return confirm('Take node offline?');" : "return confirm('Bring node online?');";
+	string previewClick = "window.open('" + Model.NodeUrl + "?preview=on');";
+	string currentUrl = HttpContext.Request.Path + HttpContext.Request.QueryString;
+	int sectionIndex = 0;
+	int roleIndex = 0;
+	int menuIndex = 0;
+}
+<form method="post" id="nodeForm">
+	@* The external link checkbox and the template list post the form back (the template list also saves). *@
+	<input type="hidden" name="Refresh" id="refresh" value="" />
+	<input type="hidden" name="deleteSection" id="deleteSection" value="" />
+	<input type="hidden" name="detachSection" id="detachSection" value="" />
+	<script type="text/javascript">
+		function confirmDeleteNode() {
+			return confirm("Are you sure you want to delete this node?");
+		}
+		function refreshNode(reason) {
+			document.getElementById('refresh').value = reason;
+			document.getElementById('nodeForm').submit();
+		}
+		function sectionCommand(command, sectionId) {
+			document.getElementById(command).value = sectionId;
+			document.getElementById('nodeForm').submit();
+		}
+	</script>
+	<p>Manage the properties of the node (page). Use the buttons on the bottom
+	of the page to save or delete the page or to add a new child node underneath this node.</p>
+	<div>
+		<input type="submit" name="btnSave2" value="Save" id="p_btnSave2" />
+		<input type="submit" name="btnCancel2" value="Cancel" id="p_btnCancel2" />
+		@if (!Model.IsNewNode)
+		{
+			<input type="submit" name="btnNew2" value="Add new child" id="p_btnNew2" />
+		}
+		<input type="submit" name="btnDuplicate2" value="Duplicate" onclick="return confirm('Duplicate node?');" id="p_btnDuplicate2" />
+		@* On a new node, only the bottom button was hidden in the WebForms page. *@
+		<input type="submit" name="btnOffline2" value="@offlineText" onclick="@(Model.IsNewNode ? null : offlineConfirm)" id="p_btnOffline2" />
+		@if (!Model.IsNewNode)
+		{
+			<input type="submit" name="btnDelete2" value="Delete" onclick="return confirmDeleteNode();" id="p_btnDelete2" />
+		}
+		<input name="btnPreview2" type="button" id="p_btnPreview2" value="Preview" onclick="@previewClick" />
+	</div>
+	<div class="group">
+		<h4>General</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 100px">Node title</td>
+				<td><input name="NodeTitle" type="text" value="@Model.NodeTitle" id="p_txtTitle" style="width:300px;" />@if (Model.TitleError != null)
+					{<span class="validator">@Model.TitleError</span>}</td>
+			</tr>
+			<tr>
+				<td>Friendly url</td>
+				<td>@if (!Model.IsNewNode)
+					{<input name="ShortDescription" type="text" value="@Model.ShortDescription" id="p_txtShortDescription" title="You can use this for 'nice' links ([shortdescription].aspx). Make sure it's unique!" style="width:300px;" />}.aspx&nbsp;@if (Model.ShortDescriptionError != null)
+					{<span class="validator">@Model.ShortDescriptionError</span>}@if (Model.ShortDescriptionRequiredError)
+					{<span style="color:Red;">Short description is required</span>}</td>
+			</tr>
+			<tr>
+				<td>Parent node</td>
+				<td><span id="p_lblParentNode">@node.ParentNode?.Title</span></td>
+			</tr>
+			<tr>
+				<td>Status</td>
+				<td><span id="p_lblStatus">@if (!Model.IsNewNode)
+					{
+						if (isOnline)
+						{@:Online
+						}
+						else
+						{<strong>Offline</strong>}
+					}</span></td>
+			</tr>
+			<tr>
+				<td>Position</td>
+				<td>@if (Model.ShowUp)
+					{<input type="image" name="btnUp" id="p_btnUp" src="Images/upred.gif" alt="Move up" style="border-width:0px;" />}@if (Model.ShowDown)
+					{<input type="image" name="btnDown" id="p_btnDown" src="Images/downred.gif" alt="Move down" style="border-width:0px;" />}@if (Model.ShowLeft)
+					{<input type="image" name="btnLeft" id="p_btnLeft" src="Images/leftred.gif" alt="Move left" style="border-width:0px;" />}@if (Model.ShowRight)
+					{<input type="image" name="btnRight" id="p_btnRight" src="Images/rightred.gif" alt="Move right" style="border-width:0px;" />}</td>
+			</tr>
+			<tr>
+				<td>Culture</td>
+				<td><select name="Culture" id="p_ddlCultures">
+					@foreach (var culture in Model.Cultures)
+					{
+						<option value="@culture.Key" selected="@(culture.Key == Model.Culture)">@culture.Value</option>
+					}
+				</select></td>
+			</tr>
+			<tr>
+				<td>Show in navigation</td>
+				<td><input id="p_chkShowInNavigation" type="checkbox" name="ShowInNavigation" value="true" checked="@Model.ShowInNavigation" /></td>
+			</tr>
+			<tr>
+				<td>Meta description</td>
+				<td>
+					<textarea name="MetaDescription" rows="2" cols="20" maxlength="500" id="p_txtMetaDescription" style="height:35px;width:400px;">@Model.MetaDescription</textarea></td>
+			</tr>
+			<tr>
+				<td>Meta keywords</td>
+				<td>
+					<textarea name="MetaKeywords" rows="2" cols="20" maxlength="500" id="p_txtMetaKeywords" style="height:35px;width:400px;">@Model.MetaKeywords</textarea></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td>@if (node.Sections.Count == 0)
+					{<input id="p_chkLink" type="checkbox" name="IsLink" value="true" checked="@Model.IsLink" onclick="refreshNode('link');" /><label for="p_chkLink">The node is a link to an external url</label>}
+					else
+					{<span disabled="disabled"><input id="p_chkLink" type="checkbox" name="IsLink" value="true" disabled="disabled" checked="@Model.IsLink" /><label for="p_chkLink">The node is a link to an external url</label></span>}@if (Model.IsLink)
+					{
+						<div id="p_pnlLink">
+							<table>
+								<tr>
+									<td style="width:60px">Url</td>
+									<td>
+										<input name="LinkUrl" type="text" value="@Model.LinkUrl" id="p_txtLinkUrl" style="width:400px;" /></td>
+								</tr>
+								<tr>
+									<td>Target</td>
+									<td>
+										<select name="LinkTarget" id="p_ddlLinkTarget">
+											<option value="Self" selected="@(Model.LinkTarget == "Self")">Same window</option>
+											<option value="New" selected="@(Model.LinkTarget == "New")">New window</option>
+										</select></td>
+								</tr>
+							</table>
+						</div>
+					}</td>
+			</tr>
+		</table>
+	</div>
+	@if (!Model.IsLink)
+	{
+		<div id="p_pnlTemplate" class="group">
+			<h4>Template</h4>
+			<table>
+				<tr>
+					<td style="WIDTH: 100px">&nbsp;</td>
+					<td>
+						<select name="TemplateId" id="p_ddlTemplates" onchange="refreshNode('template');">
+							@foreach (Template template in Model.Templates)
+							{
+								<option value="@template.Id" selected="@(template.Id == Model.TemplateId)">@template.Name</option>
+							}
+						</select></td>
+				</tr>
+			</table>
+		</div>
+		@if (Model.Menus != null)
+		{
+			<div id="p_pnlMenus" class="group">
+				<h4>Menus</h4>
+				<em>You're editing a root node, so you can also attach on or more custom menu's.</em>
+				<table class="tbl">
+					<tr>
+						<th>
+							Menu</th>
+						<th>
+							Placeholder</th>
+						<th>
+							Actions</th>
+					</tr>
+					@foreach (CustomMenu menu in Model.Menus)
+					{
+						<tr>
+							<td>@menu.Name</td>
+							<td>@menu.Placeholder</td>
+							<td>
+								<a id="p_rptMenus_ctl@((++menuIndex).ToString("00"))_hplEditMenu" href="MenuEdit.aspx?MenuId=@menu.Id&amp;NodeId=@node.Id">Edit</a>
+							</td>
+						</tr>
+					}
+				</table>
+				<a id="p_hplNewMenu" href="MenuEdit.aspx?MenuId=-1&amp;NodeId=@node.Id">Add menu</a>
+			</div>
+		}
+		<div id="p_pnlSections" class="group">
+			<h4>Sections</h4>
+			<table class="tbl">
+				<tr>
+					<th>
+						Section title</th>
+					<th>
+						Module type</th>
+					<th>
+						Placeholder</th>
+					<th>
+						Cache duration</th>
+					<th>
+						Position</th>
+					<th>
+						Actions</th>
+				</tr>
+				@foreach (Section nodeSection in Model.Sections)
+				{
+					string rowId = "p_rptSections_ctl" + (++sectionIndex).ToString("00");
+					string adminUrl = Model.ModuleAdminUrl(nodeSection);
+					<tr>
+						<td>@nodeSection.Title</td>
+						<td>@nodeSection.ModuleType.Name</td>
+						<td>@nodeSection.PlaceholderId
+							@if (Model.TemplatePlaceholders != null && !Model.TemplatePlaceholders.Contains(nodeSection.PlaceholderId))
+							{<span class="validator">(not found in template!)</span>}</td>
+						<td style="text-align:right">@nodeSection.CacheDuration</td>
+						<td>
+							@if (nodeSection.CanMoveUp())
+							{<a id="@(rowId)_hplSectionUp" href="@(currentUrl)&amp;SectionId=@nodeSection.Id&amp;Action=MoveUp"><img src="Images/upred.gif" alt="Move up" style="border-width:0px;" /></a>}
+							@if (nodeSection.CanMoveDown())
+							{<a id="@(rowId)_hplSectionDown" href="@(currentUrl)&amp;SectionId=@nodeSection.Id&amp;Action=MoveDown"><img src="Images/downred.gif" alt="Move down" style="border-width:0px;" /></a>}
+						</td>
+						<td>
+							@if (adminUrl != null)
+							{<a id="@(rowId)_hplAdmin" href="@adminUrl">Admin</a>}
+							<a id="@(rowId)_hplEdit" href="SectionEdit.aspx?SectionId=@nodeSection.Id&amp;NodeId=@node.Id">Edit</a>
+							<a id="@(rowId)_lbtDetach" href="#" onclick="sectionCommand('detachSection', @nodeSection.Id); return false;">Detach</a>
+							<a id="@(rowId)_lbtDelete" href="#" onclick="if (confirm('Are you sure?')) { sectionCommand('deleteSection', @nodeSection.Id); } return false;">Delete</a>
+						</td>
+					</tr>
+				}
+			</table>
+			@if (!Model.IsNewNode && node.Template != null)
+			{
+				<a id="p_hplNewSection" href="SectionEdit.aspx?SectionId=-1&amp;NodeId=@node.Id">Add section</a>
+			}
+		</div>
+	}
+	<div class="group">
+		<h4>Authorization</h4>
+		<table class="tbl">
+			<tr>
+				<th>
+					Role</th>
+				<th>
+					View allowed</th>
+				<th>
+					Edit allowed</th>
+			</tr>
+			@foreach (Role role in Model.Roles)
+			{
+				string rowId = "p_rptRoles_ctl" + (++roleIndex).ToString("00");
+				<tr>
+					<td>@role.Name</td>
+					<td style="text-align:center">
+						<input id="@(rowId)_chkViewAllowed" type="checkbox" name="ViewRoleIds" value="@role.Id" checked="@Model.ViewRoleIds.Contains(role.Id)" /></td>
+					<td style="text-align:center">
+						@if (SectionEditModel.CanEdit(role))
+						{
+							<input id="@(rowId)_chkEditAllowed" type="checkbox" name="EditRoleIds" value="@role.Id" checked="@Model.EditRoleIds.Contains(role.Id)" />
+						}
+					</td>
+				</tr>
+			}
+		</table>
+		<br/>
+		<input id="p_chkPropagateToSections" type="checkbox" name="PropagateToSections" value="true" checked="@Model.PropagateToSections" /><label for="p_chkPropagateToSections">Propagate security settings to sections</label><br/>
+		<input id="p_chkPropagateToChildNodes" type="checkbox" name="PropagateToChildNodes" value="true" checked="@Model.PropagateToChildNodes" /><label for="p_chkPropagateToChildNodes">Propagate security settings to child nodes</label></div>
+	<div>
+		<input type="submit" name="btnSave" value="Save" id="p_btnSave" />
+		<input type="submit" name="btnCancel" value="Cancel" id="p_btnCancel" />
+		@if (!Model.IsNewNode)
+		{
+			<input type="submit" name="btnNew" value="Add new child" id="p_btnNew" />
+		}
+		<input type="submit" name="btnDuplicate" value="Duplicate" onclick="return confirm('Duplicate node?');" id="p_btnDuplicate" />
+		@if (!Model.IsNewNode)
+		{
+			<input type="submit" name="btnOffline" value="@offlineText" onclick="@offlineConfirm" id="p_btnOffline" />
+			<input type="submit" name="btnDelete" value="Delete" onclick="return confirmDeleteNode();" id="p_btnDelete" />
+		}
+		<input name="btnPreview" type="button" id="p_btnPreview" value="Preview" onclick="@previewClick" />
+	</div>
+</form>

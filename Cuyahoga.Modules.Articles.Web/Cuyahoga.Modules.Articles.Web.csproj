@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+  The WebForms pages and controls of the Articles module (Cuyahoga.Modules.Articles). The root namespace matches the
+  former Web folder, so the markup and the resource names are the same as before the split.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <RootNamespace>Cuyahoga.Modules.Articles.Web</RootNamespace>
+    <CuyahogaModule>true</CuyahogaModule>
+  </PropertyGroup>
+  <ItemGroup>
+    <CuyahogaModuleFile Include="**\*.as?x" Exclude="bin\**;obj\**" DeployTo="Modules\Articles\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Core\Cuyahoga.Core.csproj" />
+    <ProjectReference Include="..\Cuyahoga.Modules.Articles\Cuyahoga.Modules.Articles.csproj" />
+    <ProjectReference Include="..\ServerControls\Cuyahoga.ServerControls.csproj" />
+    <ProjectReference Include="..\Web\Cuyahoga.Web.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+  </ItemGroup>
+</Project>

@@ -1,0 +1,52 @@
+@page "/Admin/Sections.aspx"
+@model SectionsModel
+<p>Manage sections that are not related to a node. This can be detached sections or
+	sections that are connected to&nbsp;one or more&nbsp;templates.</p>
+<table class="tbl">
+	<tr>
+		<th>
+			Section name</th>
+		<th>
+			Module type</th>
+		<th>
+			Attached to template(s)</th>
+		<th>
+			Actions</th>
+	</tr>
+	@foreach (var (standaloneSection, templates) in Model.Sections)
+	{
+		<tr>
+			<td>@standaloneSection.Title</td>
+			<td>@standaloneSection.ModuleType.Name</td>
+			<td>
+				@string.Join(", ", templates.Select(template => template.Name))
+			</td>
+			<td style="white-space:nowrap">
+				<a href="SectionEdit.aspx?SectionId=@standaloneSection.Id">Edit</a>
+				@* A section on a template can't be deleted or attached to a node. *@
+				@if (templates.Count == 0)
+				{
+					<a href="#" onclick="if (confirm('Are you sure?')) { deleteSection(@standaloneSection.Id); } return false;">Delete</a>
+				}
+				<a href="SectionAttachTemplate.aspx?SectionId=@standaloneSection.Id">Attach to template</a>
+				@if (templates.Count == 0)
+				{
+					<a href="SectionAttachNode.aspx?SectionId=@standaloneSection.Id">Attach to node</a>
+				}
+			</td>
+		</tr>
+	}
+</table>
+<br/>
+<form method="get" action="SectionEdit.aspx">
+	<div><input type="hidden" name="SectionId" value="-1" /><input type="submit" value="Add new section" id="p_btnNew" /></div>
+</form>
+<form method="post" id="deleteForm">
+	<input type="hidden" name="deleteSectionId" id="deleteSectionId" />
+</form>
+<script type="text/javascript">
+	function deleteSection(sectionId) {
+		document.getElementById('deleteSectionId').value = sectionId;
+		document.getElementById('deleteForm').submit();
+	}
+</script>

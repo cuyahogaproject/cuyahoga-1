@@ -1,0 +1,20 @@
+@page "/Admin/TemplateEditor.aspx"
+@model TemplateEditorModel
+<form method="post">
+	<p>
+		<em>Modifying this file could broke design or functionalities of the site.</em>
+	</p>
+	<div class="group">
+		<h4>Edit file</h4>
+		<table>
+			<tr>
+				@* The browser drops the first line break after <textarea>, so a file that starts with one keeps it. *@
+				<td><textarea name="Contents" rows="2" cols="20" id="p_txtName" style="height:500px;width:600px;">
+@Model.Contents</textarea></td>
+			</tr>
+		</table>
+	</div>
+	<br/>
+	<input type="submit" name="btnBack" value="Back" id="p_btnBack" />
+	&nbsp;<input type="submit" name="btnSave" value="Save" onclick="return confirm('Are you sure?');" id="p_btnSave" disabled="@(!Model.CanEdit)" />
+</form>

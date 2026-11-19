@@ -1,0 +1,40 @@
+@page "/Admin/Templates.aspx"
+@model TemplatesModel
+@{
+	int templateIndex = 0;
+}
+<p><em>NOTE: You have to upload the physical templates and
+		stylesheet files separately with FTP or something.</em> </p>
+<table class="tbl">
+	<tr>
+		<th>Template name</th>
+		<th>Base path</th>
+		<th>Template control</th>
+		<th>Css</th>
+		<th></th>
+	</tr>
+	@foreach (Template template in Model.Templates)
+	{
+		<tr>
+			<td>@template.Name</td>
+			<td>@template.BasePath</td>
+			<td>
+				@template.TemplateControl
+				<a href="TemplateEditor.aspx?file=@(template.BasePath + "/" + template.TemplateControl)">[Edit]</a>
+			</td>
+			<td>
+				@template.Css
+				<a href="TemplateEditor.aspx?file=@(template.BasePath + "/css/" + template.Css)">[Edit]</a>
+			</td>
+			<td>
+				<a id="p_rptTemplates_ctl@((++templateIndex).ToString("00"))_hplEdit" href="TemplateEdit.aspx?TemplateId=@template.Id">Edit</a>
+			</td>
+		</tr>
+	}
+</table><br/>
+<form method="get" action="TemplateEdit.aspx">
+	<div>
+		<input type="hidden" name="TemplateId" value="-1" />
+		<input type="submit" value="Add new template" id="p_btnNew" />
+	</div>
+</form>

@@ -1,0 +1,38 @@
+@page "/Admin/TemplateSection.aspx"
+@model TemplateSectionModel
+<form method="post">
+	<div class="group">
+		<h4>Template</h4>
+		<table>
+			<tr>
+				<td style="WIDTH:130px">Template</td>
+				<td>
+					<span id="p_lblTemplate">@Model.Template?.Name</span></td>
+			</tr>
+			<tr>
+				<td>Placeholder</td>
+				<td>
+					<span id="p_lblPlaceholder">@(Model.Template != null ? Model.Placeholder : null)</span></td>
+			</tr>
+		</table>
+	</div>
+	<br/>
+	<div class="group">
+		<h4>Section</h4>
+		<table>
+			<tr>
+				<td style="WIDTH:130px">Available sections</td>
+				<td>
+					<select name="SectionId" id="p_ddlSections">
+						@foreach (Section availableSection in Model.Sections)
+						{
+							<option value="@availableSection.Id">@availableSection.Title</option>
+						}
+					</select></td>
+			</tr>
+		</table>
+	</div>
+	<br/>
+	<input type="submit" name="btnAttach" value="Attach selected section" id="p_btnAttach" disabled="@(Model.Sections.Count == 0)" />
+	<input type="submit" name="btnBack" value="Back" id="p_btnBack" />
+</form>

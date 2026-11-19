@@ -146,28 +146,8 @@
       <DependentUpon>Modules.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\RebuildIndex.aspx.cs">
-      <DependentUpon>RebuildIndex.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TemplateEdit.aspx.cs">
-      <DependentUpon>TemplateEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TemplateEditor.aspx.cs">
-      <DependentUpon>TemplateEditor.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\TemplatePreview.aspx.cs">
       <DependentUpon>TemplatePreview.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Templates.aspx.cs">
-      <DependentUpon>Templates.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TemplateSection.aspx.cs">
-      <DependentUpon>TemplateSection.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Admin\UI\AdminBasePage.cs">
@@ -343,20 +323,7 @@
     <Content Include="Admin\Modules.aspx">
       <SubType>Form</SubType>
     </Content>
-    <Content Include="Admin\RebuildIndex.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\TemplateEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\TemplateEditor.aspx" />
     <Content Include="Admin\TemplatePreview.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\Templates.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\TemplateSection.aspx">
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\Web.config" />
@@ -1007,23 +974,8 @@
     <EmbeddedResource Include="Admin\Modules.aspx.resx">
       <DependentUpon>Modules.aspx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\RebuildIndex.aspx.resx">
-      <DependentUpon>RebuildIndex.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\TemplateEdit.aspx.resx">
-      <DependentUpon>TemplateEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\TemplateEditor.aspx.resx">
-      <DependentUpon>TemplateEditor.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Admin\TemplatePreview.aspx.resx">
       <DependentUpon>TemplatePreview.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\Templates.aspx.resx">
-      <DependentUpon>Templates.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\TemplateSection.aspx.resx">
-      <DependentUpon>TemplateSection.aspx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\EditProfile.ascx.resx">
       <DependentUpon>EditProfile.ascx.cs</DependentUpon>

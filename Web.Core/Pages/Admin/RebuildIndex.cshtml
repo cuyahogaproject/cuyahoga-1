@@ -1,0 +1,14 @@
+@page "/Admin/RebuildIndex.aspx"
+@model RebuildIndexModel
+<form method="post" id="rebuildForm">
+	<p>
+		@if (Model.IsRebuilt)
+		{<span id="p_lblMessage">The index was successfully rebuilt.</span>}
+	</p>
+	<p>
+		<input type="submit" name="btnRebuild" value="Rebuild index" onclick="this.disabled='true';document.getElementById('pleasewait').style.display = 'block';document.getElementById('rebuildForm').submit();" id="p_btnRebuild" />
+	</p>
+	<div id="pleasewait" style="DISPLAY: none">
+		Please wait while the index is being rebuild...
+	</div>
+</form>

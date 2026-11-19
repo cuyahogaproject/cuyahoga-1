@@ -34,6 +34,10 @@ The e2e tests (`e2e`) run both sites: the WebForms site on port 8082 and this si
 | `/Admin/Default.aspx`, `/Admin/SiteEdit.aspx`, `/Admin/SiteAliasEdit.aspx` | step 4a |
 | `/Admin/Sections.aspx`, `/Admin/SectionEdit.aspx`, `/Admin/SectionAttachTemplate.aspx`, `/Admin/SectionAttachNode.aspx`, `/Admin/ConnectionEdit.aspx` | step 4b |
 | `/Admin/NodeEdit.aspx`, `/Admin/MenuEdit.aspx` | step 4c |
+| `/Admin/Templates.aspx`, `/Admin/TemplateEdit.aspx`, `/Admin/TemplateEditor.aspx`, `/Admin/TemplateSection.aspx`, `/Admin/RebuildIndex.aspx` | step 5 |
+
+Two admin pages stay in the WebForms site until the public site moves: `Modules.aspx` (activating a module registers
+it in the process that renders the public pages) and `TemplatePreview.aspx` (it renders a WebForms template).
 
 The pages keep their urls and the markup of the WebForms pages (`Pages/Shared/_AdminLayout.cshtml` is
 `AdminTemplate.ascx`), so links between old and new pages keep working and the admin looks the same.
@@ -59,7 +63,8 @@ activated on the WebForms site are picked up too. A module that can't be loaded 
 
 ## The folder of the WebForms site
 
-Some things live in the folder of the WebForms site: the full-text index (`~/index`) and uploaded files (`~/files`).
+Some things live in the folder of the WebForms site: the full-text index (`~/index`), uploaded files (`~/files`) and
+the template files, which the template pages list and edit (so this site needs write access to `Templates`).
 `LegacySitePath` (absolute, or relative to this site) tells this site where that folder is, for
 `ApplicationPaths.MapPath`. Both sites write to the same full-text index; Lucene's lock keeps it consistent, but when
 both write at the same moment, one of them fails after waiting for the lock.

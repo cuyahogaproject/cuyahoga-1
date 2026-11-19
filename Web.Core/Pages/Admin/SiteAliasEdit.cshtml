@@ -1,0 +1,34 @@
+@page "/Admin/SiteAliasEdit.aspx"
+@model SiteAliasEditModel
+<form method="post">
+	<div class="group">
+		<h4>General</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 100px">Url (incl. http://)</td>
+				<td><input name="Url" type="text" value="@Model.Url" maxlength="100" id="p_txtUrl" style="width:300px;" />@if (Model.UrlError != null)
+					{<span class="validator">@Model.UrlError</span>}</td>
+			</tr>
+			<tr>
+				<td>Entry node</td>
+				<td>
+					<select name="EntryNodeId" id="p_ddlEntryNodes">
+						<option value="@SiteAliasEditModel.InheritFromSite">-- inherit from site --</option>
+						@foreach (Node node in Model.Nodes)
+						{
+							<option value="@node.Id" selected="@(Model.EntryNodeId == node.Id)">@SiteAliasEditModel.IndentedTitle(node)</option>
+						}
+					</select>
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<input type="submit" name="btnSave" value="Save" id="p_btnSave" />
+		<input type="submit" name="btnCancel" value="Cancel" id="p_btnCancel" />
+		@if (Model.IsExistingSiteAlias)
+		{
+			<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure?');" id="p_btnDelete" />
+		}
+	</div>
+</form>

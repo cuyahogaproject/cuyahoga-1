@@ -8,7 +8,8 @@
 	@foreach (Site site in Model)
 	{
 		<div class="site"><img src="Images/internet.gif" alt="Site" align="left" style="border-width:0px;" /><a class="nodeLink" href="SiteEdit.aspx?SiteId=@site.Id">@site.Name (@site.SiteUrl)</a></div>
-		@foreach (Node node in site.RootNodes)
+		@* A site that was just created (saved in this request) has no node list yet. *@
+		@foreach (Node node in site.RootNodes ?? new List<Node>())
 		{
 			<div class="node" style="padding-left: @(node.Level * 20 + 20)px"><img src="Images/home.gif" alt="Node" align="left" style="border-width:0px;" /><a class="nodeLink" href="NodeEdit.aspx?NodeId=@node.Id">@node.Title (@node.Culture)</a></div>
 		}

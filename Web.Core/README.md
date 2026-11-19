@@ -31,6 +31,7 @@ The e2e tests (`e2e`) run both sites: the WebForms site on port 8082 and this si
 | Page | Since |
 |---|---|
 | `/Admin/Users.aspx`, `/Admin/UserEdit.aspx`, `/Admin/Roles.aspx`, `/Admin/RoleEdit.aspx` | step 3 |
+| `/Admin/Default.aspx`, `/Admin/SiteEdit.aspx`, `/Admin/SiteAliasEdit.aspx` | step 4a |
 
 The pages keep their urls and the markup of the WebForms pages (`Pages/Shared/_AdminLayout.cshtml` is
 `AdminTemplate.ascx`), so links between old and new pages keep working and the admin looks the same.
@@ -41,6 +42,12 @@ Users log in and out on the WebForms site (Forms authentication). This site can'
 ask the WebForms site who is logged in: `LegacyAuthenticationHandler` calls `CurrentUser.axd` with the cookies of the
 browser and loads that user. Only pages that need a login make this call; forwarded requests don't. A renewed Forms
 cookie in the answer (sliding expiration) is passed on to the browser.
+
+## Template placeholders
+
+Templates are WebForms user controls, which this site can't load. Pages that list the placeholders of a template ask
+the WebForms site (`TemplatePlaceholders.axd`, administrators only) through `TemplatePlaceholderProvider`. Both calls go
+through `LegacySiteClient`, which sends the cookies of the browser along.
 
 ## Notes
 

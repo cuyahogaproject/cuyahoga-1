@@ -1,0 +1,133 @@
+@page "/Admin/SiteEdit.aspx"
+@model SiteEditModel
+<form method="post" id="siteForm">
+	@* Choosing a template shows its placeholders: the form goes back to the server without saving. *@
+	<input type="hidden" name="Refresh" id="refresh" value="" />
+	<div class="group">
+		<h4>General</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 100px">Name</td>
+				<td><input name="Name" type="text" value="@Model.Name" maxlength="100" id="p_txtName" style="width:300px;" />@if (Model.NameError != null)
+					{<span class="validator">@Model.NameError</span>}</td>
+			</tr>
+			<tr>
+				<td>Site url (incl. http://)</td>
+				<td><input name="SiteUrl" type="text" value="@Model.SiteUrl" maxlength="100" id="p_txtSiteUrl" style="width:300px;" />@if (Model.SiteUrlError != null)
+					{<span class="validator">@Model.SiteUrlError</span>}</td>
+			</tr>
+			<tr>
+				<td>Webmaster email</td>
+				<td><input name="WebmasterEmail" type="text" value="@Model.WebmasterEmail" maxlength="100" id="p_txtWebmasterEmail" style="width:300px;" />@if (Model.WebmasterEmailError != null)
+					{<span class="validator">@Model.WebmasterEmailError</span>}</td>
+			</tr>
+			<tr>
+				<td>Use friendly url's</td>
+				<td><input id="p_chkUseFriendlyUrls" type="checkbox" name="UseFriendlyUrls" value="true" checked="@Model.UseFriendlyUrls" /></td>
+			</tr>
+		</table>
+	</div>
+	<div class="group">
+		<h4>Defaults</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 100px">Template</td>
+				<td><select name="TemplateId" id="p_ddlTemplates" onchange="document.getElementById('refresh').value = '1'; this.form.submit();">
+					<option value="@SiteEditModel.NoTemplate" selected="@(Model.TemplateId == SiteEditModel.NoTemplate)">No template</option>
+					@foreach (Template template in Model.Templates)
+					{
+						<option value="@template.Id" selected="@(Model.TemplateId == template.Id)">@template.Name</option>
+					}
+				</select></td>
+			</tr>
+			<tr>
+				<td>Placeholder</td>
+				<td><select name="Placeholder" id="p_ddlPlaceholders">
+					@foreach (string placeholder in Model.Placeholders)
+					{
+						<option value="@placeholder" selected="@(Model.Placeholder == placeholder)">@placeholder</option>
+					}
+				</select><em>(this
+						is the placeholder where the content of&nbsp;general pages&nbsp;is inserted)</em></td>
+			</tr>
+			<tr>
+				<td style="WIDTH: 100px">Off-line Template</td>
+				<td><select name="OfflineTemplateId" id="p_ddlOfflinePageTemplate">
+					<option value="@SiteEditModel.NoTemplate" selected="@(Model.OfflineTemplateId == SiteEditModel.NoTemplate)">No template</option>
+					@foreach (Template template in Model.Templates)
+					{
+						<option value="@template.Id" selected="@(Model.OfflineTemplateId == template.Id)">@template.Name</option>
+					}
+				</select></td>
+			</tr>
+			<tr>
+				<td>Culture</td>
+				<td><select name="Culture" id="p_ddlCultures">
+					@foreach (var culture in Model.Cultures)
+					{
+						<option value="@culture.Key" selected="@(Model.Culture == culture.Key)">@culture.Value</option>
+					}
+				</select></td>
+			</tr>
+			<tr>
+				<td>Role for registered users</td>
+				<td><select name="RoleId" id="p_ddlRoles">
+					@foreach (Role role in Model.Roles)
+					{
+						<option value="@role.Id" selected="@(Model.RoleId == role.Id)">@role.Name</option>
+					}
+				</select></td>
+			</tr>
+			<tr>
+				<td>
+					Meta description</td>
+				<td>
+					<textarea name="MetaDescription" rows="2" cols="20" maxlength="500" id="p_txtMetaDescription" style="height:70px;width:400px;">@Model.MetaDescription</textarea></td>
+			</tr>
+			<tr>
+				<td>
+					Meta keywords</td>
+				<td>
+					<textarea name="MetaKeywords" rows="2" cols="20" maxlength="500" id="p_txtMetaKeywords" style="height:70px;width:400px;">@Model.MetaKeywords</textarea></td>
+			</tr>
+		</table>
+	</div>
+	<div id="p_pnlAliases" class="group">
+		<h4>Aliases</h4>
+		<table class="tbl">
+			@if (Model.IsExistingSite)
+			{
+				<tr>
+					<th>
+						Alias url</th>
+					<th>
+						Entry Node</th>
+					<th>
+						&nbsp;</th>
+				</tr>
+				@foreach (SiteAlias alias in Model.Aliases)
+				{
+					<tr>
+						<td>@alias.Url</td>
+						<td>
+							<span>@SiteEditModel.FormatEntryNode(alias)</span></td>
+						<td>
+							<a href="SiteAliasEdit.aspx?SiteId=@Model.SiteId&amp;SiteAliasId=@alias.Id">Edit</a></td>
+					</tr>
+				}
+			}
+		</table>
+		@if (Model.IsExistingSite)
+		{
+			<a id="p_hplNewAlias" href="SiteAliasEdit.aspx?SiteId=@Model.SiteId&amp;SiteAliasId=-1">Add alias</a>
+		}
+	</div>
+	<div>
+		<input type="submit" name="btnSave" value="Save" id="p_btnSave" />
+		<input type="submit" name="btnCancel" value="Cancel" id="p_btnCancel" />
+		@if (Model.IsExistingSite)
+		{
+			<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure?');" id="p_btnDelete" />
+		}
+	</div>
+</form>

@@ -18,7 +18,8 @@
 			</div>
 		</div>
 		<div id="subheader">
-			[@* View the current site: only on pages with an active site, node or section. *@]
+			[@if (adminPage?.HasActiveSiteStructure == true)
+			{<a id="p_Header_hplSite" href="@adminPage.CurrentSiteUrl">View the current site</a>}]
 			[<a id="p_Header_lbtLogout" href="#" onclick="document.getElementById('logoutForm').submit(); return false;">Log out</a>]
 		</div>
 		<div id="menupane">

@@ -126,10 +126,6 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Admin\ConnectionEdit.aspx.cs">
-      <DependentUpon>ConnectionEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\Controls\AdminTemplate.ascx.cs">
       <DependentUpon>AdminTemplate.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -162,22 +158,6 @@
       <DependentUpon>RebuildIndex.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\SectionAttachNode.aspx.cs">
-      <DependentUpon>SectionAttachNode.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SectionAttachTemplate.aspx.cs">
-      <DependentUpon>SectionAttachTemplate.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\SectionEdit.aspx.cs">
-      <DependentUpon>SectionEdit.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\Sections.aspx.cs">
-      <DependentUpon>Sections.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\TemplateEdit.aspx.cs">
       <DependentUpon>TemplateEdit.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -200,9 +180,6 @@
     </Compile>
     <Compile Include="Admin\UI\AdminBasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\UI\SettingControlHelper.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="HttpHandlers\SitemapHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -342,9 +319,6 @@
     <Compile Include="Util\UrlHelper.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Content Include="Admin\ConnectionEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Admin\Controls\AdminTemplate.ascx">
       <SubType>UserControl</SubType>
     </Content>
@@ -384,18 +358,6 @@
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\RebuildIndex.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\SectionAttachNode.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\SectionAttachTemplate.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\SectionEdit.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\Sections.aspx">
       <SubType>Form</SubType>
     </Content>
     <Content Include="Admin\TemplateEdit.aspx">
@@ -1044,9 +1006,6 @@
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
-    <EmbeddedResource Include="Admin\ConnectionEdit.aspx.resx">
-      <DependentUpon>ConnectionEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Admin\Controls\AdminTemplate.ascx.resx">
       <DependentUpon>AdminTemplate.ascx.cs</DependentUpon>
     </EmbeddedResource>
@@ -1070,18 +1029,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\RebuildIndex.aspx.resx">
       <DependentUpon>RebuildIndex.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\SectionAttachNode.aspx.resx">
-      <DependentUpon>SectionAttachNode.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\SectionAttachTemplate.aspx.resx">
-      <DependentUpon>SectionAttachTemplate.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\SectionEdit.aspx.resx">
-      <DependentUpon>SectionEdit.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\Sections.aspx.resx">
-      <DependentUpon>Sections.aspx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Admin\TemplateEdit.aspx.resx">
       <DependentUpon>TemplateEdit.aspx.cs</DependentUpon>

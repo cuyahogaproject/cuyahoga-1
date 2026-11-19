@@ -1,0 +1,75 @@
+@page "/Admin/SectionAttachNode.aspx"
+@model SectionAttachNodeModel
+<form method="post">
+	@* Choosing a site shows its nodes, choosing a node shows the placeholders of its template. *@
+	<input type="hidden" name="Refresh" id="refresh" value="" />
+	<div class="group">
+		<h4>Section</h4>
+		<table>
+			<tr>
+				<td style="WIDTH:100px">Section</td>
+				<td>
+					<span id="p_lblSection">@Model.Section.Title</span></td>
+			</tr>
+			<tr>
+				<td>Module type</td>
+				<td>
+					<span id="p_lblModuleType">@Model.Section.ModuleType.Name</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="group">
+		<h4>Attach to</h4>
+		<table>
+			<tr>
+				<td style="WIDTH:100px">Site</td>
+				<td><select name="SelectedSiteId" id="p_ddlSites" onchange="document.getElementById('refresh').value = 'site'; this.form.submit();">
+					@foreach (Site site in Model.Sites)
+					{
+						<option value="@site.Id" selected="@(site.Id == Model.SelectedSiteId)">@site.Name (@site.SiteUrl)</option>
+					}
+				</select></td>
+			</tr>
+			<tr>
+				<td>Node</td>
+				<td><select size="4" name="SelectedNodeId" id="p_lbxAvailableNodes" style="height:200px;width:150px;" onchange="this.form.submit();">
+					@foreach (Node node in Model.Nodes)
+					{
+						<option value="@node.Id" selected="@(node.Id == Model.SelectedNodeId)">@SiteAliasEditModel.IndentedTitle(node)</option>
+					}
+				</select></td>
+			</tr>
+			<tr>
+				<td>Placeholder</td>
+				<td>
+					@if (Model.Placeholders != null)
+					{
+						<select name="Placeholder" id="p_ddlPlaceholder">
+							@foreach (string placeholder in Model.Placeholders)
+							{
+								<option value="@placeholder">@placeholder</option>
+							}
+						</select>
+						<a id="p_hplLookup" onclick="window.open(&quot;TemplatePreview.aspx?TemplateId=@Model.SelectedNode.Template.Id&amp;Control=p_ddlPlaceholder&quot;, &quot;Preview&quot;, &quot;width=760 height=400&quot;)" href="javascript:;">Lookup</a>
+					}
+				</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<input type="submit" name="btnSave" value="Save" id="p_btnSave" disabled="@(Model.Placeholders == null)" />
+		<input type="submit" name="btnBack" value="Back" id="p_btnBack" />
+	</div>
+</form>
+<script type="text/javascript">
+	function setPlaceholderValue(ddlist, val) {
+		var placeholdersList = document.getElementById(ddlist);
+		if (placeholdersList != null) {
+			for (var i = 0; i < placeholdersList.options.length; i++) {
+				if (placeholdersList.options[i].value == val) {
+					placeholdersList.selectedIndex = i;
+				}
+			}
+		}
+	}
+</script>

@@ -1,0 +1,33 @@
+@model (ModuleSetting Setting, string Value)
+@* The input of a module setting, by setting type (SettingControlHelper in the WebForms site): text for strings and
+   numbers, a checkbox for booleans and a list for enums. *@
+@{
+	ModuleSetting setting = Model.Setting;
+	Type type = setting.GetRealType();
+	string id = "p_" + setting.Name;
+	string name = SectionEditModel.SettingPrefix + setting.Name;
+}
+@switch (type.FullName)
+{
+	case "System.String":
+		<input name="@name" type="text" value="@Model.Value" id="@id" style="width:300px;" />
+		break;
+	case "System.Int16":
+	case "System.Int32":
+		<input name="@name" type="text" value="@Model.Value" id="@id" style="width:50px;" />
+		break;
+	case "System.Boolean":
+		<input id="@id" type="checkbox" name="@name" value="true" checked="@String.Equals(Model.Value, "true", StringComparison.OrdinalIgnoreCase)" />
+		break;
+	default:
+		if (type.IsEnum)
+		{
+			<select name="@name" id="@id">
+				@foreach (string option in Enum.GetNames(type))
+				{
+					<option value="@option" selected="@(option == Model.Value)">@option</option>
+				}
+			</select>
+		}
+		break;
+}

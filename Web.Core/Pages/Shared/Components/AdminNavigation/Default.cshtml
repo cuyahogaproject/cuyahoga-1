@@ -1,17 +1,47 @@
-@model List<Site>
-@* The same markup as Navigation.ascx of the WebForms site. The migrated pages have no active node yet, so the node
-   tree shows the root nodes only. *@
+@model Cuyahoga.Web.Core.Pages.Admin.AdminNavigationModel
+@* The same markup as Navigation.ascx of the WebForms site: the node tree is expanded to the active node. *@
+@{
+	Node activeNode = Model.ActiveNode;
+
+	void DisplayNodes(IList<Node> nodes)
+	{
+		@* A site that was just created (saved in this request) has no node list yet. *@
+		foreach (Node node in nodes ?? new List<Node>())
+		{
+			string text = node.Level == 0 ? node.Title + " (" + node.Culture + ")" : node.Title;
+			string image = node.Level == 0 ? "home.gif" : (node.ShowInNavigation ? "doc2.gif" : "doc2-disabled.gif");
+			<div class="node" style="padding-left: @(node.Level * 20 + 20)px"><img src="Images/@image" alt="Node" align="left" style="border-width:0px;" />@if (activeNode != null && node.Id == activeNode.Id)
+				{<span class="nodeActive">@text</span>}
+				else
+				{<a class="nodeLink" href="NodeEdit.aspx?NodeId=@node.Id">@text</a>}</div>
+			// The node is in the trail of the active node: expand.
+			if (activeNode != null && node.Level <= activeNode.Level && node.Id == activeNode.Trail[node.Level])
+			{
+				DisplayNodes(node.ChildNodes);
+			}
+		}
+	}
+}
 <div class="navsection">
 	<h3>
 		<img id="p_Nav_i1" src="Images/home.gif" alt="Home" align="left" style="border-width:0px;" />
 		Sites</h3>
-	@foreach (Site site in Model)
+	@foreach (Site site in Model.Sites)
 	{
 		<div class="site"><img src="Images/internet.gif" alt="Site" align="left" style="border-width:0px;" /><a class="nodeLink" href="SiteEdit.aspx?SiteId=@site.Id">@site.Name (@site.SiteUrl)</a></div>
-		@* A site that was just created (saved in this request) has no node list yet. *@
-		@foreach (Node node in site.RootNodes ?? new List<Node>())
+		DisplayNodes(site.RootNodes);
+		if (activeNode != null)
 		{
-			<div class="node" style="padding-left: @(node.Level * 20 + 20)px"><img src="Images/home.gif" alt="Node" align="left" style="border-width:0px;" /><a class="nodeLink" href="NodeEdit.aspx?NodeId=@node.Id">@node.Title (@node.Culture)</a></div>
+			<br/>
+			@* Only saved nodes can be a parent (a new node has Id -1). *@
+			if (activeNode.Id > 0)
+			{
+				<div class="node" style="padding-left: 20px"><img src="Images/new.gif" alt="New child node" align="left" style="border-width:0px;" /><a class="nodeLink" href="NodeEdit.aspx?NodeId=-1&amp;ParentNodeId=@activeNode.Id">Add a new node under the active node</a></div>
+			}
+			else
+			{
+				<div></div>
+			}
 		}
 		<br/>
 		<div class="node" style="padding-left: 20px"><img src="Images/new.gif" alt="New Node" align="left" style="border-width:0px;" /><a class="nodeLink" href="NodeEdit.aspx?SiteId=@site.Id&amp;NodeId=-1">Add a new node at root level</a></div>

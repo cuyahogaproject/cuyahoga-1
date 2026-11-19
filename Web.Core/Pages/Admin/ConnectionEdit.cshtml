@@ -1,0 +1,52 @@
+@page "/Admin/ConnectionEdit.aspx"
+@model ConnectionEditModel
+<form method="post">
+	<div class="group">
+		<h4>From section</h4>
+		<table>
+			<tr>
+				<td style="WIDTH:100px">Section</td>
+				<td>
+					<span id="p_lblSectionFrom">@(Model.Actions != null ? Model.Section.FullName : null)</span></td>
+			</tr>
+			<tr>
+				<td>Module type</td>
+				<td>
+					<span id="p_lblModuleType">@(Model.Actions != null ? Model.Section.ModuleType.Name : null)</span></td>
+			</tr>
+			<tr>
+				<td>Action</td>
+				<td>
+					@* Choosing an action shows the sections that can handle it. *@
+					<select name="Action" id="p_ddlAction" onchange="this.form.submit();">
+						@foreach (string action in Model.Actions ?? new List<string>())
+						{
+							<option value="@action" selected="@(action == Model.Action)">@action</option>
+						}
+					</select></td>
+			</tr>
+		</table>
+	</div>
+	@if (Model.CompatibleSections.Count > 0)
+	{
+		<div id="p_pnlTo" class="group">
+			<h4>To section</h4>
+			<table>
+				<tr>
+					<td style="WIDTH: 100px">Section</td>
+					<td>
+						<select name="SectionToId" id="p_ddlSectionTo">
+							@foreach (Section compatibleSection in Model.CompatibleSections)
+							{
+								<option value="@compatibleSection.Id">@compatibleSection.FullName</option>
+							}
+						</select></td>
+				</tr>
+			</table>
+		</div>
+	}
+	<div>
+		<input type="submit" name="btnSave" value="Save" id="p_btnSave" disabled="@(Model.CompatibleSections.Count == 0)" />
+		<input type="submit" name="btnBack" value="Back" id="p_btnBack" />
+	</div>
+</form>

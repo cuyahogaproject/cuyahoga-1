@@ -1,0 +1,66 @@
+@page "/Admin/SectionAttachTemplate.aspx"
+@model SectionAttachTemplateModel
+@{
+	int templateIndex = 0;
+}
+<form method="post">
+	<div class="group">
+		<h4>Section</h4>
+		<table>
+			<tr>
+				<td style="WIDTH: 100px">Section</td>
+				<td><span id="p_lblSection">@Model.Section.Title</span></td>
+			</tr>
+			<tr>
+				<td>Module type</td>
+				<td><span id="p_lblModuleType">@Model.Section.ModuleType.Name</span></td>
+			</tr>
+		</table>
+	</div>
+	<div class="group">
+		<h4>Attach to</h4>
+		<table class="tbl">
+			<tr>
+				<th>
+					Template</th>
+				<th>
+					Attached</th>
+				<th>
+					Placeholder</th></tr>
+			@foreach (var (template, placeholders, attachedPlaceholder) in Model.Templates)
+			{
+				string rowId = "p_rptTemplates_ctl" + (templateIndex++).ToString("00");
+				<tr>
+					<td>@template.Name</td>
+					<td style="text-align:center">
+						<input id="@(rowId)_chkAttached" type="checkbox" name="attached" value="@template.Id" checked="@(attachedPlaceholder != null)" /></td>
+					<td>
+						<select name="placeholder_@template.Id" id="@(rowId)_ddlPlaceHolders">
+							@foreach (string placeholder in placeholders)
+							{
+								<option value="@placeholder" selected="@(placeholder == attachedPlaceholder)">@placeholder</option>
+							}
+						</select>
+						<a onclick="window.open(&quot;TemplatePreview.aspx?TemplateId=@template.Id&amp;Control=@(rowId)_ddlPlaceHolders&quot;, &quot;Preview&quot;, &quot;width=760 height=400&quot;)" href="javascript:;">Lookup</a>
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+	<div>
+		<input type="submit" name="btnSave" value="Save" id="p_btnSave" />
+		<input type="submit" name="btnBack" value="Back" id="p_btnBack" />
+	</div>
+</form>
+<script type="text/javascript">
+	function setPlaceholderValue(ddlist, val) {
+		var placeholdersList = document.getElementById(ddlist);
+		if (placeholdersList != null) {
+			for (var i = 0; i < placeholdersList.options.length; i++) {
+				if (placeholdersList.options[i].value == val) {
+					placeholdersList.selectedIndex = i;
+				}
+			}
+		}
+	}
+</script>

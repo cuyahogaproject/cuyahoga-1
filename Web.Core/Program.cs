@@ -35,6 +35,20 @@ IWindsorContainer container = CuyahogaContainer.Create(settings, httpContextAcce
 IoC.Initialize(container);
 builder.Services.AddCuyahogaCoreServices(container);
 
+// Virtual paths (~/index, ~/files) are in the folder of the WebForms site (LegacySitePath, absolute or relative to
+// this site). Without it, the things that need these folders (updating the search index) fail with an error.
+string legacySitePath = builder.Configuration["LegacySitePath"];
+if (!String.IsNullOrWhiteSpace(legacySitePath))
+{
+	string legacySiteRoot = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, legacySitePath));
+	ApplicationPaths.MapPath = virtualPath =>
+		Path.Combine(legacySiteRoot, virtualPath.TrimStart('~', '/').Replace('/', Path.DirectorySeparatorChar));
+}
+
+// The modules of the database, activated before every page of this site.
+builder.Services.AddSingleton<ModuleActivation>();
+builder.Services.AddScoped<SearchIndexUpdater>();
+
 // Questions for the WebForms site, asked with the cookies of the browser: who is logged in, template placeholders.
 builder.Services.AddHttpClient(LegacySiteClient.HttpClientName, client =>
 		client.BaseAddress = new Uri(legacySiteUrl.TrimEnd('/') + "/"))
@@ -64,6 +78,9 @@ builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = 
 var app = builder.Build();
 
 app.UseMiddleware<NHibernateSessionMiddleware>();
+app.UseRouting();
+// Before authentication, which opens the first NHibernate session of the request.
+app.UseMiddleware<ModuleActivationMiddleware>();
 app.UseAuthentication();
 app.UseAuthorization();
 

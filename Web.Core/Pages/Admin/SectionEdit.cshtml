@@ -1,0 +1,157 @@
+@page "/Admin/SectionEdit.aspx"
+@model SectionEditModel
+@{
+	// The ids of the controls are the ones of the WebForms page; the lookup window of the template preview calls
+	// setPlaceholderValue('p_ddlPlaceholder', ...).
+	int roleIndex = 0;
+}
+<form method="post" id="sectionForm">
+	@* Choosing a module shows its settings: the form goes back to the server without saving. *@
+	<input type="hidden" name="Refresh" id="refresh" value="" />
+	<input type="hidden" name="deleteConnection" id="deleteConnection" value="" />
+	<div style="padding-top:13px;">
+		<input type="submit" name="btnSaveTop" value="Save" id="p_btnSaveTop" />
+		<input type="submit" name="btnBackTop" value="Back" id="p_btnBackTop" />
+	</div>
+	<div class="group">
+		<h4>General</h4>
+		<table>
+			<tr>
+				<td style="WIDTH:100px">Section title</td>
+				<td><input name="SectionTitle" type="text" value="@Model.SectionTitle" id="p_txtTitle" style="width:300px;" />
+					@if (Model.TitleError != null)
+					{<span class="validator">@Model.TitleError</span>}</td>
+			</tr>
+			<tr>
+				<td>Show section title</td>
+				<td><input id="p_chkShowTitle" type="checkbox" name="ShowTitle" value="true" checked="@Model.ShowTitle" /></td>
+			</tr>
+			<tr>
+				<td>Module</td>
+				<td>
+					@if (Model.CanChooseModule)
+					{
+						<select name="ModuleTypeId" id="p_ddlModule" onchange="document.getElementById('refresh').value = '1'; this.form.submit();">
+							@foreach (ModuleType moduleType in Model.ModuleTypes)
+							{
+								<option value="@moduleType.ModuleTypeId" selected="@(moduleType.ModuleTypeId == Model.ModuleTypeId)">@moduleType.Name</option>
+							}
+						</select>
+					}
+					else
+					{
+						<span id="p_lblModule">@Model.Section.ModuleType.Name</span>
+					}
+				</td>
+			</tr>
+			<tr>
+				<td>Placeholder</td>
+				<td>
+					<select name="Placeholder" id="p_ddlPlaceholder" disabled="@(Model.Placeholders == null)">
+						@foreach (string placeholder in Model.Placeholders ?? new List<string>())
+						{
+							<option value="@placeholder" selected="@(placeholder == Model.Placeholder)">@placeholder</option>
+						}
+					</select>
+					@if (Model.NodeTemplate != null)
+					{
+						@:&nbsp;<a id="p_hplLookup" onclick="window.open(&quot;TemplatePreview.aspx?TemplateId=@Model.NodeTemplate.Id&amp;Control=p_ddlPlaceholder&quot;, &quot;Preview&quot;, &quot;width=760 height=400&quot;)" href="javascript:;">Lookup</a>
+					}
+					else
+					{
+						@:&nbsp;<a id="p_hplLookup">Lookup</a>
+					}
+				</td>
+			</tr>
+			<tr>
+				<td>Cache duration</td>
+				<td><input name="CacheDuration" type="text" value="@Model.CacheDuration" id="p_txtCacheDuration" style="width:30px;" />@if (Model.CacheDurationError != null)
+					{<span class="validator">@Model.CacheDurationError</span>}</td>
+			</tr>
+		</table>
+	</div>
+	@if (Model.SettingsModuleType != null && Model.SettingsModuleType.ModuleSettings.Count > 0)
+	{
+		<div id="p_pnlCustomSettings" class="group">
+			<h4>Custom settings</h4>
+			<table>
+				@foreach (ModuleSetting setting in Model.SettingsModuleType.ModuleSettings)
+				{
+					<tr>
+						<td>@setting.FriendlyName</td>
+						<td><partial name="_ModuleSettingControl" model="(setting, Model.SettingValues.GetValueOrDefault(setting.Name))" /></td>
+					</tr>
+				}
+			</table>
+		</div>
+	}
+	@if (Model.HasConnections)
+	{
+		<div id="p_pnlConnections" class="group">
+			<h4>Connections</h4>
+			<table class="tbl">
+				<tr>
+					<th>To section</th>
+					<th>Action</th>
+					<th></th>
+				</tr>
+				@foreach (KeyValuePair<string, Section> connection in Model.Section.Connections)
+				{
+					<tr>
+						<td>@connection.Value.FullName</td>
+						<td>@connection.Key</td>
+						<td><a href="#" onclick="document.getElementById('deleteConnection').value = '@connection.Key'; document.getElementById('sectionForm').submit(); return false;">Delete</a></td>
+					</tr>
+				}
+			</table>
+			@if (Model.CanAddConnection)
+			{
+				<a id="p_hplNewConnection" href="@Model.AddConnectionUrl">Add connection</a>
+			}
+		</div>
+	}
+	<div class="group">
+		<h4>Authorization</h4>
+		<table class="tbl">
+			<tr>
+				<th>
+					Role</th>
+				<th>
+					View allowed</th>
+				<th>
+					Edit allowed</th>
+			</tr>
+			@foreach (Role role in Model.Roles)
+			{
+				string rowId = "p_rptRoles_ctl" + (++roleIndex).ToString("00");
+				<tr>
+					<td>@role.Name</td>
+					<td style="text-align:center">
+						<input id="@(rowId)_chkViewAllowed" type="checkbox" name="ViewRoleIds" value="@role.Id" checked="@Model.ViewRoleIds.Contains(role.Id)" /></td>
+					<td style="text-align:center">
+						@if (SectionEditModel.CanEdit(role))
+						{
+							<input id="@(rowId)_chkEditAllowed" type="checkbox" name="EditRoleIds" value="@role.Id" checked="@Model.EditRoleIds.Contains(role.Id)" />
+						}
+					</td>
+				</tr>
+			}
+		</table>
+	</div>
+	<div>
+		<input type="submit" name="btnSave" value="Save" id="p_btnSave" />
+		<input type="submit" name="btnBack" value="Back" id="p_btnBack" />
+	</div>
+</form>
+<script type="text/javascript">
+	function setPlaceholderValue(ddlist, val) {
+		var placeholdersList = document.getElementById(ddlist);
+		if (placeholdersList != null) {
+			for (var i = 0; i < placeholdersList.options.length; i++) {
+				if (placeholdersList.options[i].value == val) {
+					placeholdersList.selectedIndex = i;
+				}
+			}
+		}
+	}
+</script>

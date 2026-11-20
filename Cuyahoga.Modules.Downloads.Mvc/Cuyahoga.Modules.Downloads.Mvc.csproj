@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <!--
+  The Downloads module on the public pages of the ASP.NET Core site (Web.Core): the list of files (view component) and
+  the downloads (controller). Its WebForms controls and admin pages are in Cuyahoga.Modules.Downloads.Web.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Cuyahoga.Modules.Downloads.Mvc</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Web.Mvc\Cuyahoga.Web.Mvc.csproj" />
+    <ProjectReference Include="..\Cuyahoga.Modules.Downloads\Cuyahoga.Modules.Downloads.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- The texts (and translations) of the WebForms controls, shared until those are gone. -->
+    <EmbeddedResource Include="..\Cuyahoga.Modules.Downloads.Web\Resources\Strings*.resx" Link="Resources\%(Filename)%(Extension)" />
+  </ItemGroup>
+</Project>

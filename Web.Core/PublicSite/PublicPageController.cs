@@ -4,21 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cuyahoga.Web.Core.PublicSite
 {
 	/// <summary>
-	/// Renders a public page that <see cref="PublicPageTransformer"/> has resolved: the sections first
-	/// (Views/PublicPage/Index.cshtml), then the template as the layout.
+	/// Renders a public page that <see cref="PublicPageTransformer"/> has resolved, when the module of the active
+	/// section (if any) has no controller of its own.
 	/// </summary>
 	public class PublicPageController : Controller
 	{
 		public IActionResult Index()
 		{
-			PublicPage page = HttpContext.GetPublicPage();
-			if (page == null)
-			{
-				return NotFound();
-			}
-			page.Assets.RegisterStylesheet("maincss",
-				PublicUrls.GetApplicationPath(Request) + page.Template.BasePath + "/Css/" + page.Template.Css);
-			return View(new PublicPageModel(page, TemplateLayouts.GetLayoutPath(page.Template)));
+			return HttpContext.GetPublicPage() != null ? new PublicPageResult() : NotFound();
 		}
 	}
 }

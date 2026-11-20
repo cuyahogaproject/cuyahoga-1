@@ -34,21 +34,10 @@ namespace Cuyahoga.Web.Core.PublicSite
 		private Dictionary<Type, Type> GetViewsByModuleClass()
 		{
 			return this._viewsByModuleClass ??= this._descriptorProvider.ViewComponents.Items
-				.Select(descriptor => (View: descriptor.TypeInfo.AsType(), Module: GetModuleClass(descriptor.TypeInfo.AsType())))
+				.Select(descriptor => (View: descriptor.TypeInfo.AsType(),
+					Module: ModuleTypes.GetModuleClass(descriptor.TypeInfo.AsType(), typeof(ModuleViewComponent<>))))
 				.Where(pair => pair.Module != null)
 				.ToDictionary(pair => pair.Module, pair => pair.View);
-		}
-
-		private static Type GetModuleClass(Type viewComponentType)
-		{
-			for (Type type = viewComponentType; type != null; type = type.BaseType)
-			{
-				if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ModuleViewComponent<>))
-				{
-					return type.GetGenericArguments()[0];
-				}
-			}
-			return null;
 		}
 	}
 }

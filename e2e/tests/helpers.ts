@@ -121,3 +121,36 @@ export async function crawl(
   }
   return visited;
 }
+
+/**
+ * Uploads a file with the admin pages of a Downloads section (EditDownloads.aspx url) and returns its id. The file
+ * gets the roles of the section, unless deniedRoles lists roles (by name) that may not download it.
+ */
+export async function uploadDownload(page: Page, adminUrl: string, title: string, fileName: string, contents: string,
+  deniedRoles: string[] = []): Promise<string> {
+  await page.goto(adminUrl);
+  await page.locator('[id$="btnNew"]').click();
+  await expect(page).toHaveURL(/EditFile\.aspx.*FileId=-1/i);
+  await page.locator('[id$="txtTitle"]').fill(title);
+  await page.locator('[id$="filUpload"]').setInputFiles({ name: fileName, mimeType: 'text/plain', buffer: Buffer.from(contents) });
+  const uploadResponse = page.waitForResponse((r) => /EditFile\.aspx/i.test(r.url()) && r.request().method() === 'POST');
+  await page.locator('[id$="btnUpload"]').click();
+  await expectHealthyPage(page, await uploadResponse);
+  await expect(page.locator('body'), 'no upload error').not.toContainText('Error saving the file');
+  for (const role of deniedRoles) {
+    await page.locator('tr', { has: page.locator('td', { hasText: new RegExp(`^${role}$`) }) })
+      .locator('[id$="chkRole"]').uncheck();
+  }
+  await page.locator('[id$="btnSave"]').click();
+  await expect(page).toHaveURL(/EditDownloads\.aspx/i);
+  const editHref = await page.locator('tr', { hasText: title }).locator('a', { hasText: 'Edit' }).getAttribute('href');
+  return /FileId=(\d+)/i.exec(editHref!)![1];
+}
+
+/** Deletes a file of a Downloads section with its admin pages (EditDownloads.aspx url). */
+export async function deleteDownload(page: Page, adminUrl: string, fileId: string) {
+  await page.goto(adminUrl.replace(/EditDownloads\.aspx/i, 'EditFile.aspx') + `&FileId=${fileId}`);
+  page.once('dialog', (dialog) => dialog.accept());
+  await page.locator('[id$="btnDelete"]').click();
+  await expect(page).toHaveURL(/EditDownloads\.aspx/i);
+}

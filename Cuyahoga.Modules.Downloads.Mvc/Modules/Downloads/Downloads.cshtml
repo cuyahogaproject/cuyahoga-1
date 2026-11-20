@@ -1,0 +1,31 @@
+@model DownloadsModel
+<ul class="articlelist">
+	@foreach (DownloadsModel.FileItem file in Model.Files)
+	{
+		<li>
+			<h4>
+			<a href="@file.Url"><img src="@file.IconUrl" alt="@file.Details" style="border-width:0px;" /></a>
+			<a title="@file.Details" href="@file.Url">
+				@file.Title
+			</a>
+			</h4>
+			@if (Model.ShowDetails)
+			{
+				<div class="articlesub">
+					@if (Model.ShowDateModified)
+					{
+						<span>@file.DateModified</span>
+					}
+					@if (Model.ShowPublisher)
+					{
+						<span>@Model.PublishedByText @file.Publisher</span>
+					}
+					@if (Model.ShowNumberOfDownloads)
+					{
+						<span>@Model.NumberOfDownloadsText: @file.NumberOfDownloads</span>
+					}
+				</div>
+			}
+		</li>
+	}
+</ul>

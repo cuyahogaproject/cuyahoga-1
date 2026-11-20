@@ -63,6 +63,9 @@ jobs:
       - name: Unit tests (net10.0)
         run: dotnet Tests/Cuyahoga.Core.Tests/bin/Debug/net10.0/Cuyahoga.Core.Tests.dll
 
+      - name: Unit tests of the ASP.NET Core site
+        run: dotnet Tests/Cuyahoga.Web.Core.Tests/bin/Debug/net10.0/Cuyahoga.Web.Core.Tests.dll
+
       # End-to-end tests on SQL Server (LocalDB). MySQL and PostgreSQL are tested locally (npm run test:all).
 
       - name: Start SQL Server LocalDB

@@ -1,10 +1,13 @@
+using System.Globalization;
 using Castle.Windsor;
 using Cuyahoga.Core.Persistence;
 using Cuyahoga.Core.Util;
 using Cuyahoga.Web.Core;
 using Cuyahoga.Web.Core.Persistence;
+using Cuyahoga.Web.Core.PublicSite;
 using Cuyahoga.Web.Core.Security;
 using Cuyahoga.Web.Core.Services;
+using Cuyahoga.Web.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Yarp.ReverseProxy.Transforms;
@@ -58,7 +61,8 @@ builder.Services.AddScoped<LegacySiteClient>();
 builder.Services.AddScoped<TemplatePlaceholderProvider>();
 
 // Users log in on the WebForms site. The migrated admin pages ask it who is logged in (CurrentUser.axd). Only
-// endpoints with the Administrator policy authenticate, so forwarded requests don't make that extra call.
+// endpoints with the Administrator policy and public page urls (PublicPageTransformer) authenticate, so other forwarded
+// requests don't make that extra call.
 builder.Services.AddAuthentication()
 	.AddScheme<AuthenticationSchemeOptions, LegacyAuthenticationHandler>(LegacyAuthenticationHandler.SchemeName, null);
 builder.Services.AddSingleton<IAuthorizationHandler, AdministratorRequirement>();
@@ -75,6 +79,18 @@ builder.Services.AddRazorPages(options =>
 	options.Conventions.AuthorizeFolder("/Admin", AdministratorRequirement.PolicyName);
 	options.Conventions.AddPageRoute("/Admin/Default", "Admin/");
 });
+
+// The public pages (PublicSite): rendered here when their template and modules have moved to this site, otherwise
+// forwarded to the WebForms site (PublicPageTransformer).
+builder.Services.AddControllersWithViews();
+builder.Services.AddMemoryCache();
+builder.Services.AddSingleton<InstallationState>();
+builder.Services.AddSingleton<ModuleViewRegistry>();
+builder.Services.AddSingleton<TemplateLayouts>();
+builder.Services.AddScoped<IPageLookup, ServicePageLookup>();
+builder.Services.AddScoped<PageResolver>();
+builder.Services.AddScoped<SectionRenderer>();
+builder.Services.AddScoped<PublicPageTransformer>();
 
 builder.Services.AddHttpForwarder();
 // Request size limits are up to the WebForms site (maxRequestLength) for the requests that it handles.
@@ -97,10 +113,24 @@ app.Use(async (context, next) =>
 app.UseRouting();
 // Before authentication, which opens the first NHibernate session of the request.
 app.UseMiddleware<ModuleActivationMiddleware>();
+// A public page renders in the culture of its node.
+app.Use(async (context, next) =>
+{
+	PublicPage page = context.GetPublicPage();
+	if (page != null)
+	{
+		CultureInfo culture = CultureInfo.CreateSpecificCulture(page.ActiveNode.Culture);
+		CultureInfo.CurrentCulture = culture;
+		CultureInfo.CurrentUICulture = culture;
+	}
+	await next(context);
+});
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+// Every other url can be a public page; the transformer decides (before the forwarder below gets the request).
+app.MapDynamicControllerRoute<PublicPageTransformer>("{**path}");
 
 // Everything that this site doesn't handle goes to the WebForms site. The forwarder sets the X-Forwarded-Host and
 // X-Forwarded-Proto headers, which the WebForms site uses to build absolute urls (and to find the Cuyahoga site of

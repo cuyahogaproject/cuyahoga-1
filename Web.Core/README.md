@@ -42,16 +42,51 @@ it in the process that renders the public pages) and `TemplatePreview.aspx` (it 
 The pages keep their urls and the markup of the WebForms pages (`Pages/Shared/_AdminLayout.cshtml` is
 `AdminTemplate.ascx`), so links between old and new pages keep working and the admin looks the same.
 
+`TemplateEditor.aspx` only edits template stylesheets: the templates themselves are Razor layouts of this site now
+(see below), part of its code.
+
+## Public pages
+
+The PageEngine of the WebForms site (`Default.aspx` with the url mappings in `Web.config`) lives in `PublicSite`, with
+MVC: `PublicPageTransformer` (a dynamic route for every url) decides per request whether this site renders the page:
+
+- the url is a public page (`PublicUrlParser`: `{shortdescription}.aspx`, `{id}/view.aspx`, `{id}/section.aspx/...`,
+  `Default.aspx?NodeId=...`, the same forms that the WebForms site rewrites),
+- a GET request (postbacks of WebForms pages go to the WebForms site),
+- the database is installed, and the page exists and the user may view it (`PageResolver`),
+- the template of the page has a Razor layout here, and every section on it has a module view here.
+
+Everything else goes to the WebForms site as before: pages with modules that haven't moved, error pages (not found,
+forbidden), redirects of external links, the installer.
+
+`PublicPageController` then renders the sections first (`Views/PublicPage/Index.cshtml`, `SectionRenderer`: module
+views, the output cache per section, the section block with the title and edit links), and the template last, as the
+layout, so the head of the page has the stylesheets and scripts that modules register.
+
+- **Templates** are Razor layouts in `Templates/`, with the path of the user control of the WebForms site
+  (`Templates/AnotherRed/Cuyahoga.ascx` -> `Templates/AnotherRed/Cuyahoga.cshtml`), so the database doesn't change.
+  They use `<cuyahoga-head-assets />`, `<cuyahoga-placeholder id="..." />` and `<vc:hierarchical-menu />`. The
+  stylesheets and images stay in the WebForms site. Moved: Another Red and Offline.
+- **Module views** derive from `ModuleViewComponent<TModule>` (`Cuyahoga.Web.Mvc`) and return their views by full path
+  (`~/Modules/{Module}/...`). The views of the built-in modules are in `Cuyahoga.Modules.Mvc`. Moved: StaticHtml.
+- **Offline pages**: a page is offline when it or a page above it is offline (the home page: the whole site).
+  Visitors get the offline template of the site without sections (or the template of the page without sections when
+  the site has no offline template); administrators see the page as usual.
+- The output cache of sections is in this process: changes on the WebForms site (module admin pages) don't clear it,
+  so cached sections show changes after their cache duration.
+
 ## Login
 
 Users log in and out on the WebForms site (Forms authentication). This site can't read that cookie, so the admin pages
 ask the WebForms site who is logged in: `LegacyAuthenticationHandler` calls `CurrentUser.axd` with the cookies of the
-browser and loads that user. Only pages that need a login make this call; forwarded requests don't. A renewed Forms
+browser and loads that user. Only admin pages and public page urls make this call (and only with the Forms cookie);
+other forwarded requests don't. A renewed Forms
 cookie in the answer (sliding expiration) is passed on to the browser.
 
 ## Template placeholders
 
-Templates are WebForms user controls, which this site can't load. Pages that list the placeholders of a template ask
+The templates in the database are still WebForms user controls for the pages that the WebForms site renders, which this
+site can't load. Pages that list the placeholders of a template ask
 the WebForms site (`TemplatePlaceholders.axd`, administrators only) through `TemplatePlaceholderProvider`. Both calls go
 through `LegacySiteClient`, which sends the cookies of the browser along.
 
@@ -64,7 +99,8 @@ activated on the WebForms site are picked up too. A module that can't be loaded 
 ## The folder of the WebForms site
 
 Some things live in the folder of the WebForms site: the full-text index (`~/index`), uploaded files (`~/files`) and
-the template files, which the template pages list and edit (so this site needs write access to `Templates`).
+the template files, which the template pages list, and the template stylesheets, which they edit (so this site needs
+write access to `Templates`).
 `LegacySitePath` (absolute, or relative to this site) tells this site where that folder is, for
 `ApplicationPaths.MapPath`. Both sites write to the same full-text index; Lucene's lock keeps it consistent, but when
 both write at the same moment, one of them fails after waiting for the lock.

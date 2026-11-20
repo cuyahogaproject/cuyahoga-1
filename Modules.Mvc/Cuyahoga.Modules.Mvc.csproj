@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <!--
+  The views of the built-in modules (Cuyahoga.Modules) on the public pages of the ASP.NET Core site (Web.Core): one
+  ModuleViewComponent per module, with its views in Modules/{Module}/. Their WebForms controls are in
+  Cuyahoga.Modules.Web. Modules move here one by one; a page is rendered by the ASP.NET Core site only when all its
+  modules have a view here.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Cuyahoga.Modules.Mvc</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Web.Mvc\Cuyahoga.Web.Mvc.csproj" />
+    <ProjectReference Include="..\Modules\Cuyahoga.Modules.csproj" />
+  </ItemGroup>
+</Project>

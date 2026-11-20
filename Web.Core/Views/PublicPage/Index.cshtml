@@ -1,0 +1,8 @@
+@model PublicPageModel
+@inject SectionRenderer SectionRenderer
+@{
+	// The sections are rendered before the template (the layout), so their stylesheets and scripts are known when the
+	// template writes the head of the page.
+	Layout = Model.LayoutPath;
+	await SectionRenderer.RenderAsync(Model, Component, Context.Request);
+}

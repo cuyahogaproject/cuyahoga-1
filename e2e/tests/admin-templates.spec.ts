@@ -22,8 +22,9 @@ test('create, edit and delete a template, attach a section to a placeholder', as
   await expect(page.getByText('NOTE: You have to upload the physical templates')).toBeVisible();
   const anotherRed = templateRow(page, 'Another Red');
   await expect(anotherRed).toContainText('Templates/AnotherRed');
-  await expect(anotherRed.getByRole('link', { name: '[Edit]' }).first())
-    .toHaveAttribute('href', 'TemplateEditor.aspx?file=Templates/AnotherRed/Cuyahoga.ascx');
+  // Only the stylesheet can be edited: the templates are Razor layouts of the ASP.NET Core site.
+  await expect(anotherRed.getByRole('link', { name: '[Edit]' }))
+    .toHaveAttribute('href', 'TemplateEditor.aspx?file=Templates/AnotherRed/css/red.css');
   // A template that is in use can't be deleted.
   await anotherRed.getByRole('link', { name: 'Edit', exact: true }).click();
   await expect(page.locator('[id$="txtName"]')).toHaveValue('Another Red');
@@ -114,9 +115,13 @@ test('edit a template file', async ({ page }) => {
   const cssFile = path.resolve(__dirname, '..', '..', 'Web', 'Templates', 'AnotherRed', 'Css', 'red.css');
   const original = fs.readFileSync(cssFile);
 
-  // Only template controls and stylesheets in the template folder.
+  // Only stylesheets in the template folder.
+  const onlyStylesheets = 'Only stylesheets (.css) in the template directory can be edited.';
   await page.goto('/Admin/TemplateEditor.aspx?file=Web.config');
-  await expect(messageBox(page)).toContainText('Only template controls (.ascx) and stylesheets (.css) in the template directory can be edited.');
+  await expect(messageBox(page)).toContainText(onlyStylesheets);
+  await expect(page.locator('[id$="btnSave"]')).toBeDisabled();
+  await page.goto('/Admin/TemplateEditor.aspx?file=Templates/AnotherRed/Cuyahoga.ascx');
+  await expect(messageBox(page)).toContainText(onlyStylesheets);
   await expect(page.locator('[id$="btnSave"]')).toBeDisabled();
 
   try {

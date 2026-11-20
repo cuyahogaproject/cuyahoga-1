@@ -1,0 +1,11 @@
+@*
+The templates of the public pages: Razor layouts with the same path as the user controls of the WebForms site
+(Templates/AnotherRed/Cuyahoga.ascx -> Templates/AnotherRed/Cuyahoga.cshtml). The stylesheets and images of the
+templates stay in the WebForms site.
+- <cuyahoga-head-assets />: the meta tags, stylesheets and scripts of the page
+- <cuyahoga-placeholder id="..." />: a placeholder for sections and custom menus
+- <vc:hierarchical-menu />: the navigation
+*@
+@using Cuyahoga.Web.Core.PublicSite
+@inherits TemplatePage
+@addTagHelper *, Cuyahoga.Web.Core

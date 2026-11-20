@@ -55,7 +55,7 @@ export default defineConfig({
     },
     {
       name: project('public'),
-      testMatch: /public\.spec\.ts/,
+      testMatch: /public.*\.spec\.ts/,
       dependencies: [project('seed')],
       use: { ...devices['Desktop Chrome'] },
     },

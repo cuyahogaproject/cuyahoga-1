@@ -4,8 +4,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cuyahoga.Web.Core.Pages.Admin
 {
 	/// <summary>
-	/// Edit a template control (.ascx) or stylesheet (.css) in the template folder of the WebForms site
-	/// (TemplateEditor.aspx?file=Templates/AnotherRed/css/red.css).
+	/// Edit a template stylesheet (.css) in the template folder of the WebForms site
+	/// (TemplateEditor.aspx?file=Templates/AnotherRed/css/red.css). The templates themselves are Razor layouts of the
+	/// ASP.NET Core site (Templates/*.cshtml), part of the code of the site, so they can't be edited here.
 	/// </summary>
 	public class TemplateEditorModel : AdminPageModel
 	{
@@ -19,7 +20,7 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 		[BindProperty] public string Contents { get; set; }
 
 		/// <summary>
-		/// False when the file is not a template control or stylesheet in the template folder.
+		/// False when the file is not a stylesheet in the template folder.
 		/// </summary>
 		public bool CanEdit { get; private set; }
 
@@ -75,7 +76,7 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 			CanEdit = fileName != null;
 			if (!CanEdit)
 			{
-				ShowError("Only template controls (.ascx) and stylesheets (.css) in the template directory can be edited.");
+				ShowError("Only stylesheets (.css) in the template directory can be edited.");
 			}
 			return fileName;
 		}
@@ -90,12 +91,11 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 			try
 			{
 				string physicalPath = Path.GetFullPath(ApplicationPaths.MapPath("~/" + file.TrimStart('/')));
-				// Only template controls and stylesheets inside the template folder.
+				// Only stylesheets inside the template folder.
 				string templateDir = Path.GetFullPath(ApplicationPaths.MapPath(this._settings.TemplateDir))
 					.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
-				string extension = Path.GetExtension(physicalPath).ToLowerInvariant();
 				if (physicalPath.StartsWith(templateDir, StringComparison.OrdinalIgnoreCase)
-					&& (extension == ".ascx" || extension == ".css"))
+					&& String.Equals(Path.GetExtension(physicalPath), ".css", StringComparison.OrdinalIgnoreCase))
 				{
 					return physicalPath;
 				}

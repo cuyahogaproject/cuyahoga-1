@@ -20,6 +20,9 @@
     <ProjectReference Include="..\Cuyahoga.Modules.Articles\Cuyahoga.Modules.Articles.csproj" />
     <ProjectReference Include="..\Cuyahoga.Modules.Downloads\Cuyahoga.Modules.Downloads.csproj" />
     <ProjectReference Include="..\Cuyahoga.Modules.RemoteContent\Cuyahoga.Modules.RemoteContent.csproj" />
+    <!-- The public pages: what modules build their views on, and the views of the modules. -->
+    <ProjectReference Include="..\Web.Mvc\Cuyahoga.Web.Mvc.csproj" />
+    <ProjectReference Include="..\Modules.Mvc\Cuyahoga.Modules.Mvc.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />

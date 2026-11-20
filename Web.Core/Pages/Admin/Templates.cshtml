@@ -18,10 +18,7 @@
 		<tr>
 			<td>@template.Name</td>
 			<td>@template.BasePath</td>
-			<td>
-				@template.TemplateControl
-				<a href="TemplateEditor.aspx?file=@(template.BasePath + "/" + template.TemplateControl)">[Edit]</a>
-			</td>
+			<td>@template.TemplateControl</td>
 			<td>
 				@template.Css
 				<a href="TemplateEditor.aspx?file=@(template.BasePath + "/css/" + template.Css)">[Edit]</a>

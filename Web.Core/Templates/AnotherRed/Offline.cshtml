@@ -1,0 +1,48 @@
+@* The offline template of the sample site: shown instead of the template of a page that is offline. *@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+	<title>@Model.Page.Title</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<cuyahoga-head-assets />
+</head>
+<body>
+	<div id="container">
+		<div id="header">
+			<div id="searcharea"></div>
+			<div>
+				<span id="titletext">Cuyahoga</span>
+				A .NET Web Site Framework
+			</div>
+		</div>
+
+		<!-- shadow divs -->
+		<div id="containerleft">
+		<div id="containertopleft">
+		<div id="containerright">
+		<div id="containertopright">
+		<!-- main -->
+		<div id="main">
+			<div id="globalmenu">
+			</div>
+			<div id="side">
+				<div id="nav">
+				</div>
+				<div id="sidecontent">
+				</div>
+			</div>
+			<div id="content">
+				<h5>This page is currently offline for maintenance.</h5>
+				<a href="@(Context.Request.PathBase)/">Back to home</a>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<!-- end main -->
+		</div>
+		</div>
+		</div>
+		</div>
+		<!-- end shadow divs -->
+	</div>
+</body>
+</html>

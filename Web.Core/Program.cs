@@ -10,6 +10,7 @@ using Cuyahoga.Web.Core.Services;
 using Cuyahoga.Web.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -86,6 +87,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<InstallationState>();
 builder.Services.AddSingleton<ModuleViewRegistry>();
+builder.Services.AddSingleton<ModuleControllerRegistry>();
+builder.Services.AddScoped<IPublicPageModules, PublicPageModules>();
+builder.Services.AddSingleton<IActionResultExecutor<PublicPageResult>, PublicPageResultExecutor>();
 builder.Services.AddSingleton<TemplateLayouts>();
 builder.Services.AddScoped<IPageLookup, ServicePageLookup>();
 builder.Services.AddScoped<PageResolver>();

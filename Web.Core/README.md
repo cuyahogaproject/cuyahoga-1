@@ -68,7 +68,15 @@ layout, so the head of the page has the stylesheets and scripts that modules reg
   They use `<cuyahoga-head-assets />`, `<cuyahoga-placeholder id="..." />` and `<vc:hierarchical-menu />`. The
   stylesheets and images stay in the WebForms site. Moved: Another Red and Offline.
 - **Module views** derive from `ModuleViewComponent<TModule>` (`Cuyahoga.Web.Mvc`) and return their views by full path
-  (`~/Modules/{Module}/...`). The views of the built-in modules are in `Cuyahoga.Modules.Mvc`. Moved: StaticHtml.
+  (`~/Modules/{Module}/...`). `GetText` reads the texts of the module from `{namespace}.Resources.Strings`. The views of
+  the built-in modules are in `Cuyahoga.Modules.Mvc`, the ones of the other modules in their own project
+  (`Cuyahoga.Modules.Downloads.Mvc`). Moved: StaticHtml, Downloads.
+- **Module controllers** derive from `ModuleController<TModule>` and are named after the module
+  (`DownloadsController`). When the section in the url ({id}/section.aspx/...) has a module with a controller, its
+  Index action gets the request and returns any result: a file download, or `PublicPageView()` for the page. The
+  module of a section is one instance per request (`IPublicPageModules`), shared by the controller and the view.
+- The reasons why a public page url goes to the WebForms site are logged at the Debug level
+  (`Logging__LogLevel__Cuyahoga.Web.Core.PublicSite=Debug`).
 - **Offline pages**: a page is offline when it or a page above it is offline (the home page: the whole site).
   Visitors get the offline template of the site without sections (or the template of the page without sections when
   the site has no offline template); administrators see the page as usual.

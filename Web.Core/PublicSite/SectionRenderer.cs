@@ -1,8 +1,6 @@
 using System.Globalization;
 using System.Text.Encodings.Web;
-using Castle.Windsor;
 using Cuyahoga.Core.Domain;
-using Cuyahoga.Core.Service;
 using Cuyahoga.Web.Mvc;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
@@ -17,19 +15,17 @@ namespace Cuyahoga.Web.Core.PublicSite
 	/// </summary>
 	public class SectionRenderer
 	{
-		private readonly ModuleLoader _moduleLoader;
+		private readonly IPublicPageModules _modules;
 		private readonly ModuleViewRegistry _moduleViews;
 		private readonly IMemoryCache _cache;
-		private readonly IWindsorContainer _container;
 		private readonly HtmlEncoder _htmlEncoder;
 
-		public SectionRenderer(ModuleLoader moduleLoader, ModuleViewRegistry moduleViews, IMemoryCache cache,
-			IWindsorContainer container, HtmlEncoder htmlEncoder)
+		public SectionRenderer(IPublicPageModules modules, ModuleViewRegistry moduleViews, IMemoryCache cache,
+			HtmlEncoder htmlEncoder)
 		{
-			this._moduleLoader = moduleLoader;
+			this._modules = modules;
 			this._moduleViews = moduleViews;
 			this._cache = cache;
-			this._container = container;
 			this._htmlEncoder = htmlEncoder;
 		}
 
@@ -44,26 +40,14 @@ namespace Cuyahoga.Web.Core.PublicSite
 			PublicPage page = model.Page;
 			foreach (PageSection pageSection in page.Sections)
 			{
-				ModuleBase module = this._moduleLoader.GetModuleFromSection(pageSection.Section);
+				ModuleBase module = this._modules.GetModule(pageSection.Section);
 				if (module == null)
 				{
 					// The module isn't activated.
 					continue;
 				}
-				try
-				{
-					if (page.ModulePathInfo.Length > 0 && page.ActiveSection != null
-						&& page.ActiveSection.Id == pageSection.Section.Id)
-					{
-						module.ModulePathInfo = page.ModulePathInfo;
-					}
-					IHtmlContent html = await RenderSectionAsync(page, pageSection.Section, module, viewComponentHelper, request);
-					model.GetPlaceholder(pageSection.Placeholder).AppendHtml(html);
-				}
-				finally
-				{
-					this._container.Release(module);
-				}
+				IHtmlContent html = await RenderSectionAsync(page, pageSection.Section, module, viewComponentHelper, request);
+				model.GetPlaceholder(pageSection.Placeholder).AppendHtml(html);
 			}
 			foreach (CustomMenu menu in page.Menus)
 			{

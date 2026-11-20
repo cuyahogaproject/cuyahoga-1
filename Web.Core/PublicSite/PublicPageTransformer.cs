@@ -20,15 +20,20 @@ namespace Cuyahoga.Web.Core.PublicSite
 		private readonly PageResolver _pageResolver;
 		private readonly TemplateLayouts _templateLayouts;
 		private readonly ModuleViewRegistry _moduleViews;
+		private readonly ModuleControllerRegistry _moduleControllers;
+		private readonly ILogger<PublicPageTransformer> _logger;
 
 		public PublicPageTransformer(InstallationState installationState, ModuleActivation moduleActivation,
-			PageResolver pageResolver, TemplateLayouts templateLayouts, ModuleViewRegistry moduleViews)
+			PageResolver pageResolver, TemplateLayouts templateLayouts, ModuleViewRegistry moduleViews,
+			ModuleControllerRegistry moduleControllers, ILogger<PublicPageTransformer> logger)
 		{
+			this._logger = logger;
 			this._installationState = installationState;
 			this._moduleActivation = moduleActivation;
 			this._pageResolver = pageResolver;
 			this._templateLayouts = templateLayouts;
 			this._moduleViews = moduleViews;
+			this._moduleControllers = moduleControllers;
 		}
 
 		public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
@@ -51,19 +56,42 @@ namespace Cuyahoga.Web.Core.PublicSite
 			User user = LegacyAuthenticationHandler.GetUser(httpContext);
 			string siteUrl = request.Scheme + "://" + request.Host + request.PathBase.Value?.ToLowerInvariant();
 			PageResolution resolution = this._pageResolver.Resolve(pageRequest, siteUrl, request.Cookies["CuyahogaCulture"], user);
-			if (resolution.Kind != PageResolutionKind.Page || !CanRender(resolution.Page))
+			if (resolution.Kind != PageResolutionKind.Page)
 			{
+				this._logger.LogDebug("{Url} goes to the WebForms site: {Resolution}.", request.Path, resolution.Kind);
+				return null;
+			}
+			string missing = GetMissingParts(resolution.Page);
+			if (missing != null)
+			{
+				this._logger.LogDebug("{Url} goes to the WebForms site: {Missing} not moved yet.", request.Path, missing);
 				return null;
 			}
 
 			httpContext.SetPublicPage(resolution.Page);
-			return new RouteValueDictionary { ["controller"] = "PublicPage", ["action"] = "Index" };
+			// The module of the section in the url handles the request when it has a controller (a file download).
+			string controller = resolution.Page.ActiveSection != null
+				? this._moduleControllers.GetControllerName(resolution.Page.ActiveSection.ModuleType)
+				: null;
+			return new RouteValueDictionary { ["controller"] = controller ?? "PublicPage", ["action"] = "Index" };
 		}
 
-		private bool CanRender(PublicPage page)
+		/// <summary>
+		/// What this site lacks to render the page (the template or a module), or null.
+		/// </summary>
+		private string GetMissingParts(PublicPage page)
 		{
-			return page.Template != null && this._templateLayouts.HasLayout(page.Template)
-				&& page.Sections.All(section => this._moduleViews.GetViewComponentType(section.Section.ModuleType) != null);
+			if (page.Template == null || !this._templateLayouts.HasLayout(page.Template))
+			{
+				return "template " + page.Template?.Name;
+			}
+			IEnumerable<string> modules = page.Sections
+				.Select(section => section.Section.ModuleType)
+				.Where(moduleType => this._moduleViews.GetViewComponentType(moduleType) == null)
+				.Select(moduleType => moduleType.Name)
+				.Distinct()
+				.ToList();
+			return modules.Any() ? "module " + String.Join(", ", modules) : null;
 		}
 	}
 }

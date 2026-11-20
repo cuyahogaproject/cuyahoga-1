@@ -1,3 +1,6 @@
+using System.Collections.Concurrent;
+using System.Globalization;
+using System.Resources;
 using Cuyahoga.Core.Domain;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +18,9 @@ namespace Cuyahoga.Web.Mvc
 	/// <typeparam name="TModule">The module type.</typeparam>
 	public abstract class ModuleViewComponent<TModule> : ViewComponent where TModule : ModuleBase
 	{
+		private static readonly ConcurrentDictionary<Type, ResourceManager> Resources =
+			new ConcurrentDictionary<Type, ResourceManager>();
+
 		private ModuleViewContext _context;
 
 		/// <summary>
@@ -50,6 +56,17 @@ namespace Cuyahoga.Web.Mvc
 		/// Renders the content of the section.
 		/// </summary>
 		protected abstract Task<IViewComponentResult> RenderAsync();
+
+		/// <summary>
+		/// A text in the language of the page, from the resources {namespace of the view component}.Resources.Strings
+		/// in the assembly of the view component (like the GetText of the WebForms module controls).
+		/// </summary>
+		protected string GetText(string key)
+		{
+			ResourceManager resources = Resources.GetOrAdd(GetType(),
+				type => new ResourceManager(type.Namespace + ".Resources.Strings", type.Assembly));
+			return resources.GetString(key, CultureInfo.CurrentUICulture);
+		}
 
 		/// <summary>
 		/// Registers a stylesheet for the head of the page.

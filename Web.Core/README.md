@@ -66,8 +66,10 @@ layout, so the head of the page has the stylesheets and scripts that modules reg
 
 - **Templates** are Razor layouts in `Templates/`, with the path of the user control of the WebForms site
   (`Templates/AnotherRed/Cuyahoga.ascx` -> `Templates/AnotherRed/Cuyahoga.cshtml`), so the database doesn't change.
-  They use `<cuyahoga-head-assets />`, `<cuyahoga-placeholder id="..." />` and `<vc:hierarchical-menu />`. The
-  stylesheets and images stay in the WebForms site. Moved: Another Red and Offline.
+  They use `<cuyahoga-head-assets />`, `<cuyahoga-placeholder id="..." />` and the navigation view components
+  (`<vc:hierarchical-menu />`, `<vc:navigation-level-zero-one />`, `<vc:navigation-level-two />`). The stylesheets and
+  images stay in the WebForms site. Moved: all templates of the sample site (Another Red, Offline, Classic: Cuyahoga
+  Home and Cuyahoga Standard, Default: Cuyahoga New).
 - **Module views** derive from `ModuleViewComponent<TModule>` (`Cuyahoga.Web.Mvc`) and return their views by full path
   (`~/Modules/{Module}/...`). `GetText` reads the texts of the module from `{namespace}.Resources.Strings`. The views of
   the built-in modules are in `Cuyahoga.Modules.Mvc`, the ones of the other modules in their own project

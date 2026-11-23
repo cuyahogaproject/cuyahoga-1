@@ -3,6 +3,7 @@ using Castle.Windsor;
 using Cuyahoga.Core.Persistence;
 using Cuyahoga.Core.Util;
 using Cuyahoga.Web.Core;
+using Cuyahoga.Web.Core.Install;
 using Cuyahoga.Web.Core.Persistence;
 using Cuyahoga.Web.Core.PublicSite;
 using Cuyahoga.Web.Core.Security;
@@ -126,6 +127,8 @@ app.Use(async (context, next) =>
 	}
 	await next(context);
 });
+// The installer takes over while the database isn't installed or needs an upgrade.
+app.UseMiddleware<InstallerMiddleware>();
 app.UseRouting();
 // Before authentication, which opens the first NHibernate session of the request.
 app.UseMiddleware<ModuleActivationMiddleware>();

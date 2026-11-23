@@ -58,6 +58,18 @@ test.describe('public site', () => {
     }
   });
 
+  test('the installer of an installed site', async ({ page }) => {
+    await page.goto('/Install/Install.aspx');
+    await expect(page.locator('#lblError')).toContainText("Can't install Cuyahoga.");
+    await expect(page.locator('input[type="submit"]')).toHaveCount(0);
+    // The later steps need the cookie of the browser that installed the database.
+    const token = await page.locator('input[name="__RequestVerificationToken"]').inputValue();
+    const response = await page.request.post('/Install/Install.aspx', {
+      form: { __RequestVerificationToken: token, btnCreateSite: 'Yes, create a site' },
+    });
+    expect(response.status()).toBe(403);
+  });
+
   test('runtime folders are not served', async ({ request }) => {
     for (const url of ['/Web.config', '/Web.local.config', '/index/segments', '/files/test.txt']) {
       const response = await request.get(url);

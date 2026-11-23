@@ -184,18 +184,6 @@
     <Compile Include="HttpModules\CoreRepositoryModule.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Install\Install.aspx.cs">
-      <DependentUpon>Install.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Install\Sorry.aspx.cs">
-      <DependentUpon>Sorry.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Install\Upgrade.aspx.cs">
-      <DependentUpon>Upgrade.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -298,21 +286,12 @@
     <Content Include="Install\Core\Database\mysql\1.7.0.sql" />
     <Content Include="Install\Core\Database\postgresql\1.5.0.sql" />
     <Content Include="Install\Core\Database\postgresql\1.7.0.sql" />
-    <Content Include="Install\Install.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Install\Modules\Database\mssql2000\1.5.0.sql" />
     <Content Include="Install\Modules\Database\mssql2000\1.7.0.sql" />
     <Content Include="Install\Modules\Database\mysql\1.5.0.sql" />
     <Content Include="Install\Modules\Database\mysql\1.7.0.sql" />
     <Content Include="Install\Modules\Database\postgresql\1.5.0.sql" />
     <Content Include="Install\Modules\Database\postgresql\1.7.0.sql" />
-    <Content Include="Install\Sorry.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Install\Upgrade.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="js\DefaultButton.js" />
     <Content Include="Login.aspx">
       <SubType>Form</SubType>
@@ -914,15 +893,6 @@
       <DependentUpon>Global.asax.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Install\Install.aspx.resx">
-      <DependentUpon>Install.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Install\Sorry.aspx.resx">
-      <DependentUpon>Sorry.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Install\Upgrade.aspx.resx">
-      <DependentUpon>Upgrade.aspx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Login.aspx.resx">
       <DependentUpon>Login.aspx.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -972,7 +942,6 @@
     <None Include="Install\Modules\Database\postgresql\1.5.1.sql" />
     <None Include="Install\Modules\Database\postgresql\1.6.0.sql" />
     <None Include="Install\Modules\Database\postgresql\install.sql" />
-    <None Include="Install\Web.config" />
     <Content Include="Support\ckeditor\CHANGES.md" />
     <Content Include="Support\ckeditor\LICENSE.md" />
     <Content Include="Support\ckeditor\plugins\scayt\LICENSE.md" />
@@ -981,7 +950,6 @@
     <Content Include="Support\ckeditor\plugins\wsc\README.md" />
     <Content Include="Support\ckeditor\README.md" />
     <Content Include="Support\ckeditor\skins\moono\readme.md" />
-    <Content Include="Support\fileman\asp_net\main.ashx" />
     <Content Include="Support\fileman\conf.json" />
     <Content Include="Support\fileman\images\filetypes\big\Thumbs.db" />
     <Content Include="Support\fileman\images\filetypes\Thumbs.db" />

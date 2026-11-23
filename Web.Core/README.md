@@ -82,6 +82,9 @@ layout, so the head of the page has the stylesheets and scripts that modules reg
   instant indexing of searchable modules) and get `_ModuleAdminLayout` (the module admin header; the page is one form).
   Only users who may edit the section get in (policy `SectionEditor` on the `/Modules` folder). `JsCalendar` writes the
   date fields of the WebForms Calendar control. Moved: all (StaticHtml, Downloads, RemoteContent, Articles).
+  The texts of a module are resx files in its .Mvc project. Static files (images, e-mail templates) are in the
+  module class projects (Cuyahoga.Modules, Cuyahoga.Modules.Downloads), which deploy them into `Web/Modules` after
+  each build; the WebForms site serves them. The WebForms views and admin pages of the modules are gone.
   `UrlPager` pages a list like the Pager control of the WebForms site (`.../page/2` or `...?page=2`).
 - **Module controllers** derive from `ModuleController<TModule>` and are named after the module
   (`DownloadsController`). When the section in the url ({id}/section.aspx/...) has a module with a controller, its

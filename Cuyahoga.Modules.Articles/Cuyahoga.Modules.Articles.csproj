@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <!--
-  The Articles module without its WebForms pages (those are in Cuyahoga.Modules.Articles.Web): the module class, the
-  domain, data access and the NHibernate mappings. netstandard2.0, so the WebForms site and the ASP.NET Core site
-  (Web.Core) both load it.
+  The Articles module: the module class, the domain, data access and the NHibernate mappings. netstandard2.0, so the
+  WebForms site and the ASP.NET Core site (Web.Core) both load it. Its views and admin pages are in
+  Cuyahoga.Modules.Articles.Mvc.
   -->
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>

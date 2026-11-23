@@ -1150,18 +1150,14 @@
   Publishing only picks up files that are part of this project, but the modules are deployed into Web\Modules and
   Web\bin by their own builds (see DeployCuyahogaModule in Directory.Build.targets). The modules reference this
   project, so they can't be project references here. Instead, build them before publishing and add their files
-  to the publish output. Each module has its module classes (netstandard2.0) and its WebForms pages (.Web), in
-  that build order.
+  to the publish output: the module classes (netstandard2.0), their install scripts and static files. The views and
+  admin pages of the modules are in the ASP.NET Core site (the .Mvc projects).
   -->
   <ItemGroup>
     <CuyahogaModuleProject Include="..\Modules\Cuyahoga.Modules.csproj" />
-    <CuyahogaModuleProject Include="..\Modules.Web\Cuyahoga.Modules.Web.csproj" />
     <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Articles\Cuyahoga.Modules.Articles.csproj" />
-    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Articles.Web\Cuyahoga.Modules.Articles.Web.csproj" />
     <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Downloads\Cuyahoga.Modules.Downloads.csproj" />
-    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.Downloads.Web\Cuyahoga.Modules.Downloads.Web.csproj" />
     <CuyahogaModuleProject Include="..\Cuyahoga.Modules.RemoteContent\Cuyahoga.Modules.RemoteContent.csproj" />
-    <CuyahogaModuleProject Include="..\Cuyahoga.Modules.RemoteContent.Web\Cuyahoga.Modules.RemoteContent.Web.csproj" />
   </ItemGroup>
   <PropertyGroup>
     <CopyAllFilesToSingleFolderForPackageDependsOn>$(CopyAllFilesToSingleFolderForPackageDependsOn);IncludeCuyahogaModulesForPublish</CopyAllFilesToSingleFolderForPackageDependsOn>

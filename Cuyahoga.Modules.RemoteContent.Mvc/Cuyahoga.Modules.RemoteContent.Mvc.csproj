@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk.Razor">
   <!--
   The RemoteContent module on the public pages of the ASP.NET Core site (Web.Core): the items of the RSS feeds of a
-  section (view component). Its WebForms control and admin pages are in Cuyahoga.Modules.RemoteContent.Web.
+  section (view component) and the admin pages (Pages/Modules/RemoteContent).
   -->
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>

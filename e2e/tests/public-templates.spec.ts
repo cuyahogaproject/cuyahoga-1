@@ -1,24 +1,9 @@
-import { test, expect, type Page, type TestInfo } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import { adminStorageState } from '../playwright.config';
-import { createNode, createSection, deleteNode } from './helpers';
+import { createNode, createSection, deleteNode, expectHealthyPage } from './helpers';
 
-// The Classic and Default templates of the sample site in the ASP.NET Core site, the same as on the WebForms site:
-// Page 2 and a page below it get each template in turn.
-const legacyBaseUrl = 'http://localhost:8082';
-
-async function same(page: Page, legacyPage: Page, url: string, label: string, testInfo: TestInfo) {
-  for (const p of [page, legacyPage]) await p.goto(url);
-  expect(await page.locator('input[name="__VIEWSTATE"]').count(), `${label}: ASP.NET Core`).toBe(0);
-  const a = await page.screenshot({ fullPage: true });
-  const b = await legacyPage.screenshot({ fullPage: true });
-  if (!a.equals(b)) {
-    await testInfo.attach(label + ' core', { body: a, contentType: 'image/png' });
-    await testInfo.attach(label + ' legacy', { body: b, contentType: 'image/png' });
-    await testInfo.attach(label + ' core.html', { body: await page.content(), contentType: 'text/plain' });
-    await testInfo.attach(label + ' legacy.html', { body: await legacyPage.content(), contentType: 'text/plain' });
-  }
-  expect(a.equals(b), `${label} looks the same as on the WebForms site`).toBe(true);
-}
+// The Classic and Default templates of the sample site in the ASP.NET Core site (they were compared pixel for pixel
+// with the WebForms site while they moved): Page 2 and a page below it get each template in turn.
 
 async function setTemplate(admin: Page, nodeId: string, template: string) {
   await admin.goto(`/Admin/NodeEdit.aspx?NodeId=${nodeId}`);
@@ -27,14 +12,15 @@ async function setTemplate(admin: Page, nodeId: string, template: string) {
   await expect(admin.locator('[id$="MessageBox"]')).toContainText('Node saved.');
 }
 
-test('the Classic and Default templates look the same as on the WebForms site', async ({ page, browser, baseURL }, testInfo) => {
-  const headers = { 'X-Forwarded-Host': new URL(baseURL!).host, 'X-Forwarded-Proto': 'http' };
-  const legacy = await browser.newContext({ baseURL: legacyBaseUrl, extraHTTPHeaders: headers });
-  const legacyAdmin = await browser.newContext({ baseURL: legacyBaseUrl, extraHTTPHeaders: headers, storageState: adminStorageState });
+async function open(page: Page, url: string, stylesheet: string) {
+  await expectHealthyPage(page, await page.goto(url));
+  await expect(page.locator('input[name="__VIEWSTATE"]'), `${url} rendered by the ASP.NET Core site`).toHaveCount(0);
+  await expect(page.locator('head link[rel="stylesheet"]').first()).toHaveAttribute('href', stylesheet);
+}
+
+test('the Classic and Default templates', async ({ page, browser }) => {
   const admin = await browser.newContext({ storageState: adminStorageState });
   const adminPage = await admin.newPage();
-  const legacyPage = await legacy.newPage();
-  const legacyAdminPage = await legacyAdmin.newPage();
   await adminPage.goto('/page2.aspx');
   const href = await adminPage.locator('.moduletools a', { hasText: 'Section Properties' }).first().getAttribute('href');
   const page2Id = /NodeId=(\d+)/.exec(href!)![1];
@@ -43,18 +29,36 @@ test('the Classic and Default templates look the same as on the WebForms site', 
     await createSection(adminPage, childId, 'Sub', 'StaticHtml');
     await adminPage.goto(`/Admin/NodeEdit.aspx?NodeId=${childId}`);
     const childUrl = '/' + await adminPage.locator('[id$="txtShortDescription"]').inputValue() + '.aspx';
-    for (const template of ['Cuyahoga Home', 'Cuyahoga Standard', 'Cuyahoga New']) {
+
+    // Classic: the main menu (the home page and its children), with the Admin link for administrators.
+    for (const template of ['Cuyahoga Home', 'Cuyahoga Standard']) {
       await setTemplate(adminPage, page2Id, template);
       await setTemplate(adminPage, childId, template);
-      await same(page, legacyPage, '/page2.aspx', `${template} page 2`, testInfo);
-      await same(page, legacyPage, childUrl, `${template} child`, testInfo);
-      await same(adminPage, legacyAdminPage, '/page2.aspx', `${template} page 2 admin`, testInfo);
+      await open(page, '/page2.aspx', '/Templates/Classic/Css/red.css');
+      await expect(page.locator('#logoarea #title')).toHaveText('Cuyahoga');
+      await expect(page.locator('#mainmenu > li > a').first()).toHaveText('Home');
+      await expect(page.locator('#mainmenu a.selected')).toHaveText('Page 2');
+      await expect(page.locator('#mainmenu a', { hasText: 'Admin' })).toHaveCount(0);
+      await expect(page.locator('#main .section')).toHaveCount(1);
+      await open(adminPage, '/page2.aspx', '/Templates/Classic/Css/red.css');
+      await expect(adminPage.locator('#mainmenu a', { hasText: 'Admin' })).toHaveAttribute('href', '/Admin');
     }
+    // Cuyahoga Standard: the submenu with the pages below the level 1 page.
+    await open(page, childUrl, '/Templates/Classic/Css/red.css');
+    await expect(page.locator('#side1 .submenu a.subselected')).toHaveText('Sub page');
+    await expect(page.locator('#mainmenu a.selected')).toHaveText('Page 2');
+
+    // Default: the hierarchical menu.
+    await setTemplate(adminPage, page2Id, 'Cuyahoga New');
+    await setTemplate(adminPage, childId, 'Cuyahoga New');
+    await open(page, childUrl, '/Templates/Default/Css/red-new.css');
+    await expect(page.locator('#headerside #title')).toHaveText('Cuyahoga');
+    await expect(page.locator('#nav a', { hasText: 'Page 2' })).toBeVisible();
+    await expect(page.locator('#nav a.selected')).toHaveText('Sub page');
+    await expect(page.locator('.section')).toHaveCount(1);
   } finally {
     await setTemplate(adminPage, page2Id, 'Another Red');
     await deleteNode(adminPage, childId);
-    await legacy.close();
-    await legacyAdmin.close();
     await admin.close();
   }
 });

@@ -1,0 +1,49 @@
+@page "/Modules/Articles/AdminArticles.aspx"
+@model Cuyahoga.Modules.Articles.Mvc.Pages.Modules.Articles.AdminArticlesModel
+@* The markup of AdminArticles.aspx. The pages of the list are links (?page=2), the WebForms page had postbacks. *@
+			<div id="moduleadminpane">
+				<h1>Article management</h1>
+				<p>
+					<table class="tbl">
+								<tr>
+									<th>
+										Title</th>
+									<th>
+										Category</th>
+									<th>
+										Date online</th>
+									<th>
+										Date offline</th>
+									<th>
+										Created by</th>
+									<th>
+										Modified by</th>
+									<th>
+									</th>
+								</tr>
+						@foreach (var article in Model.Articles)
+						{
+								<tr>
+									<td>@article.Title</td>
+									<td>@article.Category?.Title</td>
+									<td>
+										@TimeZoneUtil.AdjustDateToUserTimeZone(article.DateOnline, Model.CurrentUser)</td>
+									<td>
+										@TimeZoneUtil.AdjustDateToUserTimeZone(article.DateOffline, Model.CurrentUser)</td>
+									<td>@article.CreatedBy?.UserName</td>
+									<td>@article.ModifiedBy?.UserName</td>
+									<td>
+										<a href="@Url.Content("~/Modules/Articles/EditArticle.aspx")@Model.BaseQueryString&ArticleId=@article.Id">Edit</a>
+										<a href="@Url.Content("~/Modules/Articles/AdminComments.aspx")@Model.BaseQueryString&ArticleId=@article.Id">Comments</a>
+									</td>
+								</tr>
+						}
+					</table>
+				</p>
+				<div class="pager">
+					@* No whitespace between the links, like the Pager control of the WebForms site. *@
+					<span id="p_pgrArticles">@foreach (PagerLink link in Model.PagerLinks) { if (link.Url != null) {<a href="@link.Url">@link.Text</a>} else {<span style="font-weight:bold;">@link.Text</span>} }</span>
+				</div>
+				<br/>
+				<input name="btnNew" id="p_btnNew" type="button" value="New Article" onclick="document.location.href='EditArticle.aspx@(Model.BaseQueryString)&amp;ArticleId=-1'" />
+			</div>

@@ -73,7 +73,13 @@ layout, so the head of the page has the stylesheets and scripts that modules reg
   the built-in modules are in `Cuyahoga.Modules.Mvc`, the ones of the other modules in their own project
   (`Cuyahoga.Modules.Downloads.Mvc`, `Cuyahoga.Modules.Articles.Mvc`, `Cuyahoga.Modules.RemoteContent.Mvc`). Moved:
   all modules (StaticHtml, Sitemap, Search, SearchInput, LanguageSwitcher, User, UserProfile, Downloads, Articles,
-  RemoteContent). Their admin pages are still WebForms pages.
+  RemoteContent).
+- **Module admin pages** are Razor Pages in the project of the module (`Pages/Modules/{Module}/`), with the url and
+  the element ids of the WebForms page (`@page "/Modules/Articles/EditArticle.aspx"`). They derive from
+  `ModuleAdminPageModel<TModule>` (`Cuyahoga.Web.Mvc`: the node, section and module of the url, the message box,
+  instant indexing of searchable modules) and get `_ModuleAdminLayout` (the module admin header; the page is one form).
+  Only users who may edit the section get in (policy `SectionEditor` on the `/Modules` folder). `JsCalendar` writes the
+  date fields of the WebForms Calendar control. Moved: all (StaticHtml, Downloads, RemoteContent, Articles).
   `UrlPager` pages a list like the Pager control of the WebForms site (`.../page/2` or `...?page=2`).
 - **Module controllers** derive from `ModuleController<TModule>` and are named after the module
   (`DownloadsController`). When the section in the url ({id}/section.aspx/...) has a module with a controller, its
@@ -101,8 +107,9 @@ layout, so the head of the page has the stylesheets and scripts that modules reg
   articles of its section only; article titles and summaries are encoded (they are text, the content stays html),
   like the titles, summaries and paths of search results; the RSS feed of a section is only for users who may view
   the section (the WebForms site gave it to anyone).
-- The output cache of sections is in this process: changes on the WebForms site (module admin pages) don't clear it,
-  so cached sections show changes after their cache duration. Posted forms and urls with a query string (a search)
+- The output cache of sections is in this process. The module admin pages clear the cache of their section after a
+  post (all its entries: the list and the items); changes made in the WebForms site show after the cache duration.
+  Posted forms and urls with a query string (a search)
   are never served from the cache (the WebForms site served the results of the first search url for all queries).
 
 ## Login

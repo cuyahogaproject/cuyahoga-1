@@ -1,0 +1,48 @@
+@page "/Modules/RemoteContent/EditFeed.aspx"
+@model Cuyahoga.Modules.RemoteContent.Mvc.Pages.Modules.RemoteContent.EditFeedModel
+@* The markup of EditFeed.aspx; the validation messages look like the ones of the WebForms validators. A new feed can
+   be saved after it was verified (Verified). *@
+			<input type="hidden" name="Verified" value="@(Model.Verified ? "true" : "false")" />
+			<div id="moduleadminpane">
+				<h1>Edit Feed</h1>
+				<div class="group">
+					<h4>Feed properties</h4>
+					<table>
+						<tr>
+							<td style="WIDTH: 100px">Url (incl http://)</td>
+							<td>
+								<input name="txtUrl" type="text" value="@Model.FeedUrl" id="p_txtUrl" style="width:400px;" />
+								<input type="submit" name="btnVerify" value="Verify feed" id="p_btnVerify" />
+								@if (Model.UrlMissing) {<span id="p_rfvUrl" class="validator" style="color:Red;">Url is required</span>}</td>
+						</tr>
+						<tr>
+							<td>Title</td>
+							<td>
+								<input name="txtTitle" type="text" value="@Model.FeedTitle" id="p_txtTitle" style="width:400px;" />
+								@if (Model.TitleMissing) {<span id="p_rfvTitle" class="validator" style="color:Red;">Title is required</span>}</td>
+						</tr>
+						<tr>
+							<td>Number of items to show</td>
+							<td>
+								<input name="txtNumberOfItems" type="text" value="@Model.NumberOfItems" id="p_txtNumberOfItems" style="width:40px;" />
+								@if (Model.NumberOfItemsMissing) {<span id="p_rfvNumberOfItems" class="validator" style="color:Red;">Number of items is required</span>}
+								@if (Model.NumberOfItemsInvalid) {<span id="p_covNumberOfItems" class="validator" style="color:Red;">Invalid number</span>}</td>
+						</tr>
+						<tr>
+							<td>Feed publication date</td>
+							<td>
+								<span id="p_lblPubDate">@Model.PubDate</span></td>
+						</tr>
+						<tr>
+							<td>Last updated</td>
+							<td>
+								<span id="p_lblUpdateTimestamp">@Model.UpdateTimestamp</span></td>
+						</tr>
+					</table>
+				</div>
+				<p>
+					<input type="submit" name="btnSave" value="Save" id="p_btnSave" disabled="@(!Model.CanSave)" />
+					@if (Model.IsExistingFeed) {<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure?');" id="p_btnDelete" />}
+					<input name="btnCancel" id="p_btnCancel" type="button" value="Cancel" onclick="document.location.href='AdminRemoteContent.aspx@(Model.BaseQueryString)'" />
+				</p>
+			</div>

@@ -1,6 +1,8 @@
+using System.Collections.Concurrent;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Web.Mvc;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 
 namespace Cuyahoga.Web.Core.PublicSite
 {
@@ -10,6 +12,9 @@ namespace Cuyahoga.Web.Core.PublicSite
 	public class SectionOutputCache : ISectionOutputCache
 	{
 		private readonly IMemoryCache _cache;
+		// Per section: cancelled to remove all its cached output (one entry per path info).
+		private readonly ConcurrentDictionary<int, CancellationTokenSource> _sectionTokens =
+			new ConcurrentDictionary<int, CancellationTokenSource>();
 
 		public SectionOutputCache(IMemoryCache cache)
 		{
@@ -26,14 +31,18 @@ namespace Cuyahoga.Web.Core.PublicSite
 
 		public void Set(ModuleBase module, CachedSection section, int durationInSeconds)
 		{
-			this._cache.Set(GetKey(module), section, DateTimeOffset.Now.AddSeconds(durationInSeconds));
+			CancellationTokenSource sectionToken = this._sectionTokens.GetOrAdd(module.Section.Id, _ => new CancellationTokenSource());
+			var options = new MemoryCacheEntryOptions { AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(durationInSeconds) }
+				.AddExpirationToken(new CancellationChangeToken(sectionToken.Token));
+			this._cache.Set(GetKey(module), section, options);
 		}
 
 		public void Remove(ModuleBase module)
 		{
-			if (module.CacheKey != null)
+			if (module.Section != null && this._sectionTokens.TryRemove(module.Section.Id, out CancellationTokenSource sectionToken))
 			{
-				this._cache.Remove(GetKey(module));
+				sectionToken.Cancel();
+				sectionToken.Dispose();
 			}
 		}
 

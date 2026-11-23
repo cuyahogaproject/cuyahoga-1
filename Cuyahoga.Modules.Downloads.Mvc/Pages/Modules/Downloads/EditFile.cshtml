@@ -1,0 +1,56 @@
+@page "/Modules/Downloads/EditFile.aspx"
+@model Cuyahoga.Modules.Downloads.Mvc.Pages.Modules.Downloads.EditFileModel
+@* The markup of EditFile.aspx. A new file that was uploaded but not saved yet is in TempFileId (the WebForms page
+   kept it in the ViewState). *@
+@section Head {
+@JsCalendar.Head(Request)
+}
+			<input type="hidden" name="TempFileId" value="@Model.TempFileId" />
+			<div id="moduleadminpane">
+				<h1>Edit File</h1>
+				<div class="group">
+					<h4>File properties</h4>
+					<table>
+						<tr>
+							<td style="WIDTH: 100px">File</td>
+							<td><div id="p_pnlFileName">
+
+									<input name="txtFile" type="text" value="@Model.FilePath" id="p_txtFile" disabled="disabled" style="width:300px;" />
+									@if (Model.FileMissing) {<span id="p_rfvFile" class="validator" style="color:Red;">File is required</span>}
+
+</div><input name="filUpload" id="p_filUpload" type="file" style="WIDTH: 300px" />
+								<input type="submit" name="btnUpload" value="Upload" id="p_btnUpload" /></td>
+						</tr>
+						<tr>
+							<td style="WIDTH: 100px">Title (optional)</td>
+							<td>
+								<input name="txtTitle" type="text" value="@Model.FileTitle" id="p_txtTitle" style="width:300px;" /></td>
+						</tr>
+						<tr>
+							<td style="WIDTH: 100px">Date published</td>
+							<td>
+								@JsCalendar.Field(Request, "p_calDatePublished", "calDatePublished", Model.DatePublished, displayTime: true)
+								@if (Model.DateMissing) {<span id="p_rfvDatePublished" class="validator" style="color:Red;">Date published is required</span>}</td>
+						</tr>
+					</table>
+				</div>
+				<div class="group">
+					<h4>Allowed roles for download</h4>
+					<table class="tbl">
+								<tr>
+									<th>
+										Role</th>
+									<th>
+									</th>
+								</tr>
+						@for (int i = 0; i < Model.Roles.Count; i++)
+						{
+								<tr>
+									<td>@Model.Roles[i].Name</td>
+									<td style="text-align:center">
+										<input id="p_rptRoles_ctl@((i + 1).ToString("00"))_chkRole" type="checkbox" name="Roles" value="@Model.Roles[i].Id" checked="@Model.Roles[i].Allowed" /></td>
+								</tr>
+						}</table>
+				</div>
+				<p><input type="submit" name="btnSave" value="Save" id="p_btnSave" />@if (Model.IsExistingFile) {<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure?');" id="p_btnDelete" />}<input type="submit" name="btnCancel" value="Cancel" id="p_btnCancel" /></p>
+			</div>

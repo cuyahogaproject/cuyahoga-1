@@ -1,0 +1,72 @@
+@page "/Modules/Articles/EditArticle.aspx"
+@model Cuyahoga.Modules.Articles.Mvc.Pages.Modules.Articles.EditArticleModel
+@* The markup of EditArticle.aspx. *@
+@section Head {
+@JsCalendar.Head(Request)
+		<script type="text/javascript" src="~/Support/ckeditor/ckeditor.js"></script>
+}
+			<div id="moduleadminpane">
+				<h1>Edit Article</h1>
+				<div class="group">
+					<h4>Article</h4>
+					<table>
+						<tr>
+							<td style="WIDTH: 100px">Title</td>
+							<td><input name="txtTitle" type="text" value="@Model.ArticleTitle" id="p_txtTitle" style="width:650px;" />@if (Model.TitleMissing) {<span id="p_rfvTitle" class="validator" style="color:Red;">The title is required</span>}</td>
+						</tr>
+						<tr>
+							<td style="WIDTH: 100px">Summary</td>
+							<td><textarea name="txtSummary" rows="2" cols="20" id="p_txtSummary" style="height:60px;width:650px;">@Model.Summary</textarea></td>
+						</tr>
+						<tr>
+							<td style="WIDTH: 100px">Content</td>
+							<td>
+								<textarea name="txtContent" rows="2" cols="20" id="p_txtContent" class="ckeditor" style="height:250px;width:650px;">@Model.ArticleContent</textarea>
+							</td>
+						</tr>
+						<tr>
+							<td style="WIDTH: 100px">Category</td>
+							<td><select name="ddlCategory" id="p_ddlCategory" style="width:200px;">
+								<option value="0" selected="@(Model.CategoryId == 0)">none</option>
+								@foreach (var category in Model.Categories)
+								{
+								<option value="@category.Id" selected="@(Model.CategoryId == category.Id)">@category.Title</option>
+								}
+							</select>&nbsp;or
+								enter a new category:
+								<input name="txtCategory" type="text" value="@Model.NewCategory" id="p_txtCategory" style="width:200px;" />
+							</td>
+						</tr>
+					</table>
+				</div>
+				<div class="group">
+					<h4>Publishing</h4>
+					<table>
+						<tr>
+							<td style="WIDTH: 100px">Syndicate</td>
+							<td><input id="p_chkSyndicate" type="checkbox" name="chkSyndicate" value="true" checked="@Model.Syndicate" /></td>
+						</tr>
+						<tr>
+							<td style="WIDTH: 100px">Date online</td>
+							<td>@JsCalendar.Field(Request, "p_calDateOnline", "calDateOnline", Model.DateOnline, displayTime: true)</td>
+						</tr>
+						<tr>
+							<td style="WIDTH: 100px">Date offline</td>
+							<td>@JsCalendar.Field(Request, "p_calDateOffline", "calDateOffline", Model.DateOffline, displayTime: true)</td>
+						</tr>
+					</table>
+				</div>
+				<p><input type="submit" name="btnSave" value="Save" id="p_btnSave" />@if (Model.IsExistingArticle) {<input type="submit" name="btnDelete" value="Delete" onclick="return confirm('Are you sure?');" id="p_btnDelete" />}<input name="btnCancel" id="p_btnCancel" type="button" value="Cancel" onclick="document.location.href='AdminArticles.aspx@(Model.BaseQueryString)'" /></p>
+			</div>
+@section Scripts {
+				<script type="text/javascript">
+					var fileManUrl = '@Url.Content("~/Support/fileman/index.html")';
+					CKEDITOR.replace('p_txtContent', {
+						uiColor: '#6699cc',
+						filebrowserBrowseUrl: fileManUrl,
+						filebrowserUploadUrl: fileManUrl,
+						filebrowserImageBrowseUrl: fileManUrl + '?type=image',
+						filebrowserImageUploadUrl: fileManUrl + '?type=image'
+					});
+				</script>
+}

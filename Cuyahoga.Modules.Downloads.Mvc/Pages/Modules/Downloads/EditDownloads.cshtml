@@ -1,0 +1,42 @@
+@page "/Modules/Downloads/EditDownloads.aspx"
+@model Cuyahoga.Modules.Downloads.Mvc.Pages.Modules.Downloads.EditDownloadsModel
+@* The markup of EditDownloads.aspx. *@
+			<div id="moduleadminpane">
+				<h1>Downloads management</h1>
+				<p>
+					<table class="tbl">
+								<tr>
+									<th>
+										Title</th>
+									<th>
+										Filename</th>
+									<th>
+										Size (bytes)</th>
+									<th>
+										Published by</th>
+									<th>
+										Number of downloads</th>
+									<th>
+										Date published</th>
+									<th>
+									</th>
+								</tr>
+						@foreach (Cuyahoga.Modules.Downloads.Domain.File file in Model.Files)
+						{
+								<tr>
+									<td>@file.Title</td>
+									<td>@file.FilePath</td>
+									<td>@file.Size</td>
+									<td>@file.Publisher.FullName</td>
+									<td>@file.NrOfDownloads</td>
+									<td>@TimeZoneUtil.AdjustDateToUserTimeZone(file.DatePublished, Model.CurrentUser)</td>
+									<td>
+										<a href="@Url.Content("~/Modules/Downloads/EditFile.aspx")@Model.BaseQueryString&FileId=@file.Id">Edit</a>
+									</td>
+								</tr>
+						}
+					</table>
+				</p>
+				<br/>
+				<input name="btnNew" id="p_btnNew" type="button" value="Add File" onclick="document.location.href='EditFile.aspx@(Model.BaseQueryString)&amp;FileId=-1'" />
+			</div>

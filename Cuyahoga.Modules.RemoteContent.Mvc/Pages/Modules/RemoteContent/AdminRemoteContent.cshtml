@@ -1,0 +1,52 @@
+@page "/Modules/RemoteContent/AdminRemoteContent.aspx"
+@model Cuyahoga.Modules.RemoteContent.Mvc.Pages.Modules.RemoteContent.AdminRemoteContentModel
+@* The markup of AdminRemoteContent.aspx. The Refresh links post the id of the feed (the WebForms page did a postback). *@
+			<input type="hidden" name="RefreshFeedId" id="RefreshFeedId" />
+			<div id="moduleadminpane">
+				<h1>Remote content management</h1>
+				<p>
+					Note that you can combine multiple feeds in one display.
+					<table class="tbl">
+								<tr>
+									<th>
+										Title</th>
+									<th>
+										url</th>
+									<th>
+										Number of items to display</th>
+									<th>
+										Feed publication date</th>
+									<th>
+										Last updated</th>
+									<th>
+									</th>
+								</tr>
+						@for (int i = 0; i < Model.Feeds.Count; i++)
+						{
+							var feed = Model.Feeds[i];
+							string itemId = "p_rptFeeds_ctl" + (i + 1).ToString("00");
+								<tr>
+									<td>@feed.Title</td>
+									<td>@feed.Url</td>
+									<td>@feed.NumberOfItems</td>
+									<td>@feed.PubDate</td>
+									<td>@feed.UpdateTimestamp</td>
+									<td>
+										<a id="@(itemId)_hplEdit" href="@Url.Content("~/Modules/RemoteContent/EditFeed.aspx")@Model.BaseQueryString&FeedId=@feed.Id">Edit</a>
+										<a id="@(itemId)_lbtRefresh" href="javascript:refreshFeed(@feed.Id)">Refresh</a>
+									</td>
+								</tr>
+						}
+					</table>
+				</p>
+				<br/>
+				<input name="btnNew" id="p_btnNew" type="button" value="Add Feed" onclick="document.location.href='EditFeed.aspx@(Model.BaseQueryString)&amp;FeedId=-1'" />
+			</div>
+@section Scripts {
+			<script type="text/javascript">
+				function refreshFeed(feedId) {
+					document.getElementById('RefreshFeedId').value = feedId;
+					document.getElementById('Frm').submit();
+				}
+			</script>
+}

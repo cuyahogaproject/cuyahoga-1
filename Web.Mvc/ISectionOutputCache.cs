@@ -8,8 +8,8 @@ namespace Cuyahoga.Web.Mvc
 	public interface ISectionOutputCache
 	{
 		/// <summary>
-		/// Removes the cached output of the module (its section, with the path info of the module), so a change shows
-		/// immediately. Like InvalidateCache of the WebForms module controls.
+		/// Removes the cached output of the section of the module (for all path infos: the list and the items), so a
+		/// change shows immediately. Like InvalidateCache of the WebForms module controls.
 		/// </summary>
 		void Remove(ModuleBase module);
 	}

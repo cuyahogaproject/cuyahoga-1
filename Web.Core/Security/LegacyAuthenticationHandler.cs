@@ -5,6 +5,7 @@ using System.Text.Encodings.Web;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service.Membership;
 using Cuyahoga.Web.Core.Services;
+using Cuyahoga.Web.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Options;
 
@@ -20,7 +21,6 @@ namespace Cuyahoga.Web.Core.Security
 		public const string SchemeName = "CuyahogaLegacy";
 		// The name of the Forms authentication cookie (Web.config, <forms name="...">).
 		private const string FormsCookieName = "CuyahogaUser";
-		private static readonly object UserKey = new object();
 
 		private readonly LegacySiteClient _legacySiteClient;
 		private readonly IUserService _userService;
@@ -38,7 +38,7 @@ namespace Cuyahoga.Web.Core.Security
 		/// </summary>
 		public static User GetUser(HttpContext context)
 		{
-			return context.Items.TryGetValue(UserKey, out object user) ? (User)user : null;
+			return context.GetCuyahogaUser();
 		}
 
 		protected override async Task<AuthenticateResult> HandleAuthenticateAsync()
@@ -59,7 +59,7 @@ namespace Cuyahoga.Web.Core.Security
 				return AuthenticateResult.Fail("The logged-in user doesn't exist or is disabled.");
 			}
 			user.IsAuthenticated = true;
-			Context.Items[UserKey] = user;
+			Context.SetCuyahogaUser(user);
 
 			var identity = new ClaimsIdentity(new[]
 			{

@@ -67,17 +67,26 @@ builder.Services.AddScoped<TemplatePlaceholderProvider>();
 builder.Services.AddAuthentication()
 	.AddScheme<AuthenticationSchemeOptions, LegacyAuthenticationHandler>(LegacyAuthenticationHandler.SchemeName, null);
 builder.Services.AddSingleton<IAuthorizationHandler, AdministratorRequirement>();
+builder.Services.AddScoped<IAuthorizationHandler, SectionEditorHandler>();
 builder.Services.AddAuthorization(options =>
+{
 	options.AddPolicy(AdministratorRequirement.PolicyName, policy => policy
 		.AddAuthenticationSchemes(LegacyAuthenticationHandler.SchemeName)
 		.RequireAuthenticatedUser()
-		.AddRequirements(new AdministratorRequirement())));
+		.AddRequirements(new AdministratorRequirement()));
+	options.AddPolicy(SectionEditorRequirement.PolicyName, policy => policy
+		.AddAuthenticationSchemes(LegacyAuthenticationHandler.SchemeName)
+		.RequireAuthenticatedUser()
+		.AddRequirements(new SectionEditorRequirement()));
+});
 
 // The migrated pages keep the urls of the WebForms pages (/Admin/Users.aspx). The admin home page is also the default
 // document of the admin folder (/Admin/), like Default.aspx was in IIS.
 builder.Services.AddRazorPages(options =>
 {
 	options.Conventions.AuthorizeFolder("/Admin", AdministratorRequirement.PolicyName);
+	// The admin pages of the modules (in the projects of the modules) are for the editors of the section.
+	options.Conventions.AuthorizeFolder("/Modules", SectionEditorRequirement.PolicyName);
 	options.Conventions.AddPageRoute("/Admin/Default", "Admin/");
 });
 

@@ -1,0 +1,32 @@
+@using Cuyahoga.Web.Mvc
+@{
+	// The same markup as ModuleAdminTemplate.ascx (with ModuleAdminHeader.ascx) of the WebForms site: the admin pages
+	// of modules (ModuleAdminPageModel). Like there, the whole page is one form.
+	var adminPage = (ModuleAdminPageModel)ViewData.Model;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>@adminPage.Title</title>
+		<link id="p_CssStyleSheet" rel="stylesheet" type="text/css" href="~/Admin/Css/Admin.css" />
+		@await RenderSectionAsync("Head", required: false)
+	</head>
+	<body>
+		<form id="Frm" method="post" enctype="multipart/form-data">
+			<div id="header">
+				<div id="headertitle">Cuyahoga module administration</div>
+			</div>
+			<div id="subheader">
+				[Node: <span id="p_header_lblNode">@adminPage.Node.Title</span>]
+				[Section: <span id="p_header_lblSection">@adminPage.Section.Title</span>&nbsp;&nbsp;]
+				[<a id="p_header_hplBack" href="@PublicUrls.GetUrlFromNode(Context.Request, adminPage.Node)">Return to site</a>]
+			</div>
+			@if (adminPage.Message != null)
+			{
+			<div id="p_MessageBox" class="@(adminPage.MessageIsError ? "errorbox" : "messagebox")">@adminPage.Message</div>
+			}
+			@RenderBody()
+		</form>
+		@await RenderSectionAsync("Scripts", required: false)
+	</body>
+</html>

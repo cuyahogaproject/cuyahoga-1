@@ -53,8 +53,8 @@ namespace Cuyahoga.Web.Core.PublicSite
 			}
 
 			this._moduleActivation.ActivateModules();
-			await httpContext.AuthenticateAsync(LegacyAuthenticationHandler.SchemeName);
-			User user = LegacyAuthenticationHandler.GetUser(httpContext);
+			await httpContext.AuthenticateAsync(CuyahogaAuthentication.SchemeName);
+			User user = CuyahogaAuthentication.GetUser(httpContext);
 			string siteUrl = request.Scheme + "://" + request.Host + request.PathBase.Value?.ToLowerInvariant();
 			PageResolution resolution = this._pageResolver.Resolve(pageRequest, siteUrl, request.Cookies["CuyahogaCulture"], user);
 			if (resolution.Kind != PageResolutionKind.Page)

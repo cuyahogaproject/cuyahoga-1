@@ -55,8 +55,8 @@ namespace Cuyahoga.Web.Core.PublicSite
 				return NotFound();
 			}
 			// The WebForms site gave the feed of any section to anyone.
-			await HttpContext.AuthenticateAsync(LegacyAuthenticationHandler.SchemeName);
-			if (!section.ViewAllowed(LegacyAuthenticationHandler.GetUser(HttpContext)))
+			await HttpContext.AuthenticateAsync(CuyahogaAuthentication.SchemeName);
+			if (!section.ViewAllowed(CuyahogaAuthentication.GetUser(HttpContext)))
 			{
 				return StatusCode(StatusCodes.Status403Forbidden);
 			}

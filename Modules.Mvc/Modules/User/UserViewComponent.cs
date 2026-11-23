@@ -11,7 +11,7 @@ namespace Cuyahoga.Modules.Mvc.User
 	/// register, reset the password and edit the profile.
 	/// </summary>
 	/// <remarks>
-	/// The forms post to UserLogin.axd of the WebForms site, which creates or removes its login cookie and comes back
+	/// The forms post to UserLogin.axd (UserLoginController of the site), which logs in or out and comes back
 	/// to this page (with ?loginerror=... when the login failed).
 	/// </remarks>
 	public class UserViewComponent : ModuleViewComponent<UserModule>
@@ -89,7 +89,7 @@ namespace Cuyahoga.Modules.Mvc.User
 	public class UserModel
 	{
 		/// <summary>
-		/// The url of the login and logout handler of the WebForms site.
+		/// The url of the login and logout handler (UserLogin.axd).
 		/// </summary>
 		public string LoginUrl { get; init; }
 		public string ReturnUrl { get; init; }

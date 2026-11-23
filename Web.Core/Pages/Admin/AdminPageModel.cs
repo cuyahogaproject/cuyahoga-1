@@ -45,7 +45,7 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 		/// </summary>
 		public User CurrentUser
 		{
-			get { return LegacyAuthenticationHandler.GetUser(HttpContext); }
+			get { return CuyahogaAuthentication.GetUser(HttpContext); }
 		}
 
 		/// <summary>

@@ -26,7 +26,7 @@ namespace Cuyahoga.Web.Core.Security
 		protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, SectionEditorRequirement requirement)
 		{
 			HttpContext httpContext = context.Resource as HttpContext;
-			User user = httpContext != null ? LegacyAuthenticationHandler.GetUser(httpContext) : null;
+			User user = httpContext != null ? CuyahogaAuthentication.GetUser(httpContext) : null;
 			if (user != null && Int32.TryParse(httpContext.Request.Query["SectionId"], out int sectionId))
 			{
 				Section section = this._sectionService.GetSectionById(sectionId);

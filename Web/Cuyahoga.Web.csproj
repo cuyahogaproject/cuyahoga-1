@@ -174,8 +174,6 @@
       <DependentUpon>Global.asax</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="HttpHandlers\CurrentUserHandler.cs" />
-    <Compile Include="HttpHandlers\UserLoginHandler.cs" />
     <Compile Include="HttpHandlers\PageHandler.cs" />
     <Compile Include="HttpModules\NHibernateSessionModule.cs" />
     <Compile Include="HttpModules\AuthenticationModule.cs">
@@ -183,10 +181,6 @@
     </Compile>
     <Compile Include="HttpModules\CoreRepositoryModule.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Login.aspx.cs">
-      <DependentUpon>Login.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\BaseModuleControl.cs">
       <SubType>ASPXCodeBehind</SubType>
@@ -293,9 +287,6 @@
     <Content Include="Install\Modules\Database\postgresql\1.5.0.sql" />
     <Content Include="Install\Modules\Database\postgresql\1.7.0.sql" />
     <Content Include="js\DefaultButton.js" />
-    <Content Include="Login.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Support\ckeditor\adapters\jquery.js" />
     <Content Include="Support\ckeditor\build-config.js" />
     <Content Include="Support\ckeditor\ckeditor.js" />
@@ -891,10 +882,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Global.asax.resx">
       <DependentUpon>Global.asax.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Login.aspx.resx">
-      <DependentUpon>Login.aspx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Install\Core\Database\mssql2000\0.8.2.sql" />

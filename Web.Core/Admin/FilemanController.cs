@@ -29,8 +29,8 @@ namespace Cuyahoga.Web.Core.Admin
 		[Route("Support/fileman/asp_net/main.ashx")]
 		public async Task<IActionResult> Index(string a)
 		{
-			await HttpContext.AuthenticateAsync(LegacyAuthenticationHandler.SchemeName);
-			User user = LegacyAuthenticationHandler.GetUser(HttpContext);
+			await HttpContext.AuthenticateAsync(CuyahogaAuthentication.SchemeName);
+			User user = CuyahogaAuthentication.GetUser(HttpContext);
 			if (user == null || !AllowedRoles.Any(user.IsInRole))
 			{
 				return StatusCode(StatusCodes.Status403Forbidden);

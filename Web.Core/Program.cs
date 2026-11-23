@@ -55,29 +55,20 @@ if (!String.IsNullOrWhiteSpace(legacySitePath))
 builder.Services.AddSingleton<ModuleActivation>();
 builder.Services.AddScoped<SearchIndexUpdater>();
 
-// Questions for the WebForms site, asked with the cookies of the browser: who is logged in.
-builder.Services.AddHttpClient(LegacySiteClient.HttpClientName, client =>
-		client.BaseAddress = new Uri(legacySiteUrl.TrimEnd('/') + "/"))
-	.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false });
-builder.Services.AddScoped<LegacySiteClient>();
 builder.Services.AddScoped<TemplateRenderer>();
 builder.Services.AddScoped<TemplatePlaceholderProvider>();
 
-// Users log in on the WebForms site. The migrated admin pages ask it who is logged in (CurrentUser.axd). Only
-// endpoints with the Administrator policy and public page urls (PublicPageTransformer) authenticate, so other forwarded
-// requests don't make that extra call.
-builder.Services.AddAuthentication()
-	.AddScheme<AuthenticationSchemeOptions, LegacyAuthenticationHandler>(LegacyAuthenticationHandler.SchemeName, null);
+// The login: a cookie with the id of the user (Login.aspx, the login form of the User module).
+builder.Services.AddAuthentication(CuyahogaAuthentication.SchemeName)
+	.AddCookie(CuyahogaAuthentication.SchemeName, CuyahogaAuthentication.Configure);
 builder.Services.AddSingleton<IAuthorizationHandler, AdministratorRequirement>();
 builder.Services.AddScoped<IAuthorizationHandler, SectionEditorHandler>();
 builder.Services.AddAuthorization(options =>
 {
 	options.AddPolicy(AdministratorRequirement.PolicyName, policy => policy
-		.AddAuthenticationSchemes(LegacyAuthenticationHandler.SchemeName)
 		.RequireAuthenticatedUser()
 		.AddRequirements(new AdministratorRequirement()));
 	options.AddPolicy(SectionEditorRequirement.PolicyName, policy => policy
-		.AddAuthenticationSchemes(LegacyAuthenticationHandler.SchemeName)
 		.RequireAuthenticatedUser()
 		.AddRequirements(new SectionEditorRequirement()));
 });

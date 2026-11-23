@@ -54,11 +54,12 @@ if (!String.IsNullOrWhiteSpace(legacySitePath))
 builder.Services.AddSingleton<ModuleActivation>();
 builder.Services.AddScoped<SearchIndexUpdater>();
 
-// Questions for the WebForms site, asked with the cookies of the browser: who is logged in, template placeholders.
+// Questions for the WebForms site, asked with the cookies of the browser: who is logged in.
 builder.Services.AddHttpClient(LegacySiteClient.HttpClientName, client =>
 		client.BaseAddress = new Uri(legacySiteUrl.TrimEnd('/') + "/"))
 	.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler { UseCookies = false, AllowAutoRedirect = false });
 builder.Services.AddScoped<LegacySiteClient>();
+builder.Services.AddScoped<TemplateRenderer>();
 builder.Services.AddScoped<TemplatePlaceholderProvider>();
 
 // Users log in on the WebForms site. The migrated admin pages ask it who is logged in (CurrentUser.axd). Only

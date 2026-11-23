@@ -3,7 +3,7 @@ using System.Net;
 namespace Cuyahoga.Web.Core.Services
 {
 	/// <summary>
-	/// Asks the WebForms site for things that only it can answer (who is logged in, the placeholders of a template),
+	/// Asks the WebForms site for things that only it can answer (who is logged in),
 	/// on behalf of the current request: the request goes out with the cookies of the browser.
 	/// </summary>
 	public class LegacySiteClient

@@ -31,8 +31,8 @@ namespace Cuyahoga.Web.Core.PublicSite
 		private static readonly Regex Section = new Regex(@"/(\d+)\/section.aspx", Options);
 		private static readonly Regex Feed = new Regex(@"/(\d+)\/feed.aspx", Options);
 		private static readonly Regex ShortDescription = new Regex(@"/([\w|\/|-]+).aspx", Options);
-		// The handler of the XML sitemap (sitemap.* in any folder) comes before the mappings, so a page with the short
-		// description 'sitemap' never shows there.
+		// The XML sitemap (sitemap.* in any folder, SitemapController), like the WebForms site, where its handler came
+		// before the url mappings: a page with the short description 'sitemap' never shows there.
 		private static readonly Regex SitemapHandler = new Regex(@"(^|/)sitemap\.[^/]*$", Options);
 
 		// The forms of these urls that the WebForms site rewrites correctly.

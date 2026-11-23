@@ -142,18 +142,9 @@
       <DependentUpon>Navigation.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Admin\Modules.aspx.cs">
-      <DependentUpon>Modules.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Admin\TemplatePreview.aspx.cs">
-      <DependentUpon>TemplatePreview.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Admin\UI\AdminBasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="HttpHandlers\SitemapHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -162,18 +153,6 @@
     </Compile>
     <Compile Include="Components\UrlRewriter.cs">
       <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Controls\EditProfile.ascx.cs">
-      <DependentUpon>EditProfile.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\ModuleAdminHeader.ascx.cs">
-      <DependentUpon>ModuleAdminHeader.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\ModuleAdminTemplate.ascx.cs">
-      <DependentUpon>ModuleAdminTemplate.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Controls\Navigation\HierarchicalMenu.ascx.cs">
       <DependentUpon>HierarchicalMenu.ascx</DependentUpon>
@@ -187,18 +166,6 @@
       <DependentUpon>NavigationLevelZeroOne.ascx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Controls\Register.ascx.cs">
-      <DependentUpon>Register.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\ResetPassword.ascx.cs">
-      <DependentUpon>ResetPassword.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Controls\ViewProfile.ascx.cs">
-      <DependentUpon>ViewProfile.ascx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Error.aspx.cs">
       <DependentUpon>Error.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -209,7 +176,6 @@
     </Compile>
     <Compile Include="HttpHandlers\CurrentUserHandler.cs" />
     <Compile Include="HttpHandlers\UserLoginHandler.cs" />
-    <Compile Include="HttpHandlers\TemplatePlaceholdersHandler.cs" />
     <Compile Include="HttpHandlers\PageHandler.cs" />
     <Compile Include="HttpModules\NHibernateSessionModule.cs" />
     <Compile Include="HttpModules\AuthenticationModule.cs">
@@ -232,14 +198,6 @@
     </Compile>
     <Compile Include="Login.aspx.cs">
       <DependentUpon>Login.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Profile.aspx.cs">
-      <DependentUpon>Profile.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Rss.aspx.cs">
-      <DependentUpon>Rss.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\BaseModuleControl.cs">
@@ -267,9 +225,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="UI\LocalizedUserControl.cs">
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="UI\ModuleAdminBasePage.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="UI\PageEngine.cs">
@@ -321,36 +276,12 @@
     <Content Include="Admin\Images\upred.gif" />
     <Content Include="Admin\Images\user.gif" />
     <Content Include="Admin\Images\users.gif" />
-    <Content Include="Admin\Modules.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Admin\TemplatePreview.aspx">
-      <SubType>Form</SubType>
-    </Content>
     <Content Include="Admin\Web.config" />
-    <Content Include="Controls\EditProfile.ascx">
-      <SubType>UserControl</SubType>
-    </Content>
-    <Content Include="Controls\ModuleAdminHeader.ascx">
-      <SubType>UserControl</SubType>
-    </Content>
-    <Content Include="Controls\ModuleAdminTemplate.ascx">
-      <SubType>UserControl</SubType>
-    </Content>
     <Content Include="Controls\Navigation\HierarchicalMenu.ascx" />
     <Content Include="Controls\Navigation\NavigationLevelTwo.ascx">
       <SubType>UserControl</SubType>
     </Content>
     <Content Include="Controls\Navigation\NavigationLevelZeroOne.ascx">
-      <SubType>UserControl</SubType>
-    </Content>
-    <Content Include="Controls\Register.ascx">
-      <SubType>UserControl</SubType>
-    </Content>
-    <Content Include="Controls\ResetPassword.ascx">
-      <SubType>UserControl</SubType>
-    </Content>
-    <Content Include="Controls\ViewProfile.ascx">
       <SubType>UserControl</SubType>
     </Content>
     <Content Include="Default.aspx">
@@ -384,12 +315,6 @@
     </Content>
     <Content Include="js\DefaultButton.js" />
     <Content Include="Login.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Profile.aspx">
-      <SubType>Form</SubType>
-    </Content>
-    <Content Include="Rss.aspx">
       <SubType>Form</SubType>
     </Content>
     <Content Include="Support\ckeditor\adapters\jquery.js" />
@@ -972,21 +897,6 @@
     <EmbeddedResource Include="Admin\Controls\Navigation.ascx.resx">
       <DependentUpon>Navigation.ascx.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Admin\Modules.aspx.resx">
-      <DependentUpon>Modules.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Admin\TemplatePreview.aspx.resx">
-      <DependentUpon>TemplatePreview.aspx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\EditProfile.ascx.resx">
-      <DependentUpon>EditProfile.ascx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ModuleAdminHeader.ascx.resx">
-      <DependentUpon>ModuleAdminHeader.ascx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ModuleAdminTemplate.ascx.resx">
-      <DependentUpon>ModuleAdminTemplate.ascx.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Navigation\HierarchicalMenu.ascx.resx">
       <DependentUpon>HierarchicalMenu.ascx.cs</DependentUpon>
     </EmbeddedResource>
@@ -995,27 +905,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Navigation\NavigationLevelZeroOne.ascx.resx">
       <DependentUpon>NavigationLevelZeroOne.ascx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Register.ascx.resx">
-      <DependentUpon>Register.ascx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ResetPassword.ascx.resx">
-      <DependentUpon>ResetPassword.ascx.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Resources\Strings.nl.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Resources\Strings.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Resources\Strings.it.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\Resources\Strings.sv.resx">
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\ViewProfile.ascx.resx">
-      <DependentUpon>ViewProfile.ascx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Error.aspx.resx">
       <DependentUpon>Error.aspx.cs</DependentUpon>
@@ -1036,14 +925,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Login.aspx.resx">
       <DependentUpon>Login.aspx.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Profile.aspx.resx">
-      <DependentUpon>Profile.aspx.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Rss.aspx.resx">
-      <DependentUpon>Rss.aspx.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="Install\Core\Database\mssql2000\0.8.2.sql" />

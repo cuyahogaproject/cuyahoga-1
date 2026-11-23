@@ -1,0 +1,78 @@
+@page "/Admin/Modules.aspx"
+@model ModulesModel
+@{
+	int index = 0;
+}
+<p>
+	<em>NOTE: The Load on startup setting affects the activation on application startup. However,
+	checking it will try to activate the module immediately</em>
+</p>
+<table class="tbl">
+	<tr>
+		<th>Module name</th>
+		<th>Assembly</th>
+		<th>Load on startup</th>
+		<th>Activation Status</th>
+		<th>Installation Status</th>
+		<th>Actions</th>
+	</tr>
+	@foreach (ModulesModel.ModuleRow row in Model.Modules)
+	{
+		string rowId = "p_rptModules_ctl" + (++index).ToString("00");
+		string argument = row.ModuleType.Name + ":" + row.ModuleType.AssemblyName;
+		<tr>
+			<td>@row.ModuleType.Name</td>
+			<td>@row.ModuleType.AssemblyName</td>
+			<td>
+				@* A module that isn't installed yet can't be switched. *@
+				<input id="@(rowId)_chkBoxActivation" type="checkbox" checked="@row.ModuleType.AutoActivate"
+					disabled="@row.CanInstall"
+					onclick="setActivation(@row.ModuleType.ModuleTypeId, this.checked);" />
+			</td>
+			<td>
+				@if (row.IsActive)
+				{
+					<span style="color:green;">Active</span>
+				}
+				else
+				{
+					<span style="color:red;">Not Active</span>
+				}
+			</td>
+			<td>@row.InstallationStatus</td>
+			<td>
+				@foreach (string command in new[] { "Install", "Upgrade", "Uninstall" })
+				{
+					bool available = command switch { "Install" => row.CanInstall, "Upgrade" => row.CanUpgrade, _ => row.CanUninstall };
+					if (available)
+					{
+						<a id="@(rowId)_lbt@(command)" href="#"
+							onclick="if (confirm('@command this module?')) runCommand('@command', '@argument'); return false;">@command</a>
+					}
+				}
+			</td>
+		</tr>
+	}
+</table>
+<form id="activationForm" method="post" asp-page-handler="Activation">
+	<input type="hidden" name="moduleTypeId" />
+	<input type="hidden" name="activate" />
+</form>
+<form id="commandForm" method="post" asp-page-handler="Command">
+	<input type="hidden" name="command" />
+	<input type="hidden" name="argument" />
+</form>
+<script type="text/javascript">
+	function setActivation(moduleTypeId, activate) {
+		var form = document.getElementById('activationForm');
+		form.moduleTypeId.value = moduleTypeId;
+		form.activate.value = activate;
+		form.submit();
+	}
+	function runCommand(command, argument) {
+		var form = document.getElementById('commandForm');
+		form.command.value = command;
+		form.argument.value = argument;
+		form.submit();
+	}
+</script>

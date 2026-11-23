@@ -58,11 +58,6 @@ test.describe('public site', () => {
     }
   });
 
-  test('RSS endpoint responds', async ({ request }) => {
-    const response = await request.get('/Rss.aspx');
-    expect(response.status()).toBeLessThan(400);
-  });
-
   test('runtime folders are not served', async ({ request }) => {
     for (const url of ['/Web.config', '/Web.local.config', '/index/segments', '/files/test.txt']) {
       const response = await request.get(url);

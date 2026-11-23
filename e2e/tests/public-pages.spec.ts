@@ -311,11 +311,15 @@ test.describe('the Sitemap module in the ASP.NET Core site', () => {
       await expect(sitemap.locator('a', { hasText: 'Downloads' })).toHaveAttribute('href', '/home/downloads.aspx');
       await expectAspNetCorePage(await admin.newPage(), '/home/overview.aspx');
 
-      // sitemap.aspx (in any folder) and sitemap.xml are the XML sitemap of the WebForms site.
-      for (const url of ['/sitemap.aspx', '/sitemap.xml', '/home/sitemap.aspx']) {
+      // sitemap.aspx (in any folder) and sitemap.xml are the XML sitemap of the site: the pages in the navigation.
+      for (const url of ['/sitemap.aspx', '/sitemap.xml', '/home/sitemap.aspx', '/Home/SiteMap.XML']) {
         const response = await page.request.get(url);
         expect(response.status(), url).toBe(200);
-        expect(await response.text(), url).toContain('<urlset');
+        expect(response.headers()['content-type'], url).toMatch(/^text\/xml/);
+        const xml = await response.text();
+        expect(xml, url).toMatch(/^<\?xml version="1.0" encoding="UTF-8"\?><urlset xmlns="http:\/\/www.google.com\/schemas\/sitemap\/0.9">/);
+        expect(xml, url).toContain(`<url><loc>${baseURL}/page2.aspx</loc><title>Page 2</title><lastmod>`);
+        expect(xml, url).toContain('<changefreq>daily</changefreq><priority>0.6</priority></url>');
       }
     } finally {
       await admin.close();
@@ -575,6 +579,15 @@ test.describe('the UserProfile module in the ASP.NET Core site', () => {
       const sectionUrl = `/${sectionId}/section.aspx`;
       const stamp = Date.now().toString(36);
       try {
+        // The old profile pages go to the profile section.
+        for (const [old, page] of [['register', 'Register'], ['reset', 'ResetPassword'], ['edit', 'EditProfile'],
+          ['view/1', 'ViewProfile/1']]) {
+          const response = await adminPage.request.get(`/Profile.aspx/${old}`, { maxRedirects: 0 });
+          expect(response.status(), old).toBe(302);
+          expect(response.headers()['location'], old).toBe(`${sectionUrl}/${page}`);
+        }
+        expect((await adminPage.request.get('/Profile.aspx/unknown', { maxRedirects: 0 })).status()).toBe(404);
+
         // Visitors: the edit page asks to log in.
         for (const url of ['/userprofile.aspx', `${sectionUrl}/ViewProfile/1`, `${sectionUrl}/ViewProfile/999999`,
           `${sectionUrl}/Register`, `${sectionUrl}/ResetPassword`]) {

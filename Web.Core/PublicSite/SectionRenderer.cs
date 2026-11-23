@@ -95,13 +95,18 @@ namespace Cuyahoga.Web.Core.PublicSite
 
 		/// <summary>
 		/// The content of the module view. It's cached for anonymous users when the section has a cache duration, but
-		/// not when a form was posted (the view can show what the user entered).
+		/// not when a form was posted (the view can show what the user entered) and not for urls with a query string
+		/// (the cache key of the module doesn't have it, and the view can show it: the query of a search), and never for
+		/// views with <see cref="NoSectionCacheAttribute"/>.
 		/// </summary>
 		private async Task<string> GetContentAsync(PublicPage page, Section section, ModuleBase module,
 			ModuleViewContext context, IViewComponentHelper viewComponentHelper, HttpRequest request)
 		{
+			Type viewComponentType = this._moduleViews.GetViewComponentType(section.ModuleType)
+				?? throw new InvalidOperationException($"The module {section.ModuleType.Name} has no view.");
 			bool useCache = section.CacheDuration > 0 && module.CacheKey != null && page.User == null
-				&& (HttpMethods.IsGet(request.Method) || HttpMethods.IsHead(request.Method));
+				&& (HttpMethods.IsGet(request.Method) || HttpMethods.IsHead(request.Method)) && !request.QueryString.HasValue
+				&& !Attribute.IsDefined(viewComponentType, typeof(NoSectionCacheAttribute));
 			CachedSection cached = useCache ? this._cache.Get(module) : null;
 			if (cached != null)
 			{
@@ -118,8 +123,6 @@ namespace Cuyahoga.Web.Core.PublicSite
 				return cached.Html;
 			}
 
-			Type viewComponentType = this._moduleViews.GetViewComponentType(section.ModuleType)
-				?? throw new InvalidOperationException($"The module {section.ModuleType.Name} has no view.");
 			IHtmlContent content = await viewComponentHelper.InvokeAsync(viewComponentType, new { context });
 			using var writer = new StringWriter();
 			content.WriteTo(writer, this._htmlEncoder);

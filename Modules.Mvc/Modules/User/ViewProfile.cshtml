@@ -1,0 +1,37 @@
+@using Cuyahoga.Core.Util
+@using Cuyahoga.Modules.Mvc.User
+@model ProfileModel
+@* The markup of ViewProfile.ascx. *@
+@{
+	Cuyahoga.Core.Domain.User profile = Model.Profile;
+	bool hasWebsite = profile != null && !String.IsNullOrEmpty(profile.Website) && Text.IsSafeUrl(profile.Website);
+}
+<h3>@(profile != null ? String.Format(Model.Text("VIEWPROFILETITLE"), profile.UserName) : null)</h3>
+
+@if (Model.Error != null) {<span class="error">@Model.Error</span>}<br/>
+<table class="tbl">
+	<tr>
+		<td style="WIDTH: 100px">@Model.Text("USERNAME")</td>
+		<td class="tblvalue"><span>@profile?.UserName</span></td>
+		<td style="WIDTH: 100px">@Model.Text("REGISTEREDON")</td>
+		<td class="tblvalue"><span>@profile?.InsertTimestamp.ToShortDateString()</span></td>
+	</tr>
+	<tr>
+		<td>@Model.Text("FIRSTNAME")</td>
+		<td class="tblvalue"><span>@profile?.FirstName</span></td>
+		<td>@Model.Text("LASTLOGINON")</td>
+		<td class="tblvalue"><span>@profile?.LastLogin?.ToString()</span></td>
+	</tr>
+	<tr>
+		<td>@Model.Text("LASTNAME")</td>
+		<td class="tblvalue"><span>@profile?.LastName</span></td>
+		<td>&nbsp;</td>
+		<td class="tblvalue">&nbsp;</td>
+	</tr>
+	<tr>
+		<td>@Model.Text("WEBSITE")</td>
+		<td class="tblvalue">@if (hasWebsite) {<a href="@profile.Website" target="_blank">@profile.Website</a>} else {<a target="_blank"></a>}</td>
+		<td>&nbsp;</td>
+		<td class="tblvalue">&nbsp;</td>
+	</tr>
+</table>

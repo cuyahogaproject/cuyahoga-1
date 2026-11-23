@@ -4,12 +4,29 @@ using System.Text.RegularExpressions;
 namespace Cuyahoga.Web.Mvc
 {
 	/// <summary>
-	/// Paging with the page number in the path info of the url (.../page/2), like the Pager server control of the
-	/// WebForms site (PagerLinkMode.HyperLinkPathInfo), with the same links: &lt;&lt; &lt; ... 1 2 3 ... &gt; &gt;&gt;.
+	/// Where the pager puts the page number in the url.
 	/// </summary>
-	public class PathInfoPager
+	public enum PagerUrlMode
 	{
-		private static readonly Regex PageNumber = new Regex(@"\/page\/(\d+)$", RegexOptions.CultureInvariant);
+		/// <summary>
+		/// In the path info: .../page/2.
+		/// </summary>
+		PathInfo,
+		/// <summary>
+		/// At the end of the query string: ...?q=text&amp;page=2.
+		/// </summary>
+		QueryString
+	}
+
+	/// <summary>
+	/// Paging with the page number in the url (.../page/2 or ...?page=2), like the Pager server control of the WebForms
+	/// site (which also reads the page number from these urls), with the same links: &lt;&lt; &lt; ... 1 2 3 ... &gt;
+	/// &gt;&gt;.
+	/// </summary>
+	public class UrlPager
+	{
+		private static readonly Regex PathInfoPageNumber = new Regex(@"\/page\/(\d+)$", RegexOptions.CultureInvariant);
+		private static readonly Regex QueryStringPageNumber = new Regex(@"(\?|\&)page=(\d+)$", RegexOptions.CultureInvariant);
 
 		/// <summary>
 		/// The maximum number of page numbers that the pager shows.
@@ -17,6 +34,7 @@ namespace Cuyahoga.Web.Mvc
 		public const int MaxDisplayPages = 10;
 
 		private readonly string _pageUrl;
+		private readonly PagerUrlMode _mode;
 
 		/// <param name="requestUrl">The path and query of the request (url encoded, with the path base).</param>
 		/// <param name="pageUrl">The url of the pages (the section url). When the request url contains it, the request
@@ -24,14 +42,17 @@ namespace Cuyahoga.Web.Mvc
 		/// <param name="itemCount">The number of items to page.</param>
 		/// <param name="pageSize">The number of items per page. 0 shows all items on one page.</param>
 		/// <param name="hideWhenOnePage">Don't show the page number when there is only one page.</param>
-		public PathInfoPager(string requestUrl, string pageUrl, int itemCount, int pageSize, bool hideWhenOnePage)
+		/// <param name="mode">Where the page number is in the url.</param>
+		public UrlPager(string requestUrl, string pageUrl, int itemCount, int pageSize, bool hideWhenOnePage,
+			PagerUrlMode mode = PagerUrlMode.PathInfo)
 		{
 			this._pageUrl = requestUrl.Contains(pageUrl, StringComparison.Ordinal) ? requestUrl : pageUrl;
+			this._mode = mode;
 			PageSize = pageSize;
 			HideWhenOnePage = hideWhenOnePage;
 			PageCount = pageSize > 0 && itemCount > 0 ? (itemCount + pageSize - 1) / pageSize : 1;
 			Match match = PageNumber.Match(this._pageUrl);
-			if (match.Success && Int32.TryParse(match.Groups[1].Value, NumberStyles.None, CultureInfo.InvariantCulture,
+			if (match.Success && Int32.TryParse(match.Groups[match.Groups.Count - 1].Value, NumberStyles.None, CultureInfo.InvariantCulture,
 				out int pageNumber) && pageNumber > 0)
 			{
 				CurrentPageIndex = pageNumber - 1;
@@ -48,6 +69,8 @@ namespace Cuyahoga.Web.Mvc
 		/// The page to show (from the url), starting at 0. It can be past the last page.
 		/// </summary>
 		public int CurrentPageIndex { get; }
+
+		private Regex PageNumber => this._mode == PagerUrlMode.PathInfo ? PathInfoPageNumber : QueryStringPageNumber;
 
 		private bool IsPagingEnabled => PageSize > 0;
 
@@ -69,8 +92,13 @@ namespace Cuyahoga.Web.Mvc
 		/// <param name="pageIndex">The page, starting at 0.</param>
 		public string GetPageUrl(int pageIndex)
 		{
-			return PageNumber.Replace(this._pageUrl, String.Empty)
-				+ "/page/" + (pageIndex + 1).ToString(CultureInfo.InvariantCulture);
+			string url = PageNumber.Replace(this._pageUrl, String.Empty);
+			string number = (pageIndex + 1).ToString(CultureInfo.InvariantCulture);
+			if (this._mode == PagerUrlMode.PathInfo)
+			{
+				return url + "/page/" + number;
+			}
+			return url + (url.Contains('?') ? "&page=" : "?page=") + number;
 		}
 
 		/// <summary>

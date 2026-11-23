@@ -25,8 +25,8 @@ export async function createNode(page: Page, parentId: string, title: string): P
 }
 
 /**
- * Adds a section with the given module to a node. Settings are module settings by name: strings fill a text box,
- * booleans set a checkbox.
+ * Adds a section with the given module to a node. Settings are module settings by name: strings fill a text box or
+ * select an option of a list, booleans set a checkbox.
  */
 export async function createSection(page: Page, nodeId: string, title: string, moduleName: string,
   settings: Record<string, string | boolean> = {}) {
@@ -34,17 +34,54 @@ export async function createSection(page: Page, nodeId: string, title: string, m
   await page.locator('[id$="txtTitle"]').fill(title);
   await page.locator('[id$="ddlModule"]').selectOption({ label: moduleName });
   await page.waitForLoadState();
+  await fillSectionSettings(page, settings);
+  await page.locator('[id$="btnSave"]').click();
+  await expect(page, `section ${title} saved`).toHaveURL(new RegExp(`NodeEdit\\.aspx\\?NodeId=${nodeId}`, 'i'));
+}
+
+/** Changes module settings of a section (see createSection). */
+export async function updateSectionSettings(page: Page, nodeId: string, sectionId: string,
+  settings: Record<string, string | boolean>) {
+  await page.goto(`/Admin/SectionEdit.aspx?NodeId=${nodeId}&SectionId=${sectionId}`);
+  await fillSectionSettings(page, settings);
+  await page.locator('[id$="btnSave"]').first().click();
+  await expect(page.locator('[id$="MessageBox"]')).toContainText('Section saved.');
+}
+
+async function fillSectionSettings(page: Page, settings: Record<string, string | boolean>) {
   for (const [name, value] of Object.entries(settings)) {
     const control = page.locator(`[id$="${name}"]`);
-    await expect(control, `setting ${name} of ${moduleName}`).toBeVisible();
+    await expect(control, `setting ${name}`).toBeVisible();
     if (typeof value === 'boolean') {
       await control.setChecked(value);
+    } else if (await control.evaluate((element) => element.tagName === 'SELECT')) {
+      await control.selectOption(value);
     } else {
       await control.fill(value);
     }
   }
-  await page.locator('[id$="btnSave"]').click();
-  await expect(page, `section ${title} saved`).toHaveURL(new RegExp(`NodeEdit\\.aspx\\?NodeId=${nodeId}`, 'i'));
+}
+
+/** The id of the section with the given title on a node. */
+export async function sectionIdByTitle(page: Page, nodeId: string, title: string): Promise<string> {
+  await page.goto(`/Admin/NodeEdit.aspx?NodeId=${nodeId}`);
+  const href = await page.locator('tr', { hasText: title }).locator('a[href*="SectionEdit.aspx"]').first()
+    .getAttribute('href');
+  return /SectionId=(\d+)/i.exec(href!)![1];
+}
+
+/** Deletes the sections of a node and then the node itself. */
+export async function deleteNode(page: Page, nodeId: string) {
+  await page.goto(`/Admin/NodeEdit.aspx?NodeId=${nodeId}`);
+  const deleteLinks = page.locator('a[id$="lbtDelete"]');
+  for (let count = await deleteLinks.count(); count > 0; count--) {
+    page.once('dialog', (dialog) => dialog.accept());
+    await deleteLinks.first().click();
+    await expect(deleteLinks).toHaveCount(count - 1);
+  }
+  page.once('dialog', (dialog) => dialog.accept());
+  await page.locator('[id$="btnDelete"]').click();
+  await expect(page).not.toHaveURL(new RegExp(`NodeEdit\\.aspx\\?NodeId=${nodeId}$`, 'i'));
 }
 
 /** Collects uncaught JavaScript errors on a page so a test can assert there were none. */
@@ -166,7 +203,13 @@ export async function createArticle(page: Page, adminUrl: string, title: string,
   await expect(page).toHaveURL(/EditArticle\.aspx.*ArticleId=-1/i);
   await page.locator('[id$="txtTitle"]').fill(title);
   await page.locator('[id$="txtSummary"]').fill(summary);
-  // The content textarea is replaced by CKEditor; set the content through the editor when it's there.
+  // The content textarea is replaced by CKEditor; set the content through the editor when it's there (once it's
+  // ready: content set before that is lost).
+  await page.waitForFunction(() => {
+    const ck = (window as any).CKEDITOR;
+    const instances = ck ? Object.values(ck.instances) : [];
+    return !ck || (instances.length > 0 && instances.every((instance: any) => instance.status === 'ready'));
+  });
   await page.evaluate((html) => {
     const ck = (window as any).CKEDITOR;
     if (ck) for (const name in ck.instances) ck.instances[name].setData(html);

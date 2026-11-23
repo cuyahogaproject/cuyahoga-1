@@ -31,6 +31,9 @@ namespace Cuyahoga.Web.Core.PublicSite
 		private static readonly Regex Section = new Regex(@"/(\d+)\/section.aspx", Options);
 		private static readonly Regex Feed = new Regex(@"/(\d+)\/feed.aspx", Options);
 		private static readonly Regex ShortDescription = new Regex(@"/([\w|\/|-]+).aspx", Options);
+		// The handler of the XML sitemap (sitemap.* in any folder) comes before the mappings, so a page with the short
+		// description 'sitemap' never shows there.
+		private static readonly Regex SitemapHandler = new Regex(@"(^|/)sitemap\.[^/]*$", Options);
 
 		// The forms of these urls that the WebForms site rewrites correctly.
 		private static readonly Regex DefaultPageUrl = new Regex(@"^/Default\.aspx(?<pathInfo>[\w|/]*)$", Options);
@@ -50,6 +53,10 @@ namespace Cuyahoga.Web.Core.PublicSite
 				return FromQuery(query, null, null, null, String.Empty);
 			}
 
+			if (SitemapHandler.IsMatch(path))
+			{
+				return null;
+			}
 			string pathAndQuery = path + queryString;
 			Match match;
 			if (NotRewritten.IsMatch(pathAndQuery))
@@ -73,7 +80,7 @@ namespace Cuyahoga.Web.Core.PublicSite
 			}
 			if (Feed.IsMatch(pathAndQuery))
 			{
-				// RSS feeds (Rss.aspx).
+				// RSS feeds aren't pages (FeedController).
 				return null;
 			}
 			if (ShortDescription.IsMatch(pathAndQuery))

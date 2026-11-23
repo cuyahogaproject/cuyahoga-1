@@ -1,6 +1,7 @@
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service.SiteStructure;
 using Cuyahoga.Web.Mvc;
+using NHibernate;
 
 namespace Cuyahoga.Web.Core.PublicSite
 {
@@ -11,7 +12,9 @@ namespace Cuyahoga.Web.Core.PublicSite
 	{
 		SiteAlias GetSiteAliasByUrl(string url);
 		Site GetSiteBySiteUrl(string siteUrl);
+		/// <returns>The section, or null when it doesn't exist.</returns>
 		Section GetSectionById(int sectionId);
+		/// <returns>The node, or null when it doesn't exist.</returns>
 		Node GetNodeById(int nodeId);
 		Node GetNodeByShortDescriptionAndSite(string shortDescription, Site site);
 		Node GetRootNodeByCultureAndSite(string culture, Site site);
@@ -35,9 +38,25 @@ namespace Cuyahoga.Web.Core.PublicSite
 
 		public Site GetSiteBySiteUrl(string siteUrl) => this._siteService.GetSiteBySiteUrl(siteUrl);
 
-		public Section GetSectionById(int sectionId) => this._sectionService.GetSectionById(sectionId);
+		public Section GetSectionById(int sectionId) => LoadOrNull(this._sectionService.GetSectionById(sectionId));
 
-		public Node GetNodeById(int nodeId) => this._nodeService.GetNodeById(nodeId);
+		public Node GetNodeById(int nodeId) => LoadOrNull(this._nodeService.GetNodeById(nodeId));
+
+		/// <summary>
+		/// The services return a proxy that is loaded on first use: null when the id doesn't exist.
+		/// </summary>
+		private static T LoadOrNull<T>(T entity) where T : class
+		{
+			try
+			{
+				NHibernateUtil.Initialize(entity);
+				return entity;
+			}
+			catch (ObjectNotFoundException)
+			{
+				return null;
+			}
+		}
 
 		public Node GetNodeByShortDescriptionAndSite(string shortDescription, Site site) =>
 			this._nodeService.GetNodeByShortDescriptionAndSite(shortDescription, site);

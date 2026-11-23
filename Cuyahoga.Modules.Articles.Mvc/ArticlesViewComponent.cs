@@ -52,7 +52,7 @@ namespace Cuyahoga.Modules.Articles.Mvc
 			List<Article> articles = Module.GetArticleList().Cast<Article>()
 				.Where(article => article.Section.Id == Module.Section.Id)
 				.ToList();
-			var pager = new PathInfoPager(UriHelper.BuildRelative(Request.PathBase, Request.Path, Request.QueryString),
+			var pager = new UrlPager(UriHelper.BuildRelative(Request.PathBase, Request.Path, Request.QueryString),
 				SectionUrl, articles.Count, Module.NumberOfArticlesInList, hideWhenOnePage: true);
 			DisplayType displayType = GetDisplayType();
 			return new ArticleListModel

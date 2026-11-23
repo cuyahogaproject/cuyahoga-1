@@ -208,6 +208,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="HttpHandlers\CurrentUserHandler.cs" />
+    <Compile Include="HttpHandlers\UserLoginHandler.cs" />
     <Compile Include="HttpHandlers\TemplatePlaceholdersHandler.cs" />
     <Compile Include="HttpHandlers\PageHandler.cs" />
     <Compile Include="HttpModules\NHibernateSessionModule.cs" />

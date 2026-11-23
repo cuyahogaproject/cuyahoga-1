@@ -76,6 +76,20 @@ namespace Cuyahoga.Web.Mvc
 		public PageAssets Assets { get; } = new PageAssets();
 
 		public string Title => Site.Name + " - " + ActiveNode.Title;
+
+		/// <summary>
+		/// The url to go to instead of showing the page, or null.
+		/// </summary>
+		public string RedirectUrl { get; private set; }
+
+		/// <summary>
+		/// Goes to another url instead of showing the page (a module view that sends the visitor elsewhere, like
+		/// Response.Redirect in a WebForms module control). The first redirect wins.
+		/// </summary>
+		public void Redirect(string url)
+		{
+			RedirectUrl ??= url;
+		}
 	}
 
 	/// <summary>

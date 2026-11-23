@@ -135,6 +135,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
+// The RSS feeds of sections ({id}/feed.aspx).
+app.MapControllers();
 // Every other url can be a public page; the transformer decides (before the forwarder below gets the request).
 app.MapDynamicControllerRoute<PublicPageTransformer>("{**path}");
 

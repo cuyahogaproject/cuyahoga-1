@@ -1,0 +1,96 @@
+@using Cuyahoga.Modules.Mvc.User
+@model ProfileModel
+@* The markup of EditProfile.ascx; the validation messages look like the ones of the WebForms validators. Both buttons
+   are in one form: the password button has a name. *@
+<h3>@Model.Text("EDITPROFILETITLE")</h3>
+<br/>
+@if (!Model.Done)
+{
+<div>
+<form method="post" action="@Model.FormUrl">
+	@if (Model.UseAntiforgery)
+	{
+	@Html.AntiForgeryToken()
+	}
+	@Model.Text("EDITPROFILEINFO")
+	<br/>
+	@if (Model.Error != null) {<span class="error">@Model.Error</span>}
+	<br/>
+	<table class="tbl">
+		<tr>
+			<td style="WIDTH: 200px">@Model.Text("USERNAME")</td>
+			<td class="tblvalue">
+				<span>@Model.Profile.UserName</span></td>
+		</tr>
+		<tr>
+			<td>@Model.Text("FIRSTNAME")</td>
+			<td>
+				<input name="firstname" type="text" value="@Model.Form.FirstName" maxlength="100" style="width:200px;" /></td>
+		</tr>
+		<tr>
+			<td>@Model.Text("LASTNAME")</td>
+			<td>
+				<input name="lastname" type="text" value="@Model.Form.LastName" maxlength="100" style="width:200px;" /></td>
+		</tr>
+		<tr>
+			<td>@Model.Text("EMAIL")</td>
+			<td>
+				<input name="email" type="text" value="@Model.Form.Email" maxlength="100" style="width:200px;" />
+				@if (Model.EmailMissing) {<span class="error" style="color:Red;">@Model.Text("EMAILREQUIRED")</span>}
+				@if (Model.EmailInvalid) {<span class="error" style="color:Red;">@Model.Text("EMAILINVALID")</span>}</td>
+		</tr>
+		<tr>
+			<td>@Model.Text("WEBSITE")</td>
+			<td>
+				<input name="website" type="text" value="@Model.Form.Website" maxlength="100" style="width:200px;" /></td>
+		</tr>
+		<tr>
+			<td>@Model.Text("TIMEZONE")</td>
+			<td>
+				<select name="timezone">
+				@foreach (KeyValuePair<string, string> timeZone in Model.TimeZones)
+				{
+					<option value="@timeZone.Key" selected="@(timeZone.Key == Model.Form.TimeZone)">@timeZone.Value</option>
+				}
+				</select></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<input type="submit" value="@Model.Text("SAVEPROFILE")" />
+				</td>
+		</tr>
+	</table>
+	<br/>
+	<table class="tbl">
+		<tr>
+			<td>@Model.Text("CURRENTPASSWORD")</td>
+			<td>
+				<input name="currentpassword" type="password" maxlength="100" style="width:100px;" /></td>
+		</tr>
+		<tr>
+			<td style="WIDTH: 200px">@Model.Text("NEWPASSWORD")</td>
+			<td>
+				<input name="newpassword" type="password" maxlength="100" style="width:100px;" /></td>
+		</tr>
+		<tr>
+			<td>@Model.Text("NEWPASSWORDCONFIRMATION")</td>
+			<td>
+				<input name="newpasswordconfirmation" type="password" maxlength="100" style="width:100px;" /></td>
+		</tr>
+		<tr>
+			<td></td>
+			<td>
+				<input type="submit" name="savepassword" value="@Model.Text("SAVEPASSWORD")" />
+				</td>
+		</tr>
+	</table>
+</form>
+</div>
+}
+@if (Model.Confirmation != null)
+{
+<div>
+	<span>@Model.Confirmation</span>
+</div>
+}

@@ -25,6 +25,7 @@
     <ProjectReference Include="..\Modules.Mvc\Cuyahoga.Modules.Mvc.csproj" />
     <ProjectReference Include="..\Cuyahoga.Modules.Downloads.Mvc\Cuyahoga.Modules.Downloads.Mvc.csproj" />
     <ProjectReference Include="..\Cuyahoga.Modules.Articles.Mvc\Cuyahoga.Modules.Articles.Mvc.csproj" />
+    <ProjectReference Include="..\Cuyahoga.Modules.RemoteContent.Mvc\Cuyahoga.Modules.RemoteContent.Mvc.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Yarp.ReverseProxy" Version="2.3.0" />

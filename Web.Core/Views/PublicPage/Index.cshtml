@@ -5,4 +5,11 @@
 	// template writes the head of the page.
 	Layout = Model.LayoutPath;
 	await SectionRenderer.RenderAsync(Model, Component, Context.Request);
+	if (Model.Page.RedirectUrl != null)
+	{
+		// A module view sends the visitor elsewhere (nothing is written yet).
+		Layout = null;
+		Context.Response.Redirect(Model.Page.RedirectUrl);
+		return;
+	}
 }

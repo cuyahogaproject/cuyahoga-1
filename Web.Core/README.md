@@ -71,14 +71,26 @@ layout, so the head of the page has the stylesheets and scripts that modules reg
 - **Module views** derive from `ModuleViewComponent<TModule>` (`Cuyahoga.Web.Mvc`) and return their views by full path
   (`~/Modules/{Module}/...`). `GetText` reads the texts of the module from `{namespace}.Resources.Strings`. The views of
   the built-in modules are in `Cuyahoga.Modules.Mvc`, the ones of the other modules in their own project
-  (`Cuyahoga.Modules.Downloads.Mvc`, `Cuyahoga.Modules.Articles.Mvc`). Moved: StaticHtml, Downloads, Articles.
-  `PathInfoPager` pages a list like the Pager control of the WebForms site (`.../page/2`).
+  (`Cuyahoga.Modules.Downloads.Mvc`, `Cuyahoga.Modules.Articles.Mvc`, `Cuyahoga.Modules.RemoteContent.Mvc`). Moved:
+  all modules (StaticHtml, Sitemap, Search, SearchInput, LanguageSwitcher, User, UserProfile, Downloads, Articles,
+  RemoteContent). Their admin pages are still WebForms pages.
+  `UrlPager` pages a list like the Pager control of the WebForms site (`.../page/2` or `...?page=2`).
 - **Module controllers** derive from `ModuleController<TModule>` and are named after the module
   (`DownloadsController`). When the section in the url ({id}/section.aspx/...) has a module with a controller, its
   Index action gets the request and returns any result: a file download, a redirect after a posted form, or
   `PublicPageView()` for the page. The module of a section is one instance per request (`IPublicPageModules`),
   shared by the controller and the view. Forms of modules post to their section url, with their own `<form>` (the
   templates have no form around the page). `InvalidateCache()` clears the cached output of the section.
+- Forms that work on any page (a search box, the language list) use GET to a url instead of a postback: the search
+  boxes go to `{search section}/Search?q=...`, the language list to the current page with `?culture=...`. A module view
+  can send the visitor elsewhere with `PublicPage.Redirect(url)` (the page then answers with a redirect); views that do
+  that, or set cookies, have `[NoSectionCache]`.
+- **Login**: the login form of the User module posts to `UserLogin.axd` of the WebForms site (only that site can create
+  its Forms cookie), which logs in or out and goes back to the page (`?loginerror=...` when the login failed, so the
+  form is empty again: the WebForms site kept the username).
+- `sitemap.*` urls in any folder are the XML sitemap of the WebForms site (its handler comes before the page urls).
+- **RSS feeds** of sections with a syndicatable module (`{id}/feed.aspx`, with the path info of the module) come from
+  `FeedController`, the same XML as `Rss.aspx`, cached with the cache duration of the section.
 - The reasons why a public page url goes to the WebForms site are logged at the Debug level
   (`Logging__LogLevel__Cuyahoga.Web.Core.PublicSite=Debug`).
 - **Offline pages**: a page is offline when it or a page above it is offline (the home page: the whole site).
@@ -86,9 +98,12 @@ layout, so the head of the page has the stylesheets and scripts that modules reg
   the site has no offline template); administrators see the page as usual.
 - **Differences with the WebForms site**, besides 404/403 instead of the error page: an article opens only in its
   own section and only while online (or archived, when the section shows the archive), so a category lists the
-  articles of its section only; article titles and summaries are encoded (they are text, the content stays html).
+  articles of its section only; article titles and summaries are encoded (they are text, the content stays html),
+  like the titles, summaries and paths of search results; the RSS feed of a section is only for users who may view
+  the section (the WebForms site gave it to anyone).
 - The output cache of sections is in this process: changes on the WebForms site (module admin pages) don't clear it,
-  so cached sections show changes after their cache duration. Posted forms are never served from the cache.
+  so cached sections show changes after their cache duration. Posted forms and urls with a query string (a search)
+  are never served from the cache (the WebForms site served the results of the first search url for all queries).
 
 ## Login
 

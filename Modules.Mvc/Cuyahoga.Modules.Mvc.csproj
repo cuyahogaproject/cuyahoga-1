@@ -19,4 +19,10 @@
     <ProjectReference Include="..\Web.Mvc\Cuyahoga.Web.Mvc.csproj" />
     <ProjectReference Include="..\Modules\Cuyahoga.Modules.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <!-- The texts (and translations) of the WebForms controls, shared until those are gone. The link path gives them the
+    resource names of the namespaces of the view components ({namespace}.Resources.Strings). -->
+    <EmbeddedResource Include="..\Modules.Web\Search\Resources\Strings*.resx" Link="Search\Resources\%(Filename)%(Extension)" />
+    <EmbeddedResource Include="..\Modules.Web\User\Resources\Strings*.resx" Link="User\Resources\%(Filename)%(Extension)" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,31 @@
+@using Cuyahoga.Modules.Mvc.User
+@model ProfileModel
+@* The markup of Register.ascx; the validation messages look like the ones of the WebForms validators. *@
+<h3>@Model.Text("REGISTERTITLE")</h3>
+<br/>
+@if (Model.Error != null) {<span class="error">@Model.Error</span>}
+<br/>
+@if (!Model.Done)
+{
+<div>
+<form method="post" action="@Model.FormUrl">
+	@Model.Text("REGISTERINFO")<br/>
+	<table>
+		<tr>
+			<td>@Model.Text("USERNAME")</td>
+			<td><input name="username" type="text" value="@Model.Form.Username" maxlength="50" style="width:200px;" />@if (Model.UsernameMissing) {<span class="error" style="color:Red;">@Model.Text("USERNAMEREQUIRED")</span>}</td></tr>
+		<tr>
+			<td>@Model.Text("EMAIL")</td>
+			<td><input name="email" type="text" value="@Model.Form.Email" maxlength="100" style="width:200px;" />@if (Model.EmailMissing) {<span class="error" style="color:Red;">@Model.Text("EMAILREQUIRED")</span>}@if (Model.EmailInvalid) {<span class="error" style="color:Red;">@Model.Text("EMAILINVALID")</span>}</td></tr>
+		<tr>
+			<td></td>
+			<td><input type="submit" value="@Model.Text("REGISTER")" /></td></tr></table>
+</form>
+</div>
+}
+@if (Model.Confirmation != null)
+{
+<div>
+	<span>@Model.Confirmation</span>
+</div>
+}

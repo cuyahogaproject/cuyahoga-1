@@ -24,6 +24,14 @@ namespace Cuyahoga.Modules.User
 		private string _emailTemplateDir;
 
 		/// <summary>
+		/// What the url asks for (the first parameter of the path info): EditProfile when there is none.
+		/// </summary>
+		public ProfileModuleAction CurrentAction
+		{
+			get { return this._currentAction; }
+		}
+
+		/// <summary>
 		/// The ID of the current user (when the action is ViewProfile).
 		/// </summary>
 		public int CurrentUserId

@@ -1,5 +1,5 @@
 import { test, expect, type Page } from '@playwright/test';
-import { createNode, createSection, expectHealthyPage, homeNodeId } from './helpers';
+import { createNode, createSection, deleteNode, expectHealthyPage, homeNodeId } from './helpers';
 
 // The node pages of the site administration: node properties, status, external links, moving nodes and sections,
 // detaching sections, duplicating nodes, permissions and the custom menus of root nodes.
@@ -14,20 +14,6 @@ const permission = (page: Page, roleName: string, kind: 'View' | 'Edit') =>
 /** The row of a section in the sections table of NodeEdit.aspx. */
 const sectionRow = (page: Page, title: string) =>
   page.locator('tr', { has: page.locator('td', { hasText: new RegExp(`^${title}$`) }) });
-
-/** Deletes the sections of a node and then the node itself. */
-async function deleteNode(page: Page, nodeId: string) {
-  await page.goto(`/Admin/NodeEdit.aspx?NodeId=${nodeId}`);
-  const deleteLinks = page.locator('a[id$="lbtDelete"]');
-  for (let count = await deleteLinks.count(); count > 0; count--) {
-    page.once('dialog', (dialog) => dialog.accept());
-    await deleteLinks.first().click();
-    await expect(deleteLinks).toHaveCount(count - 1);
-  }
-  page.once('dialog', (dialog) => dialog.accept());
-  await page.locator('[id$="btnDelete"]').click();
-  await expect(page).not.toHaveURL(new RegExp(`NodeEdit\\.aspx\\?NodeId=${nodeId}$`, 'i'));
-}
 
 test('node properties, validation, add child and cancel', async ({ page }) => {
   const stamp = Date.now().toString(36);

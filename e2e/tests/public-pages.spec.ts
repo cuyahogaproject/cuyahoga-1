@@ -691,6 +691,38 @@ test.describe('the UserProfile module in the ASP.NET Core site', () => {
         await submit('Reset password', 'reset the password of an unknown user');
         await expect(page.getByText('No user found with the given username and email')).toBeVisible();
 
+        // When the e-mail with the new password can't be sent, the user keeps the old password.
+        const username = `e2e-reset-${stamp}`;
+        await adminPage.goto('/Admin/UserEdit.aspx?UserId=-1');
+        await adminPage.locator('[id$="txtUsername"]').fill(username);
+        await adminPage.locator('[id$="txtEmail"]').fill(`${username}@example.com`);
+        await adminPage.locator('[id$="chkActive"]').check();
+        await adminPage.locator('[id$="txtPassword1"]').fill(`pw-${stamp}`);
+        await adminPage.locator('[id$="txtPassword2"]').fill(`pw-${stamp}`);
+        await adminPage.locator('[id$="btnSave"]').click();
+        await expect(adminPage).toHaveURL(/UserEdit\.aspx\?UserId=\d+&message=/i);
+        const userId = /UserId=(\d+)/i.exec(adminPage.url())![1];
+        try {
+          await page.goto(`${sectionUrl}/ResetPassword`);
+          await page.locator('input[name="username"]').fill(username);
+          await page.locator('input[name="email"]').fill(`${username}@example.com`);
+          await page.getByRole('button', { name: 'Reset password' }).click();
+          await expect(page.getByText(/^Resetting of your password failed/)).toBeVisible();
+          const user = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+          const userPage = await user.newPage();
+          await userPage.goto('/home.aspx');
+          await userPage.locator('input[name="username"]').fill(username);
+          await userPage.locator('input[name="password"]').fill(`pw-${stamp}`);
+          await userPage.getByRole('button', { name: 'Login' }).click();
+          await expect(userPage.getByText(`Logged in as ${username}`)).toBeVisible();
+          await user.close();
+        } finally {
+          await adminPage.goto(`/Admin/UserEdit.aspx?UserId=${userId}`);
+          adminPage.once('dialog', (dialog) => dialog.accept());
+          await adminPage.locator('[id$="btnDelete"]').click();
+          await expect(adminPage).toHaveURL(/\/Admin\/Users\.aspx/i);
+        }
+
         // The profile of the administrator.
         await expectSameAsWebForms(adminPage, legacyAdminPage, '/userprofile.aspx', testInfo);
         await adminPage.locator('input[name="email"]').fill('');

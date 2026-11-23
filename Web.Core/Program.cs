@@ -94,6 +94,8 @@ builder.Services.AddSingleton<TemplateLayouts>();
 builder.Services.AddScoped<IPageLookup, ServicePageLookup>();
 builder.Services.AddScoped<PageResolver>();
 builder.Services.AddScoped<SectionRenderer>();
+builder.Services.AddSingleton<SectionOutputCache>();
+builder.Services.AddSingleton<ISectionOutputCache>(services => services.GetRequiredService<SectionOutputCache>());
 builder.Services.AddScoped<PublicPageTransformer>();
 
 builder.Services.AddHttpForwarder();

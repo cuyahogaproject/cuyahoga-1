@@ -52,7 +52,8 @@ MVC: `PublicPageTransformer` (a dynamic route for every url) decides per request
 
 - the url is a public page (`PublicUrlParser`: `{shortdescription}.aspx`, `{id}/view.aspx`, `{id}/section.aspx/...`,
   `Default.aspx?NodeId=...`, the same forms that the WebForms site rewrites),
-- a GET request (postbacks of WebForms pages go to the WebForms site),
+- a GET request, or a POST to a section url whose module controller has an [HttpPost] Index action (other posts,
+  such as postbacks of WebForms pages, go to the WebForms site),
 - the database is installed, and the page exists and the user may view it (`PageResolver`),
 - the template of the page has a Razor layout here, and every section on it has a module view here.
 
@@ -70,18 +71,24 @@ layout, so the head of the page has the stylesheets and scripts that modules reg
 - **Module views** derive from `ModuleViewComponent<TModule>` (`Cuyahoga.Web.Mvc`) and return their views by full path
   (`~/Modules/{Module}/...`). `GetText` reads the texts of the module from `{namespace}.Resources.Strings`. The views of
   the built-in modules are in `Cuyahoga.Modules.Mvc`, the ones of the other modules in their own project
-  (`Cuyahoga.Modules.Downloads.Mvc`). Moved: StaticHtml, Downloads.
+  (`Cuyahoga.Modules.Downloads.Mvc`, `Cuyahoga.Modules.Articles.Mvc`). Moved: StaticHtml, Downloads, Articles.
+  `PathInfoPager` pages a list like the Pager control of the WebForms site (`.../page/2`).
 - **Module controllers** derive from `ModuleController<TModule>` and are named after the module
   (`DownloadsController`). When the section in the url ({id}/section.aspx/...) has a module with a controller, its
-  Index action gets the request and returns any result: a file download, or `PublicPageView()` for the page. The
-  module of a section is one instance per request (`IPublicPageModules`), shared by the controller and the view.
+  Index action gets the request and returns any result: a file download, a redirect after a posted form, or
+  `PublicPageView()` for the page. The module of a section is one instance per request (`IPublicPageModules`),
+  shared by the controller and the view. Forms of modules post to their section url, with their own `<form>` (the
+  templates have no form around the page). `InvalidateCache()` clears the cached output of the section.
 - The reasons why a public page url goes to the WebForms site are logged at the Debug level
   (`Logging__LogLevel__Cuyahoga.Web.Core.PublicSite=Debug`).
 - **Offline pages**: a page is offline when it or a page above it is offline (the home page: the whole site).
   Visitors get the offline template of the site without sections (or the template of the page without sections when
   the site has no offline template); administrators see the page as usual.
+- **Differences with the WebForms site**, besides 404/403 instead of the error page: an article opens only in its
+  own section and only while online (or archived, when the section shows the archive), so a category lists the
+  articles of its section only; article titles and summaries are encoded (they are text, the content stays html).
 - The output cache of sections is in this process: changes on the WebForms site (module admin pages) don't clear it,
-  so cached sections show changes after their cache duration.
+  so cached sections show changes after their cache duration. Posted forms are never served from the cache.
 
 ## Login
 

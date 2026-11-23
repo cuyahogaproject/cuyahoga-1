@@ -1,0 +1,25 @@
+@model ArticleInfo
+@* The line under an article. The author is a link also without a profile url, like on the WebForms site. *@
+<div class="articlesub">
+	@if (Model.DateOnline != null)
+	{
+		<span>@Model.DateOnline</span>
+	}
+	@if (Model.PublishedByText != null)
+	{
+		@Model.PublishedByText
+		<a href="@Model.AuthorUrl">@Model.AuthorName</a>
+	}
+	@if (Model.CategoryText != null)
+	{
+		@Model.CategoryText
+		@if (Model.CategoryTitle != null)
+		{
+			<a href="@Model.CategoryUrl">@Model.CategoryTitle</a>
+		}
+	}
+	@if (Model.CommentsText != null)
+	{
+		<a href="@Model.CommentsUrl">@Model.CommentsText</a>
+	}
+</div>

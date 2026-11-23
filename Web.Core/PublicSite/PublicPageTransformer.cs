@@ -39,8 +39,9 @@ namespace Cuyahoga.Web.Core.PublicSite
 		public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
 		{
 			HttpRequest request = httpContext.Request;
-			// Postbacks go to the WebForms site.
-			if (!HttpMethods.IsGet(request.Method) && !HttpMethods.IsHead(request.Method))
+			// Other requests than GET, HEAD and POST go to the WebForms site.
+			bool isPost = HttpMethods.IsPost(request.Method);
+			if (!HttpMethods.IsGet(request.Method) && !HttpMethods.IsHead(request.Method) && !isPost)
 			{
 				return null;
 			}
@@ -68,11 +69,19 @@ namespace Cuyahoga.Web.Core.PublicSite
 				return null;
 			}
 
-			httpContext.SetPublicPage(resolution.Page);
-			// The module of the section in the url handles the request when it has a controller (a file download).
+			// The module of the section in the url handles the request when it has a controller for it (a file
+			// download, a posted form).
 			string controller = resolution.Page.ActiveSection != null
-				? this._moduleControllers.GetControllerName(resolution.Page.ActiveSection.ModuleType)
+				? this._moduleControllers.GetControllerName(resolution.Page.ActiveSection.ModuleType, request.Method)
 				: null;
+			if (isPost && controller == null)
+			{
+				// A postback of a WebForms page.
+				this._logger.LogDebug("{Url} goes to the WebForms site: no module controller for the post.", request.Path);
+				return null;
+			}
+
+			httpContext.SetPublicPage(resolution.Page);
 			return new RouteValueDictionary { ["controller"] = controller ?? "PublicPage", ["action"] = "Index" };
 		}
 

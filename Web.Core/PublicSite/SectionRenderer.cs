@@ -4,7 +4,6 @@ using Cuyahoga.Core.Domain;
 using Cuyahoga.Web.Mvc;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Cuyahoga.Web.Core.PublicSite
 {
@@ -17,10 +16,10 @@ namespace Cuyahoga.Web.Core.PublicSite
 	{
 		private readonly IPublicPageModules _modules;
 		private readonly ModuleViewRegistry _moduleViews;
-		private readonly IMemoryCache _cache;
+		private readonly SectionOutputCache _cache;
 		private readonly HtmlEncoder _htmlEncoder;
 
-		public SectionRenderer(IPublicPageModules modules, ModuleViewRegistry moduleViews, IMemoryCache cache,
+		public SectionRenderer(IPublicPageModules modules, ModuleViewRegistry moduleViews, SectionOutputCache cache,
 			HtmlEncoder htmlEncoder)
 		{
 			this._modules = modules;
@@ -62,7 +61,7 @@ namespace Cuyahoga.Web.Core.PublicSite
 			IViewComponentHelper viewComponentHelper, HttpRequest request)
 		{
 			var context = new ModuleViewContext(module, page);
-			string content = await GetContentAsync(page, section, module, context, viewComponentHelper);
+			string content = await GetContentAsync(page, section, module, context, viewComponentHelper, request);
 
 			string applicationPath = PublicUrls.GetApplicationPath(request);
 			var html = new HtmlContentBuilder();
@@ -95,14 +94,16 @@ namespace Cuyahoga.Web.Core.PublicSite
 		}
 
 		/// <summary>
-		/// The content of the module view. It's cached for anonymous users when the section has a cache duration.
+		/// The content of the module view. It's cached for anonymous users when the section has a cache duration, but
+		/// not when a form was posted (the view can show what the user entered).
 		/// </summary>
 		private async Task<string> GetContentAsync(PublicPage page, Section section, ModuleBase module,
-			ModuleViewContext context, IViewComponentHelper viewComponentHelper)
+			ModuleViewContext context, IViewComponentHelper viewComponentHelper, HttpRequest request)
 		{
-			bool useCache = section.CacheDuration > 0 && module.CacheKey != null && page.User == null;
-			string cacheKey = "Cuyahoga.Section." + module.CacheKey;
-			if (useCache && this._cache.TryGetValue(cacheKey, out CachedSection cached))
+			bool useCache = section.CacheDuration > 0 && module.CacheKey != null && page.User == null
+				&& (HttpMethods.IsGet(request.Method) || HttpMethods.IsHead(request.Method));
+			CachedSection cached = useCache ? this._cache.Get(module) : null;
+			if (cached != null)
 			{
 				module.DisplayTitle = cached.DisplayTitle;
 				context.DisplaySyndicationIcon = cached.DisplaySyndicationIcon;
@@ -125,10 +126,10 @@ namespace Cuyahoga.Web.Core.PublicSite
 			string html = writer.ToString();
 			if (useCache)
 			{
-				this._cache.Set(cacheKey,
+				this._cache.Set(module,
 					new CachedSection(html, module.DisplayTitle, context.DisplaySyndicationIcon, context.Stylesheets.ToList(),
 						context.JavaScripts.ToList()),
-					DateTimeOffset.Now.AddSeconds(section.CacheDuration));
+					section.CacheDuration);
 			}
 			return html;
 		}
@@ -203,8 +204,5 @@ namespace Cuyahoga.Web.Core.PublicSite
 			}
 			html.AppendHtml(">").Append(node.Title).AppendHtml("</a>");
 		}
-
-		private record CachedSection(string Html, string DisplayTitle, bool DisplaySyndicationIcon,
-			IReadOnlyList<KeyValuePair<string, string>> Stylesheets, IReadOnlyList<KeyValuePair<string, string>> JavaScripts);
 	}
 }

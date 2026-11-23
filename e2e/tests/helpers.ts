@@ -154,3 +154,42 @@ export async function deleteDownload(page: Page, adminUrl: string, fileId: strin
   await page.locator('[id$="btnDelete"]').click();
   await expect(page).toHaveURL(/EditDownloads\.aspx/i);
 }
+
+/**
+ * Creates an article with the admin pages of an Articles section (AdminArticles.aspx url) and returns its id. A
+ * category that doesn't exist yet is created.
+ */
+export async function createArticle(page: Page, adminUrl: string, title: string, summary: string, content: string,
+  category?: string, expired = false): Promise<string> {
+  await page.goto(adminUrl);
+  await page.locator('[id$="btnNew"]').click();
+  await expect(page).toHaveURL(/EditArticle\.aspx.*ArticleId=-1/i);
+  await page.locator('[id$="txtTitle"]').fill(title);
+  await page.locator('[id$="txtSummary"]').fill(summary);
+  // The content textarea is replaced by CKEditor; set the content through the editor when it's there.
+  await page.evaluate((html) => {
+    const ck = (window as any).CKEDITOR;
+    if (ck) for (const name in ck.instances) ck.instances[name].setData(html);
+    else (document.querySelector('[id$="txtContent"]') as HTMLTextAreaElement).value = html;
+  }, content);
+  if (category) {
+    await page.locator('[id$="txtCategory"]').fill(category);
+  }
+  if (expired) {
+    // Online and offline in the past (ISO dates parse in every culture).
+    await page.locator('[id$="calDateOnline_dateTextBox"]').fill('2000-01-01');
+    await page.locator('[id$="calDateOffline_dateTextBox"]').fill('2001-01-01');
+  }
+  await page.locator('[id$="btnSave"]').click();
+  await expect(page).toHaveURL(/AdminArticles\.aspx/i);
+  const editHref = await page.locator('tr', { hasText: title.split('<')[0] }).locator('a', { hasText: 'Edit' }).getAttribute('href');
+  return /ArticleId=(\d+)/i.exec(editHref!)![1];
+}
+
+/** Deletes an article (and its comments) with the admin pages of an Articles section (AdminArticles.aspx url). */
+export async function deleteArticle(page: Page, adminUrl: string, articleId: string) {
+  await page.goto(adminUrl.replace(/AdminArticles\.aspx/i, 'EditArticle.aspx') + `&ArticleId=${articleId}`);
+  page.once('dialog', (dialog) => dialog.accept());
+  await page.locator('[id$="btnDelete"]').click();
+  await expect(page).toHaveURL(/AdminArticles\.aspx/i);
+}

@@ -1,0 +1,82 @@
+@model ArticleDetailsModel
+@* The markup of ArticleDetails.ascx; the validation messages look like the ones of the WebForms validators. *@
+<div>
+	<div class="articlecontent">
+		<h4>@Model.Title</h4>
+		<p>@Html.Raw(Model.Content)</p>
+		@if (Model.Info != null)
+		{
+			<partial name="~/Modules/Articles/_ArticleInfo.cshtml" model="Model.Info" />
+		}
+		<br />
+		@if (Model.Comments != null)
+		{
+			<div>
+				<h5 id="comments">@Model.CommentsText</h5>
+				<ul class="articlecomments">
+					@foreach (ArticleDetailsModel.CommentItem comment in Model.Comments)
+					{
+						<li>
+							<p>@Html.Raw(comment.TextHtml)</p>
+							<div class="articlesub">
+								@Model.ByText
+								@if (comment.IsLink)
+								{
+									<a href="@comment.Url" target="@(comment.OpensInNewWindow ? "_blank" : null)">@comment.Name</a>
+								}
+								else
+								{
+									@comment.Name
+								}
+								-
+								@comment.UpdateTimestamp
+							</div>
+						</li>
+					}
+				</ul>
+			</div>
+		}
+		@if (Model.ShowCommentForm)
+		{
+			<form method="post" action="@Model.PostUrl">
+				@if (Model.UseAntiforgery)
+				{
+					@Html.AntiForgeryToken()
+				}
+				<div>
+					@if (Model.ShowAnonymousFields)
+					{
+						<div>
+							@Model.NameText
+							<br />
+							<input name="name" type="text" maxlength="100" value="@Model.Form.Name" style="width:500px;" />
+							@if (Model.NameMissing)
+							{
+								<span class="articleerror" style="color:Red;">@Model.NameRequiredText</span>
+							}
+							<br />
+							@Model.WebsiteText
+							<br />
+							<input name="website" type="text" maxlength="100" value="@Model.Form.Website" style="width:500px;" />
+						</div>
+					}
+					@Model.CommentText
+					<br />
+					<textarea name="comment" rows="2" cols="20" style="height:150px;width:500px;">@Model.Form.Comment</textarea>
+					@if (Model.CommentMissing)
+					{
+						<span class="articleerror" style="color:Red;">@Model.CommentRequiredText</span>
+					}
+					@if (Model.Error != null)
+					{
+						<span class="articleerror">@Model.Error</span>
+					}
+					<br />
+					<input type="submit" value="@Model.SaveCommentText" />
+				</div>
+			</form>
+		}
+		<br />
+		<a href="@Model.BackUrl">@Model.BackText</a>
+	</div>
+</div>

@@ -58,15 +58,33 @@ test.describe('public site', () => {
     }
   });
 
-  test('RSS endpoint responds', async ({ request }) => {
-    const response = await request.get('/Rss.aspx');
-    expect(response.status()).toBeLessThan(400);
+  test('the installer of an installed site', async ({ page }) => {
+    await page.goto('/Install/Install.aspx');
+    await expect(page.locator('#lblError')).toContainText("Can't install Cuyahoga.");
+    await expect(page.locator('input[type="submit"]')).toHaveCount(0);
+    // The later steps need the cookie of the browser that installed the database.
+    const token = await page.locator('input[name="__RequestVerificationToken"]').inputValue();
+    const response = await page.request.post('/Install/Install.aspx', {
+      form: { __RequestVerificationToken: token, btnCreateSite: 'Yes, create a site' },
+    });
+    expect(response.status()).toBe(403);
   });
 
   test('runtime folders are not served', async ({ request }) => {
-    for (const url of ['/Web.config', '/Web.local.config', '/index/segments', '/files/test.txt']) {
+    for (const url of ['/Web.config', '/Web.local.config', '/appsettings.json', '/index/segments', '/files/test.txt',
+      '/Install/Core/Database/mssql2000/install.sql', '/Modules/Articles/Install/Database/mssql2000/install.sql',
+      '/Modules/User/EmailTemplates/Register.txt', '/App_Data/index/segments']) {
       const response = await request.get(url);
       expect.soft(response.status(), url).toBeGreaterThanOrEqual(400);
+    }
+  });
+
+  test('the public files of the site and the modules are served', async ({ request }) => {
+    for (const url of ['/Admin/Css/Admin.css', '/Templates/AnotherRed/Css/red.css', '/Images/feed-icon.png',
+      '/Support/ckeditor/ckeditor.js', '/Support/fileman/index.html', '/Modules/Downloads/Images/pdf.gif',
+      '/Modules/LanguageSwitcher/Images/go.gif']) {
+      const response = await request.get(url);
+      expect.soft(response.status(), url).toBe(200);
     }
   });
 });

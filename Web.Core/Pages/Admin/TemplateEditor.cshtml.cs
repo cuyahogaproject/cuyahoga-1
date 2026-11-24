@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Cuyahoga.Web.Core.Pages.Admin
 {
 	/// <summary>
-	/// Edit a template stylesheet (.css) in the template folder of the WebForms site
+	/// Edit a template stylesheet (.css) in the template folder (wwwroot/Templates)
 	/// (TemplateEditor.aspx?file=Templates/AnotherRed/css/red.css). The templates themselves are Razor layouts of the
 	/// ASP.NET Core site (Templates/*.cshtml), part of the code of the site, so they can't be edited here.
 	/// </summary>

@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <!--
-  The Downloads module without its WebForms pages (those are in Cuyahoga.Modules.Downloads.Web): the module class, the
-  domain and the NHibernate mappings. netstandard2.0, so the WebForms site and the ASP.NET Core site (Web.Core) both
-  load it.
+  The Downloads module: the module class, the domain, the NHibernate mappings and the file type icons.
+  netstandard2.0, so the WebForms site and the ASP.NET Core site (Web.Core) both load it. Its views and admin pages
+  are in Cuyahoga.Modules.Downloads.Mvc.
   -->
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -13,6 +13,7 @@
   <ItemGroup>
     <EmbeddedResource Include="**\*.hbm.xml" />
     <CuyahogaModuleFile Include="Install\Database\**\*.sql" DeployTo="Modules\Downloads\Install\Database\" />
+    <CuyahogaModuleFile Include="Images\*.gif" DeployTo="Modules\Downloads\Images\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\Cuyahoga.Core.csproj" />

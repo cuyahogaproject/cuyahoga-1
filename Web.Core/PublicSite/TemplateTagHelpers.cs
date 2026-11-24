@@ -27,6 +27,14 @@ namespace Cuyahoga.Web.Core.PublicSite
 		{
 			output.TagName = null;
 			var model = ViewContext.ViewData.Model as PublicPageModel;
+			model?.AddRenderedPlaceholder(Id);
+			if (model?.PlaceholderPickerControl != null)
+			{
+				// The preview of the template: a button that picks the placeholder (TemplatePreview.aspx).
+				string onclick = $"window.opener.setPlaceholderValue('{JavaScriptEncoder.Default.Encode(model.PlaceholderPickerControl)}','{JavaScriptEncoder.Default.Encode(Id)}');self.close()";
+				output.Content.SetHtmlContent($"<input type=\"button\" value=\"{HtmlEncoder.Default.Encode(Id)}\" onclick=\"{HtmlEncoder.Default.Encode(onclick)}\" />");
+				return;
+			}
 			IHtmlContent content = model?.GetPlaceholderContent(Id);
 			if (content != null)
 			{

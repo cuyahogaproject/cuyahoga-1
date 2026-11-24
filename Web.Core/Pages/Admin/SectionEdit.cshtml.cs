@@ -190,6 +190,12 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 				try
 				{
 					Placeholders = await this._placeholderProvider.GetPlaceholdersAsync(NodeTemplate.Id);
+					// A new section goes into the main content of the template (the placeholders are in the order of
+					// the template, which often starts with the header).
+					if (String.IsNullOrEmpty(Placeholder))
+					{
+						Placeholder = Placeholders.Contains("maincontent") ? "maincontent" : Placeholders.FirstOrDefault();
+					}
 				}
 				catch (Exception ex)
 				{

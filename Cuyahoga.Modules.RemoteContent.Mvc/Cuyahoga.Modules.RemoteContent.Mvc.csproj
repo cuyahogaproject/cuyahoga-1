@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <!--
+  The RemoteContent module on the public pages of the ASP.NET Core site (Web.Core): the items of the RSS feeds of a
+  section (view component) and the admin pages (Pages/Modules/RemoteContent).
+  -->
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Cuyahoga.Modules.RemoteContent.Mvc</RootNamespace>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+  <ItemGroup>
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Web.Mvc\Cuyahoga.Web.Mvc.csproj" />
+    <ProjectReference Include="..\Cuyahoga.Modules.RemoteContent\Cuyahoga.Modules.RemoteContent.csproj" />
+  </ItemGroup>
+</Project>

@@ -32,14 +32,15 @@ async function searchSectionId(page: Page): Promise<string> {
 
 async function search(page: Page, searchPageUrl: string, text: string) {
   await page.goto(searchPageUrl);
-  await page.locator('[id$="txtSearchText"]').fill(text);
-  await page.locator('[id$="btnSearch"]').click();
-  await page.waitForLoadState();
+  // The search box of the Search page (the ASP.NET Core site sends the query in the url).
+  await page.locator('input[name="q"]').fill(text);
+  await page.getByRole('button', { name: 'Search' }).click();
+  await expect(page).toHaveURL(/\/Search\?q=/);
   await expect(page.locator('body'), 'no search error').not.toContainText('Error while performing full-text search');
 }
 
 test('search finds new articles, also after rebuilding the index', async ({ page, baseURL }) => {
-  const searchPageUrl = await findPage(page.request, baseURL!, /id="[^"]*txtSearchText"/);
+  const searchPageUrl = await findPage(page.request, baseURL!, /<input name="q"/);
   const articlesAdminPage = await findPage(page.request, baseURL!, /Modules\/Articles\/AdminArticles\.aspx/i);
   expect(searchPageUrl, 'the site has a search page').toBeTruthy();
   expect(articlesAdminPage, 'the site has an Articles section').toBeTruthy();
@@ -70,7 +71,7 @@ test('search finds new articles, also after rebuilding the index', async ({ page
     // A search box connected to the search section sends the query in the url (/{sectionId}/section.aspx/Search?q=).
     const sectionId = await searchSectionId(page);
     await page.goto(`/${sectionId}/section.aspx/Search?q=${encodeURIComponent(word)}`);
-    await expect(page.locator('[id$="txtSearchText"]')).toHaveValue(word);
+    await expect(page.locator('input[name="q"]')).toHaveValue(word);
     await expect(page.locator('a', { hasText: title }), 'found through the search url').toHaveCount(1);
 
     // Rebuild the index from the site administration.

@@ -1,0 +1,39 @@
+@model ArticleListModel
+<div>
+	<ul class="articlelist">
+		@foreach (ArticleListModel.Item article in Model.Articles)
+		{
+			<li>
+				<h4>
+					<a href="@article.Url">
+						@article.Title
+					</a></h4>
+				@if (Model.ShowSummary)
+				{
+					<div>
+						<p>@article.Summary</p>
+						<a href="@article.Url">@Model.ReadMoreText</a>
+					</div>
+				}
+				@if (Model.ShowContent)
+				{
+					<div>
+						@Html.Raw(article.Content)
+					</div>
+				}
+				@if (article.Info != null)
+				{
+					<partial name="~/Modules/Articles/_ArticleInfo.cshtml" model="article.Info" />
+				}
+			</li>
+		}
+	</ul>
+	<div class="pager">
+		@* No whitespace between the links, like the Pager control of the WebForms site. *@
+		<span>@foreach (PagerLink link in Model.PagerLinks) { if (link.Url != null) {<a href="@link.Url">@link.Text</a>} else {<span style="font-weight:bold;">@link.Text</span>} }</span>
+	</div>
+	@if (Model.ArchiveLinkUrl != null)
+	{
+		<a href="@Model.ArchiveLinkUrl">@Model.ArchiveLinkText</a>
+	}
+</div>

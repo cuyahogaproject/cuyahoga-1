@@ -1,0 +1,106 @@
+@page "/Install/Install.aspx"
+@model Cuyahoga.Web.Core.Pages.Install.InstallModel
+@{
+	Layout = null;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Install</title>
+		<link rel="stylesheet" href="../Admin/Css/Admin.css" type="text/css" />
+	</head>
+	<body>
+		<form id="Form1" method="post">
+			<div id="moduleadminpane">
+				<h1>Cuyahoga Installation</h1>
+				@if (Model.Error != null)
+				{
+				<div id="pnlErrors" class="errorbox">
+					<span id="lblError" style="white-space:pre-wrap;">@Model.Error</span>
+				</div>
+				}
+				@if (Model.Message != null)
+				{
+				<div id="pnlMessage" class="messagebox">
+					<span id="lblMessage">@Model.Message</span>
+				</div>
+				}
+				@switch (Model.Step)
+				{
+					case Cuyahoga.Web.Core.Pages.Install.InstallStep.Database:
+				<div id="pnlIntro" class="group">
+					<h4>Create Database</h4>The installer will first install the database. After
+					that you have to set the password for the default administrator. <br/><br/>The
+					database for the following components wil be installed: <br/>
+					<span id="lblCoreAssembly" style="font-weight:bold;">@Model.CoreAssembly</span><br/>
+					<span id="lblModulesAssembly" style="font-weight:bold;">@Model.ModulesAssembly</span><br/><br/>
+					<input type="submit" name="btnInstallDatabase" value="Install database" id="btnInstallDatabase" />
+				</div>
+						break;
+					case Cuyahoga.Web.Core.Pages.Install.InstallStep.Modules:
+				<div id="pnlModules" class="group">
+					<h4>Optional modules</h4>
+					Choose the optional modules to install:
+					<table class="tbl">
+						@for (int i = 0; i < Model.OptionalModules.Count; i++)
+						{
+							<tr>
+								<td>
+									<input id="rptModules_ctl@(i.ToString("00"))_chkInstall" type="checkbox" name="modules" value="@Model.OptionalModules[i]" checked="checked" />
+								</td>
+								<td>
+									@Model.OptionalModules[i]
+								</td>
+							</tr>
+						}
+					</table>
+					<input type="submit" name="btnInstallModules" value="Install selected modules" id="btnInstallModules" />
+					<input type="submit" name="btnSkipInstallModules" value="Skip installing optional modules" id="btnSkipInstallModules" />
+				</div>
+						break;
+					case Cuyahoga.Web.Core.Pages.Install.InstallStep.Administrator:
+				<div id="pnlAdmin" class="group">
+					<h4>Set administrator password</h4>The default administrator has the username
+					'admin'. Please enter a password for the administrator.
+					<table class="tbl">
+						<tr>
+							<td style="width:100px">Username</td>
+							<td>admin</td>
+						</tr>
+						<tr>
+							<td>Password</td>
+							<td>
+								<input name="password" type="password" id="txtPassword" style="width:100px;" />
+								@if (Model.PasswordMissing) {<span id="rfvPassword" class="validator" style="color:Red;">The password is required</span>}</td>
+						</tr>
+						<tr>
+							<td>Confirm password</td>
+							<td>
+								<input name="confirmPassword" type="password" id="txtConfirmPassword" style="width:100px;" />
+								@if (Model.ConfirmPasswordMissing) {<span id="rfvConfirmPassword" class="validator" style="color:Red;">The password is required</span>}
+								@if (Model.PasswordsDiffer) {<span id="cpvPassword" style="color:Red;">The passwords must be the same</span>}</td>
+						</tr>
+					</table><br/>
+					<input type="submit" name="btnAdmin" value="Create administrator account" id="btnAdmin" />
+				</div>
+						break;
+					case Cuyahoga.Web.Core.Pages.Install.InstallStep.Site:
+				<div id="pnlCreateSite" class="group">
+					<h4>Create site</h4>Do you want Cuyahoga to create a basic site for you?
+					<br/><br/>
+					<input type="submit" name="btnCreateSite" value="Yes, create a site" id="btnCreateSite" />
+					<input type="submit" name="btnSkipCreateSite" value="No, skip this step" id="btnSkipCreateSite" />
+				</div>
+						break;
+					case Cuyahoga.Web.Core.Pages.Install.InstallStep.Finished:
+				<div id="pnlFinished" class="group">
+					<h4>Finished</h4>The Cuyahoga is successfully installed! <br/><br/>
+					<a id="hplContinue" href="@Url.Content("~/Admin")">Log in
+					to the site administration with the account you just created to create a site and continue.</a>
+				</div>
+						break;
+				}
+			</div>
+		</form>
+	</body>
+</html>

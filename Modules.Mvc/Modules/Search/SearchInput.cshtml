@@ -1,0 +1,15 @@
+@using Cuyahoga.Modules.Mvc.Search
+@model SearchInputModel
+@* The markup of SearchInput.ascx, in a form of its own when the box is connected to a search section. *@
+@if (Model.FormUrl != null)
+{
+	<form method="get" action="@Model.FormUrl">
+	<input name="q" type="text" style="width:110px;" />
+	<input type="submit" value="@Model.SearchButtonText" />
+	</form>
+}
+else
+{
+	<input name="q" type="text" style="width:110px;" />
+	<input type="button" value="@Model.SearchButtonText" />
+}

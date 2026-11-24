@@ -1,0 +1,62 @@
+@using Cuyahoga.Modules.Mvc.Search
+@model SearchModel
+@* The markup of Search.ascx. The search box is a form of its own (the templates have no form around the page). *@
+@if (Model.ShowInputPanel)
+{
+	<form method="get" action="@Model.FormUrl">
+	<div>
+	<input name="q" type="text" value="@Model.Query" style="width:200px;" />
+	<input type="submit" value="@Model.SearchButtonText" />
+	<br/>
+	<br/>
+	</div>
+	</form>
+}
+@if (Model.Results != null)
+{
+	SearchResultsModel results = Model.Results;
+	<div>
+	@results.DisplayingResultsText
+	<span style="font-weight:bold;">@results.From</span> - <span style="font-weight:bold;">@results.To</span>
+	@results.OfText
+	<span style="font-weight:bold;">@results.Total</span>
+	@results.ForText
+	<span style="font-weight:bold;">@Model.Query</span>
+	(<span class="searchduration">@results.Duration</span>
+	@results.SecondsText)
+<ul class="searchresults">
+	@foreach (SearchResultsModel.Item item in results.Items)
+	{
+			<li>
+				<h4>
+					<a href="@item.Path">
+						@item.Title
+					</a></h4>
+				<div>
+					@item.Summary
+				</div>
+				<div class="sub">
+					@item.Path
+					-
+					@item.DateCreated
+				</div>
+			</li>
+	}
+	</ul>
+<div class="pager">
+		@* No whitespace between the links, like the Pager control of the WebForms site. *@
+		<span>@foreach (PagerLink link in results.PagerLinks) { if (link.Url != null) {<a href="@link.Url">@link.Text</a>} else {<span style="font-weight:bold;">@link.Text</span>} }</span></div>
+	</div>
+}
+@if (Model.NotFoundText != null)
+{
+	<div>
+	@Model.NotFoundText
+	</div>
+}
+@if (Model.InvalidQueryText != null)
+{
+	<div>
+	@Model.InvalidQueryText
+	</div>
+}

@@ -111,8 +111,8 @@ test('create, edit and delete a template, attach a section to a placeholder', as
 });
 
 test('edit a template file', async ({ page }) => {
-  // A real file of the WebForms site: put it back afterwards.
-  const cssFile = path.resolve(__dirname, '..', '..', 'Web', 'Templates', 'AnotherRed', 'Css', 'red.css');
+  // A real file of the site: put it back afterwards.
+  const cssFile = path.resolve(__dirname, '..', '..', 'Web.Core', 'wwwroot', 'Templates', 'AnotherRed', 'Css', 'red.css');
   const original = fs.readFileSync(cssFile);
 
   // Only stylesheets in the template folder.
@@ -149,4 +149,37 @@ test('rebuild the full-text index', async ({ page }) => {
   await expect(page.getByText('The index was successfully rebuilt.')).toHaveCount(0);
   await page.locator('[id$="btnRebuild"]').click();
   await expect(page.getByText('The index was successfully rebuilt.')).toBeVisible();
+});
+
+test('the modules: installation and activation', async ({ page }) => {
+  await page.goto('/Admin/Modules.aspx');
+  await expect(page.locator('#contentpane h1')).toHaveText('Modules');
+  const row = (name: string) => page.locator('tr', { has: page.locator('td', { hasText: new RegExp(`^${name}$`) }) });
+  await expect(row('Articles')).toContainText(/Installed \(\d+\.\d+\.\d+\)/);
+  await expect(row('Articles')).toContainText('Active');
+  await expect(row('StaticHtml')).toContainText('Cuyahoga.Modules');
+  // Installed modules can be uninstalled, not installed again.
+  await expect(row('Articles').locator('a', { hasText: 'Uninstall' })).toHaveCount(1);
+  await expect(row('Articles').locator('a', { hasText: /^Install$/ })).toHaveCount(0);
+
+  // Load on startup.
+  const activation = row('RemoteContent').locator('input[type="checkbox"]');
+  await expect(activation).toBeChecked();
+  await activation.uncheck();
+  await expect(row('RemoteContent').locator('input[type="checkbox"]')).not.toBeChecked();
+  await row('RemoteContent').locator('input[type="checkbox"]').check();
+  await expect(row('RemoteContent').locator('input[type="checkbox"]')).toBeChecked();
+  await expect(row('RemoteContent')).toContainText('Active');
+});
+
+test('the preview of a template picks a placeholder', async ({ page }) => {
+  await page.goto('/page2.aspx');
+  const href = (await page.locator('.moduletools a', { hasText: 'Section Properties' }).first().getAttribute('href'))!;
+  await page.goto(href.replace(/^.*\/Admin\//, '/Admin/'));
+  const placeholder = page.locator('[id$="ddlPlaceholder"]');
+  await expect(placeholder.locator('option')).toHaveText(['searchinput', 'globalMenu', 'side1content', 'maincontent']);
+  const [preview] = await Promise.all([page.waitForEvent('popup'), page.locator('#p_hplLookup').click()]);
+  await expect(preview.locator('#header input[type="button"]')).toHaveValue('searchinput');
+  await preview.locator('input[type="button"][value="side1content"]').click();
+  await expect(placeholder).toHaveValue('side1content');
 });

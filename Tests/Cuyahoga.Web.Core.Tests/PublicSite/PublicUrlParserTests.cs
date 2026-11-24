@@ -69,6 +69,8 @@ namespace Cuyahoga.Web.Core.Tests.PublicSite
 		[InlineData("/3/feed.aspx")]
 		[InlineData("/Templates/AnotherRed/Css/red.css")]
 		[InlineData("/sitemap.xml")]
+		[InlineData("/sitemap.aspx")]
+		[InlineData("/home/Sitemap.aspx")]
 		[InlineData("/CurrentUser.axd")]
 		// The WebForms site doesn't rewrite these (or rewrites them into a broken url); it keeps handling them.
 		[InlineData("/modules-overview.aspx")]

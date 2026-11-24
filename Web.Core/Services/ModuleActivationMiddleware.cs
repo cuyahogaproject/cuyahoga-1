@@ -1,3 +1,4 @@
+using Cuyahoga.Web.Core.PublicSite;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Cuyahoga.Web.Core.Services
@@ -15,9 +16,12 @@ namespace Cuyahoga.Web.Core.Services
 			this._next = next;
 		}
 
-		public async Task InvokeAsync(HttpContext context, ModuleActivation moduleActivation)
+		public async Task InvokeAsync(HttpContext context, ModuleActivation moduleActivation,
+			InstallationState installationState)
 		{
-			if (context.GetEndpoint()?.Metadata.GetMetadata<CompiledPageActionDescriptor>() != null)
+			// Not while the database isn't there yet or is being upgraded (the installer pages).
+			if (context.GetEndpoint()?.Metadata.GetMetadata<CompiledPageActionDescriptor>() != null
+				&& installationState.IsInstalled() && !installationState.NeedsUpgrade())
 			{
 				moduleActivation.ActivateModules();
 			}

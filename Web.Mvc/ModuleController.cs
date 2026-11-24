@@ -11,6 +11,9 @@ namespace Cuyahoga.Web.Mvc
 	/// gets the page.
 	/// </summary>
 	/// <remarks>
+	/// The site sends a request to the controller only when it has an Index action for the http method, so a form of
+	/// the module can post to the section url with an [HttpPost] Index action. Other posts go to the WebForms site.
+	///
 	/// The site finds the controller of a module type by the ModuleController base class. Name it after the module
 	/// ({ModuleName}Controller): controller names must be unique in the site.
 	/// </remarks>
@@ -28,6 +31,14 @@ namespace Cuyahoga.Web.Mvc
 		/// </summary>
 		protected TModule Module =>
 			(TModule)HttpContext.RequestServices.GetRequiredService<IPublicPageModules>().GetModule(PublicPage.ActiveSection);
+
+		/// <summary>
+		/// Removes the cached output of the section of the module, so a change shows immediately.
+		/// </summary>
+		protected void InvalidateCache()
+		{
+			HttpContext.RequestServices.GetRequiredService<ISectionOutputCache>().Remove(Module);
+		}
 
 		/// <summary>
 		/// Renders the public page with all its sections.

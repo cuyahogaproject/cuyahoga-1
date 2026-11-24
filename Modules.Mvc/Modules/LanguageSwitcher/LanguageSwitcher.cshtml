@@ -1,0 +1,26 @@
+@using Cuyahoga.Modules.LanguageSwitcher
+@using Cuyahoga.Modules.Mvc.LanguageSwitcher
+@model LanguageSwitcherModel
+@* The markup of LanguageSwitcher.ascx. The dropdown is a form of its own that sends the culture to this page. *@
+<div class="languageswitcher">
+	@if (Model.DisplayMode != DisplayMode.DropDown)
+	{
+	<div>
+		<ul>@foreach (LanguageSwitcherModel.Language language in Model.Languages.Where(language => !language.IsCurrent)) { if (Model.DisplayMode == DisplayMode.Flag) {<li><a title="@language.Text" href="@language.Url"><img src="@language.FlagUrl" alt="@language.Text" style="border-width:0px;" /></a></li>} else {<li><a href="@language.Url">@language.Text</a></li>} }</ul>
+	</div>
+	}
+	else
+	{
+	<form method="get" action="@Model.FormUrl">
+	<div>
+		<select name="@LanguageSwitcherViewComponent.CultureParameter" style="width:120px;">
+		@foreach (LanguageSwitcherModel.Language language in Model.Languages)
+		{
+			<option value="@language.Culture" selected="@language.IsSelected">@language.Text</option>
+		}
+		</select>
+		<input type="image" src="@Model.GoImageUrl" style="border-width:0px;" />
+	</div>
+	</form>
+	}
+</div>

@@ -2,6 +2,7 @@ using Cuyahoga.Core.DataAccess;
 using Cuyahoga.Core.Domain;
 using Cuyahoga.Core.Service.SiteStructure;
 using Cuyahoga.Core.Util;
+using Cuyahoga.Web.Core.PublicSite;
 using Cuyahoga.Web.Core.Services;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,20 +10,23 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 {
 	/// <summary>
 	/// Edit a template: its name, the folder with its files (base path), the template control and the stylesheet, and
-	/// the sections in its placeholders. The files are in the folder of the WebForms site (LegacySitePath).
+	/// the sections in its placeholders. The stylesheets and images are in wwwroot/{base path}, the layouts in Templates.
 	/// </summary>
 	public class TemplateEditModel : AdminPageModel
 	{
 		private readonly ICommonDao _commonDao;
 		private readonly INodeService _nodeService;
 		private readonly TemplatePlaceholderProvider _placeholderProvider;
+		private readonly TemplateLayouts _templateLayouts;
 		private Template _template;
 
-		public TemplateEditModel(ICommonDao commonDao, INodeService nodeService, TemplatePlaceholderProvider placeholderProvider)
+		public TemplateEditModel(ICommonDao commonDao, INodeService nodeService, TemplatePlaceholderProvider placeholderProvider,
+			TemplateLayouts templateLayouts)
 		{
 			this._commonDao = commonDao;
 			this._nodeService = nodeService;
 			this._placeholderProvider = placeholderProvider;
+			this._templateLayouts = templateLayouts;
 		}
 
 		[BindProperty(SupportsGet = true)] public int TemplateId { get; set; }
@@ -174,8 +178,10 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 			var templateDir = new DirectoryInfo(MapPath(basePath));
 			if (templateDir.Exists)
 			{
-				string[] templateControls = templateDir.GetFiles("*.ascx").Select(file => file.Name).ToArray();
-				if (templateControls.Length == 0 && isPostBack)
+				// The template controls are the Razor layouts of the base path (Templates/AnotherRed/Cuyahoga.cshtml),
+				// with the names of the user controls of the WebForms site (Cuyahoga.ascx).
+				IReadOnlyList<string> templateControls = this._templateLayouts.GetTemplateControls(basePath);
+				if (templateControls.Count == 0 && isPostBack)
 				{
 					TemplateControlWarning = "No template user controls found at the [base path] location.";
 				}
@@ -244,7 +250,7 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 				return;
 			}
 			string templateControlPath = "/" + this._template.Path;
-			if (!System.IO.File.Exists(MapPath(this._template.Path)))
+			if (!this._templateLayouts.HasLayout(this._template))
 			{
 				ShowError("Unable to load the template control " + templateControlPath);
 				return;
@@ -260,7 +266,7 @@ namespace Cuyahoga.Web.Core.Pages.Admin
 		}
 
 		/// <summary>
-		/// The physical path of a path from the root of the WebForms site.
+		/// The physical path of a path of the site (the public files of a template: Templates/AnotherRed).
 		/// </summary>
 		private static string MapPath(string path)
 		{

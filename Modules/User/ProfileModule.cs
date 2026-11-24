@@ -24,6 +24,14 @@ namespace Cuyahoga.Modules.User
 		private string _emailTemplateDir;
 
 		/// <summary>
+		/// What the url asks for (the first parameter of the path info): EditProfile when there is none.
+		/// </summary>
+		public ProfileModuleAction CurrentAction
+		{
+			get { return this._currentAction; }
+		}
+
+		/// <summary>
 		/// The ID of the current user (when the action is ViewProfile).
 		/// </summary>
 		public int CurrentUserId
@@ -107,9 +115,19 @@ namespace Cuyahoga.Modules.User
 		/// </summary>
 		/// <param name="username"></param>
 		/// <param name="emailAddress"></param>
+		/// <remarks>
+		/// The new password is only saved after the e-mail with it was sent. When sending fails, the user keeps the old
+		/// password (otherwise nobody would know the password of the account).
+		/// </remarks>
 		public void ResetPassword(string username, string emailAddress)
 		{
-			string newPassword = this._userService.ResetPassword(username, emailAddress);
+			Cuyahoga.Core.Domain.User user = this._userService.GetUserByUsernameAndEmail(username, emailAddress);
+			if (user == null)
+			{
+				throw new NullReferenceException("No user found with the given username and email");
+			}
+			string oldPassword = user.Password;
+			string newPassword = user.GeneratePassword();
 			// Send email
 			this._emailService.TemplateDir = ApplicationPaths.MapPath(virtualEmailTemplateDir);
 			this._emailService.Language = base.Section.Node.Culture.Substring(0, 2);
@@ -118,7 +136,17 @@ namespace Cuyahoga.Modules.User
 			Dictionary<string, string> bodyParams = new Dictionary<string,string>(1);
 			bodyParams.Add("$password", newPassword);
 
-			this._emailService.ProcessEmail(this.Section.Node.Site.WebmasterEmail, emailAddress, "ResetPassword", subjectParams, bodyParams);
+			try
+			{
+				this._emailService.ProcessEmail(this.Section.Node.Site.WebmasterEmail, emailAddress, "ResetPassword", subjectParams, bodyParams);
+			}
+			catch
+			{
+				// The user is loaded in the session: undo the change, so it isn't saved when the session is flushed.
+				user.Password = oldPassword;
+				throw;
+			}
+			this._userService.UpdateUser(user);
 		}
 
 		/// <summary>

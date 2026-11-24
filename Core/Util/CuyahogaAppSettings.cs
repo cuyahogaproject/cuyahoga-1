@@ -6,9 +6,9 @@ using System.Globalization;
 namespace Cuyahoga.Core.Util
 {
 	/// <summary>
-	/// The Cuyahoga settings from the appSettings section of Web.config (keys starting with 'Cuyahoga.').
-	/// Machine-specific values can be overridden in the optional, git-ignored Web.local.config, and environment
-	/// variables override both (for example CUYAHOGA_CONNECTIONSTRING; the e2e tests use these).
+	/// The Cuyahoga settings, as appSettings with keys starting with 'Cuyahoga.' (the site passes the 'Cuyahoga' section
+	/// of its configuration this way). Environment variables override them (for example CUYAHOGA_CONNECTIONSTRING; the
+	/// e2e tests use these).
 	/// </summary>
 	public class CuyahogaAppSettings
 	{

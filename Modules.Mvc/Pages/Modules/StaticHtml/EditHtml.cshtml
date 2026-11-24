@@ -1,0 +1,24 @@
+@page "/Modules/StaticHtml/EditHtml.aspx"
+@model Cuyahoga.Modules.Mvc.Pages.Modules.StaticHtml.EditHtmlModel
+@* The markup of EditHtml.aspx. *@
+			<div id="moduleadminpane">
+				<h1>Edit static content</h1>
+				<textarea name="txtEditor" rows="2" cols="20" id="p_txtEditor">@Model.Html</textarea>
+				<br/>
+				<br/>
+				<input type="submit" name="btnSave" value="Save" id="p_btnSave" />
+			</div>
+@section Scripts {
+				<script type="text/javascript" src="~/Support/ckeditor/ckeditor.js"></script>
+				<script type="text/javascript">
+					var fileManUrl = '@Url.Content("~/Support/fileman/index.html")';
+					CKEDITOR.replace('p_txtEditor', {
+						uiColor: '#6699cc',
+						height: 400,
+						filebrowserBrowseUrl: fileManUrl,
+						filebrowserUploadUrl: fileManUrl,
+						filebrowserImageBrowseUrl: fileManUrl + '?type=image',
+						filebrowserImageUploadUrl: fileManUrl + '?type=image'
+					});
+				</script>
+}

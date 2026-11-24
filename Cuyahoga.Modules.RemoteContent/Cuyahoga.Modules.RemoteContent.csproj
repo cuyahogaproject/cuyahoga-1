@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <!--
-  The RemoteContent module without its WebForms pages (those are in Cuyahoga.Modules.RemoteContent.Web): the module
-  class, the domain and the NHibernate mappings. netstandard2.0, so the WebForms site and the ASP.NET Core site
-  (Web.Core) both load it.
+  The RemoteContent module: the module class, the domain and the NHibernate mappings. netstandard2.0, so the WebForms
+  site and the ASP.NET Core site (Web.Core) both load it. Its views and admin pages are in
+  Cuyahoga.Modules.RemoteContent.Mvc.
   -->
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>

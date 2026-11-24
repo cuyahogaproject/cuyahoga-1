@@ -230,7 +230,7 @@ test('a section of a node', async ({ page }) => {
   await expect(page.getByRole('link', { name: 'Add a new node under the active node' }))
     .toHaveAttribute('href', `NodeEdit.aspx?NodeId=-1&ParentNodeId=${nodeId}`);
   await expect(page.locator('[id$="lblModule"]')).toHaveText('Search');
-  await expect(page.locator('[id$="ddlPlaceholder"]')).toHaveValue('side1content');
+  await expect(page.locator('[id$="ddlPlaceholder"]')).toHaveValue('maincontent');
   await expect(page.locator('[id$="RESULTS_PER_PAGE"]')).toHaveValue('10');
   await expect(page.locator('[id$="SHOW_INPUT_PANEL"]')).toBeChecked();
   await page.locator('[id$="RESULTS_PER_PAGE"]').fill('11');

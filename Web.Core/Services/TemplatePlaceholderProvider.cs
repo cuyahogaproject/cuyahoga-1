@@ -1,34 +1,29 @@
-using System.Globalization;
-using System.Net;
+using Cuyahoga.Core.Service.SiteStructure;
+using Cuyahoga.Web.Core.PublicSite;
 
 namespace Cuyahoga.Web.Core.Services
 {
 	/// <summary>
-	/// The placeholders of a template. Templates are WebForms user controls, so the WebForms site finds them
-	/// (TemplatePlaceholders.axd).
+	/// The placeholders of a template: the &lt;cuyahoga-placeholder /&gt; elements of its layout, in their order.
 	/// </summary>
 	public class TemplatePlaceholderProvider
 	{
-		private readonly LegacySiteClient _legacySiteClient;
+		private readonly ITemplateService _templateService;
+		private readonly TemplateRenderer _templateRenderer;
 
-		public TemplatePlaceholderProvider(LegacySiteClient legacySiteClient)
+		public TemplatePlaceholderProvider(ITemplateService templateService, TemplateRenderer templateRenderer)
 		{
-			this._legacySiteClient = legacySiteClient;
+			this._templateService = templateService;
+			this._templateRenderer = templateRenderer;
 		}
 
 		/// <summary>
-		/// The placeholder names, in the order the WebForms admin pages showed them.
+		/// The placeholder names. A template without a layout has none.
 		/// </summary>
 		public async Task<List<string>> GetPlaceholdersAsync(int templateId)
 		{
-			var (statusCode, body) = await this._legacySiteClient.GetAsync(
-				"TemplatePlaceholders.axd?TemplateId=" + templateId.ToString(CultureInfo.InvariantCulture));
-			if (statusCode != HttpStatusCode.OK)
-			{
-				throw new InvalidOperationException(
-					$"Unable to get the placeholders of template {templateId} (HTTP {(int)statusCode} from the WebForms site).");
-			}
-			return body.Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+			var rendered = await this._templateRenderer.RenderAsync(this._templateService.GetTemplateById(templateId));
+			return rendered?.Placeholders.ToList() ?? new List<string>();
 		}
 	}
 }

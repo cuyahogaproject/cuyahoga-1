@@ -1,0 +1,48 @@
+@page "/Install/Upgrade.aspx"
+@model Cuyahoga.Web.Core.Pages.Install.UpgradeModel
+@{
+	Layout = null;
+}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<title>Upgrade</title>
+		<link rel="stylesheet" href="../Admin/Css/Admin.css" type="text/css" />
+	</head>
+	<body>
+		<form id="Form1" method="post">
+			<div id="moduleadminpane">
+				<h1>Cuyahoga Upgrade</h1>
+				@if (Model.Error != null)
+				{
+				<div id="pnlErrors" class="errorbox">
+					<span id="lblError" style="white-space:pre-wrap;">@Model.Error</span>
+				</div>
+				}
+				@if (Model.CanUpgrade)
+				{
+				<div id="pnlIntro" class="group">
+<h4>Upgrade Database</h4>Current versions:<br/>
+<span id="lblCoreAssemblyCurrent" style="font-weight:bold;">@Model.CoreCurrent</span><br/>
+<span id="lblModulesAssemblyCurrent" style="font-weight:bold;">@Model.ModulesCurrent</span><br/><br/>New
+versions:<br/>
+<span id="lblCoreAssemblyNew" style="font-weight:bold;">@Model.CoreNew</span><br/>
+<span id="lblModulesAssemblyNew" style="font-weight:bold;">@Model.ModulesNew</span><br/><br/>
+<input type="submit" name="btnUpgradeDatabase" value="Upgrade database" id="btnUpgradeDatabase" />
+				</div>
+				}
+				@if (Model.Finished)
+				{
+				<div id="pnlFinished" class="group">
+<h4>Finished</h4>Cuyahoga is upgraded successfully!<br />
+It's highly recommended to visit the module administration page to check if there are updates for existing modules.<br/><br/>
+<a id="hplModules" href="@Url.Content("~/Admin/Modules.aspx")">Upgrade modules or check module status</a><br/>
+<a id="hplSite" href="@Url.Content("~/Default.aspx")">View the site</a><br/>
+<a id="hplAdmin" href="@Url.Content("~/Admin")">Go to
+					to the site administration</a>
+				</div>
+				}
+			</div>
+		</form>
+	</body>
+</html>

@@ -1,0 +1,28 @@
+@model RemoteContentModel
+@* The markup of RemoteContent.ascx. *@
+@foreach (RemoteContentModel.Item item in Model.Items)
+{
+		<div class="genericitem">
+			<h4><a href="@item.Url">@item.Title</a></h4>
+			@if (Model.ShowContents)
+			{
+			<div>
+				@item.Content
+			</div>
+			}
+			<div class="genericdetails">
+				@if (Model.ShowDates)
+				{
+				<span>@item.PubDate</span>
+				}
+				@if (Model.ShowAuthors)
+				{
+				<span>@item.Author</span>
+				}
+				@if (Model.ShowSources)
+				{
+				<span>@item.Source</span>
+				}
+			</div>
+		</div>
+}

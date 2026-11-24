@@ -1,0 +1,39 @@
+@page "/Modules/Articles/AdminComments.aspx"
+@model Cuyahoga.Modules.Articles.Mvc.Pages.Modules.Articles.AdminCommentsModel
+@* The markup of AdminComments.aspx. The Delete links post the id of the comment (the WebForms page did a postback). *@
+			<input type="hidden" name="DeleteCommentId" id="DeleteCommentId" />
+			<div id="moduleadminpane">
+				<h1>Article comments</h1>
+				<p>
+					<table class="tbl">
+								<tr>
+									<th>Comment</th>
+									<th>From</th>
+									<th>IP</th>
+									<th>Date</th>
+									<th></th>
+								</tr>
+						@for (int i = 0; i < Model.Comments.Count; i++)
+						{
+							var comment = Model.Comments[i];
+								<tr>
+									<td>@Html.Raw(comment.CommentTextHtml)</td>
+									<td>@(comment.User != null ? comment.User.UserName : comment.Name)</td>
+									<td>@comment.UserIp</td>
+									<td>@TimeZoneUtil.AdjustDateToUserTimeZone(comment.UpdateTimestamp, Model.CurrentUser)</td>
+									<td><a onclick="return confirm('Are you sure?');" id="p_rptComments_ctl@((i + 1).ToString("00"))_lbtDelete" href="javascript:deleteComment(@comment.Id)">Delete</a></td>
+								</tr>
+						}
+					</table>
+				</p>
+				<br/>
+				<input type="submit" name="btnBack" value="Back" id="p_btnBack" />
+			</div>
+@section Scripts {
+			<script type="text/javascript">
+				function deleteComment(commentId) {
+					document.getElementById('DeleteCommentId').value = commentId;
+					document.getElementById('Frm').submit();
+				}
+			</script>
+}

@@ -8,6 +8,7 @@ using NHibernate.Dialect;
 using log4net;
 
 using Cuyahoga.Core.Domain;
+using Cuyahoga.Core.Persistence;
 using Cuyahoga.Core.Service;
 using System.Globalization;
 using NHibernate.Engine;
@@ -155,10 +156,13 @@ namespace Cuyahoga.Core.Util
 			return version;
 		}
 
+		/// <summary>
+		/// The current NHibernate session factory (of both sites: the obsolete SessionFactory wrapper only exists in the
+		/// WebForms site).
+		/// </summary>
 		private static ISessionFactoryImplementor GetNHibernateSessionFactory()
 		{
-			SessionFactory sf = SessionFactory.GetInstance();
-			return (ISessionFactoryImplementor) sf.GetNHibernateFactory();
+			return (ISessionFactoryImplementor)IoC.Container.Resolve<SessionFactoryHolder>().SessionFactory;
 		}
 
 		private static string GetDelimiter()

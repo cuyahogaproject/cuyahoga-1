@@ -1,0 +1,40 @@
+@using Cuyahoga.Modules.Mvc.User
+@model UserModel
+@* The markup of User.ascx; the forms post to UserLogin.axd, which does the login and logout. *@
+@if (Model.UserName == null)
+{
+<div>
+<form method="post" action="@Model.LoginUrl">
+<input type="hidden" name="action" value="login" />
+<input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+<span>@Model.UsernameText</span><br/>
+<input name="username" type="text" style="width:120px;" /><br/>
+<span>@Model.PasswordText</span><br/>
+<input name="password" type="password" style="width:120px;" /><br/>
+<input id="persistlogin" type="checkbox" name="persist" value="true" /><label for="persistlogin">@Model.PersistLoginText</label><br/>
+@if (Model.LoginError != null) {<span class="error">@Model.LoginError</span>}<br/>
+<input type="submit" value="@Model.LoginText" /><br/><br/>
+@if (Model.RegisterUrl != null) {<a href="@Model.RegisterUrl">@Model.RegisterText</a>}&nbsp;&nbsp;
+@if (Model.ResetPasswordUrl != null) {<a href="@Model.ResetPasswordUrl">@Model.ResetPasswordText</a>}
+</form>
+</div>
+}
+else
+{
+<div>
+<form method="post" action="@Model.LoginUrl">
+	<input type="hidden" name="action" value="logout" />
+	<input type="hidden" name="returnUrl" value="@Model.ReturnUrl" />
+	<span>@Model.LoggedInText</span>
+	<span>@Model.UserName</span>
+	<br/>
+	<input type="submit" value="@Model.LogoutText" />
+	<br/>
+	<br/>
+	@if (Model.EditProfileUrl != null)
+	{
+	<a href="@Model.EditProfileUrl">@Model.EditProfileText</a>
+	}
+</form>
+</div>
+}

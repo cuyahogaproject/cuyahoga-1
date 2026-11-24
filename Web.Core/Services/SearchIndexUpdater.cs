@@ -6,8 +6,8 @@ using Cuyahoga.Core.Util;
 namespace Cuyahoga.Web.Core.Services
 {
 	/// <summary>
-	/// Updates the full-text index of the WebForms site (SearchHelper in the WebForms site). The index is in the folder
-	/// of the WebForms site (Cuyahoga.SearchIndexDir), so LegacySitePath must be set.
+	/// Updates the full-text index of the site (SearchHelper in the WebForms site). The index is in the data folder
+	/// (Cuyahoga.SearchIndexDir).
 	/// </summary>
 	/// <remarks>
 	/// Both sites write to the same index. Lucene's write lock keeps it consistent, but when both write at the same

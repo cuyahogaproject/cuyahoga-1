@@ -12,7 +12,6 @@ using Cuyahoga.Web.Mvc;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,12 +22,6 @@ builder.Configuration
 	.AddJsonFile("appsettings.local.json", optional: true)
 	.AddEnvironmentVariables()
 	.AddCommandLine(args);
-
-string legacySiteUrl = builder.Configuration["LegacySiteUrl"];
-if (String.IsNullOrWhiteSpace(legacySiteUrl))
-{
-	throw new InvalidOperationException("The setting 'LegacySiteUrl' (the url of the WebForms site) is required.");
-}
 
 // Cuyahoga core: the unit of work lives per request, the core services come from Windsor.
 CuyahogaAppSettings settings = CuyahogaContainer.LoadSettings(builder.Configuration);
@@ -41,15 +34,8 @@ IWindsorContainer container = CuyahogaContainer.Create(settings, httpContextAcce
 IoC.Initialize(container);
 builder.Services.AddCuyahogaCoreServices(container);
 
-// Virtual paths (~/index, ~/files) are in the folder of the WebForms site (LegacySitePath, absolute or relative to
-// this site). Without it, the things that need these folders (updating the search index) fail with an error.
-string legacySitePath = builder.Configuration["LegacySitePath"];
-if (!String.IsNullOrWhiteSpace(legacySitePath))
-{
-	string legacySiteRoot = Path.GetFullPath(Path.Combine(builder.Environment.ContentRootPath, legacySitePath));
-	ApplicationPaths.MapPath = virtualPath =>
-		Path.Combine(legacySiteRoot, virtualPath.TrimStart('~', '/').Replace('/', Path.DirectorySeparatorChar));
-}
+// The files of the site: public files in wwwroot, install scripts in the site folder, data in the data folder.
+string dataPath = SitePaths.Configure(builder);
 
 // The modules of the database, activated before every page of this site.
 builder.Services.AddSingleton<ModuleActivation>();
@@ -83,8 +69,7 @@ builder.Services.AddRazorPages(options =>
 	options.Conventions.AddPageRoute("/Admin/Default", "Admin/");
 });
 
-// The public pages (PublicSite): rendered here when their template and modules have moved to this site, otherwise
-// forwarded to the WebForms site (PublicPageTransformer).
+// The public pages (PublicSite): the template of the page with the views of its modules (PublicPageTransformer).
 builder.Services.AddControllersWithViews();
 builder.Services.AddMemoryCache();
 builder.Services.AddSingleton<InstallationState>();
@@ -100,12 +85,14 @@ builder.Services.AddSingleton<SectionOutputCache>();
 builder.Services.AddSingleton<ISectionOutputCache>(services => services.GetRequiredService<SectionOutputCache>());
 builder.Services.AddScoped<PublicPageTransformer>();
 
-builder.Services.AddHttpForwarder();
-// Request size limits are up to the WebForms site (maxRequestLength) for the requests that it handles.
-builder.WebHost.ConfigureKestrel(options => options.Limits.MaxRequestBodySize = null);
-
 var app = builder.Build();
 
+if (!app.Environment.IsDevelopment())
+{
+	// The error page (Error.aspx).
+	app.UseExceptionHandler("/Error.aspx");
+}
+app.UseSiteFiles(dataPath);
 app.UseMiddleware<NHibernateSessionMiddleware>();
 // The admin folder without trailing slash goes to the folder (like IIS does), so the relative links of the admin pages
 // work. The routes ignore the trailing slash, so this can't be left to the admin home page route.
@@ -139,26 +126,11 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();
-// The RSS feeds of sections ({id}/feed.aspx).
+// The RSS feeds of sections ({id}/feed.aspx), the sitemap, the file manager, the login of the User module.
 app.MapControllers();
-// Every other url can be a public page; the transformer decides (before the forwarder below gets the request).
+// Every other url can be a public page; the transformer decides.
 app.MapDynamicControllerRoute<PublicPageTransformer>("{**path}");
-
-// Everything that this site doesn't handle goes to the WebForms site. The forwarder sets the X-Forwarded-Host and
-// X-Forwarded-Proto headers, which the WebForms site uses to build absolute urls (and to find the Cuyahoga site of
-// the request) for the address that the browser used. Redirects that IIS itself makes (for example from a folder url
-// without trailing slash) have the address of the WebForms site, so they're changed to the address of this site.
-string legacySiteRootUrl = legacySiteUrl.TrimEnd('/') + "/";
-app.MapForwarder("/{**catch-all}", legacySiteUrl, transforms => transforms.AddResponseTransform(context =>
-{
-	string location = context.HttpContext.Response.Headers.Location;
-	if (location != null && location.StartsWith(legacySiteRootUrl, StringComparison.OrdinalIgnoreCase))
-	{
-		HttpRequest request = context.HttpContext.Request;
-		context.HttpContext.Response.Headers.Location =
-			$"{request.Scheme}://{request.Host}{request.PathBase}/{location.Substring(legacySiteRootUrl.Length)}";
-	}
-	return ValueTask.CompletedTask;
-})).WithOrder(int.MaxValue);
+// Anything else isn't there.
+app.MapFallbackToController("NotFoundPage", "Error");
 
 app.Run();

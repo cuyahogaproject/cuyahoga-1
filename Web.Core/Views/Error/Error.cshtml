@@ -1,0 +1,45 @@
+@model ErrorModel
+@* The markup of Error.aspx of the WebForms site. *@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" >
+<html>
+	<head>
+		<title>Error</title>
+		<style>
+			body
+			{
+				margin: 0px;
+				background-color: #EEEEEE;
+			}
+
+			p, div
+			{
+				font-family: Arial, Helvetica;
+				font-size: 8pt;
+				color: #333333;
+			}
+
+			h1
+			{
+				font-family: Arial, Helvetica;
+				font-size: 12pt;
+				font-weight: bold;
+				background-color: #EEEEEE;
+				width: 100%;
+				border-bottom: solid 1px #CCCCCC;
+				padding: 1px;
+			}
+			#errorbox
+			{
+				padding: 10px;
+				margin:30px;
+				background-color:#fff;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="errorbox">
+			<h1><span id="lblTitle">@Model.Title</span></h1>
+			<p><span id="lblError">@Model.Message</span></p>
+		</div>
+	</body>
+</html>

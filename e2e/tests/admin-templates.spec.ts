@@ -111,8 +111,8 @@ test('create, edit and delete a template, attach a section to a placeholder', as
 });
 
 test('edit a template file', async ({ page }) => {
-  // A real file of the WebForms site: put it back afterwards.
-  const cssFile = path.resolve(__dirname, '..', '..', 'Web', 'Templates', 'AnotherRed', 'Css', 'red.css');
+  // A real file of the site: put it back afterwards.
+  const cssFile = path.resolve(__dirname, '..', '..', 'Web.Core', 'wwwroot', 'Templates', 'AnotherRed', 'Css', 'red.css');
   const original = fs.readFileSync(cssFile);
 
   // Only stylesheets in the template folder.

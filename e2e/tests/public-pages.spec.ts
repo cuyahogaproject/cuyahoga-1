@@ -76,9 +76,13 @@ test.describe('public pages of the ASP.NET Core site', () => {
     }
   });
 
-  test('unknown pages go to the not-found handling of the WebForms site', async ({ page }) => {
+  test('unknown pages and urls are not found', async ({ page }) => {
     const response = await page.goto('/does-not-exist.aspx');
-    expect(response!.status()).toBeGreaterThanOrEqual(400);
+    expect(response!.status()).toBe(404);
+    await expect(page.locator('#errorbox h1')).toHaveText('404 Page not found');
+    for (const url of ['/does-not-exist', '/12345/view.aspx', '/does/not/exist.png']) {
+      expect((await page.request.get(url)).status(), url).toBe(404);
+    }
   });
 
   test('an offline page shows the offline template to visitors and the page to administrators',

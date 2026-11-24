@@ -8,10 +8,9 @@ using Microsoft.AspNetCore.Mvc.Routing;
 namespace Cuyahoga.Web.Core.PublicSite
 {
 	/// <summary>
-	/// Decides per request whether this site renders a public page: only when the url is a public page, the page
-	/// exists, the user may view it, and its template and all its modules have been moved to this site. Otherwise
-	/// (null) the request goes on to the WebForms site, which then handles it like before: other pages, error pages,
-	/// redirects of external links, the installer.
+	/// Turns a public url into the controller that answers it: the page (PublicPageController, or the controller of the
+	/// module of the section in the url), or why there is no page (PublicPageController.Unavailable: not found,
+	/// forbidden, an unknown site, an external link). Urls that aren't public pages (null) get the 404 of the site.
 	/// </summary>
 	public class PublicPageTransformer : DynamicRouteValueTransformer
 	{
@@ -39,7 +38,7 @@ namespace Cuyahoga.Web.Core.PublicSite
 		public override async ValueTask<RouteValueDictionary> TransformAsync(HttpContext httpContext, RouteValueDictionary values)
 		{
 			HttpRequest request = httpContext.Request;
-			// Other requests than GET, HEAD and POST go to the WebForms site.
+			// Other requests than GET, HEAD and POST aren't pages (the site answers 404).
 			bool isPost = HttpMethods.IsPost(request.Method);
 			if (!HttpMethods.IsGet(request.Method) && !HttpMethods.IsHead(request.Method) && !isPost)
 			{
@@ -59,14 +58,15 @@ namespace Cuyahoga.Web.Core.PublicSite
 			PageResolution resolution = this._pageResolver.Resolve(pageRequest, siteUrl, request.Cookies["CuyahogaCulture"], user);
 			if (resolution.Kind != PageResolutionKind.Page)
 			{
-				this._logger.LogDebug("{Url} goes to the WebForms site: {Resolution}.", request.Path, resolution.Kind);
-				return null;
+				// Not found, forbidden, an unknown site or an external link (PublicPageController.Unavailable).
+				this._logger.LogDebug("{Url} is no page: {Resolution}.", request.Path, resolution.Kind);
+				httpContext.Features.Set(resolution);
+				return new RouteValueDictionary { ["controller"] = "PublicPage", ["action"] = "Unavailable" };
 			}
 			string missing = GetMissingParts(resolution.Page);
 			if (missing != null)
 			{
-				this._logger.LogDebug("{Url} goes to the WebForms site: {Missing} not moved yet.", request.Path, missing);
-				return null;
+				throw new InvalidOperationException($"The page {request.Path} can't be shown: the {missing} has no view.");
 			}
 
 			// The module of the section in the url handles the request when it has a controller for it (a file
@@ -76,8 +76,8 @@ namespace Cuyahoga.Web.Core.PublicSite
 				: null;
 			if (isPost && controller == null)
 			{
-				// A postback of a WebForms page.
-				this._logger.LogDebug("{Url} goes to the WebForms site: no module controller for the post.", request.Path);
+				// Nothing on the page takes a post (the site answers 404).
+				this._logger.LogDebug("{Url}: no module controller for the post.", request.Path);
 				return null;
 			}
 

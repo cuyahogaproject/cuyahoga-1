@@ -18,8 +18,8 @@ permissions:
 jobs:
   build-and-test:
     name: Build and test
-    # Visual Studio with the ASP.NET workload (web application targets), IIS Express, SQL Server LocalDB,
-    # Node.js and the .NET Framework 4.8 targeting pack come with the image.
+    # The .NET SDK, SQL Server LocalDB, Node.js and the .NET Framework 4.8 targeting pack (for the net48 unit tests)
+    # come with the image.
     runs-on: windows-2025
     timeout-minutes: 45
 
@@ -33,28 +33,21 @@ jobs:
           key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj', 'Directory.Build.*') }}
           restore-keys: nuget-${{ runner.os }}-
 
-      - uses: microsoft/setup-msbuild@v2
-
       # Fails fast, before the build, when the runner image lacks a tool that the build or the e2e tests need.
       - name: Check tools
         run: |
           $missing = @()
-          foreach ($tool in 'msbuild', 'sqlcmd', 'SqlLocalDB') {
+          foreach ($tool in 'dotnet', 'sqlcmd', 'SqlLocalDB') {
             $command = Get-Command $tool -ErrorAction SilentlyContinue
             if ($command) { "${tool}: $($command.Source)" } else { $missing += "$tool (not on PATH)" }
           }
-          $iisExpress = 'C:\Program Files\IIS Express\iisexpress.exe'
-          if (Test-Path $iisExpress) { "iisexpress: $iisExpress" } else { $missing += "IIS Express ($iisExpress)" }
-          $vs = & "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe" -latest -property installationPath
-          $webTargets = Get-ChildItem "$vs\MSBuild\Microsoft\VisualStudio" -Recurse -Filter Microsoft.WebApplication.targets -ErrorAction SilentlyContinue | Select-Object -First 1
-          if ($webTargets) { "web application targets: $($webTargets.FullName)" } else { $missing += "Microsoft.WebApplication.targets (ASP.NET workload) in $vs" }
           if ($missing) {
             $missing | ForEach-Object { "::error::Missing tool: $_" }
             exit 1
           }
 
       - name: Build
-        run: msbuild Cuyahoga.sln -restore -m -p:Configuration=Debug -verbosity:minimal
+        run: dotnet build Cuyahoga.sln -c Debug -v minimal
 
       - name: Unit tests (net48)
         run: Tests/Cuyahoga.Core.Tests/bin/Debug/net48/Cuyahoga.Core.Tests.exe

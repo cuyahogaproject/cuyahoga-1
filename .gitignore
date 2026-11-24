@@ -1,5 +1,9 @@
 build/
-Web/Modules/
+# The folder of the former WebForms site (local data and settings, e.g. Web.local.config).
+Web/
+# Deployed by the module builds, and the runtime data of the site (files, index, UserFiles).
+Web.Core/Modules/
+Web.Core/App_Data/
 packages/
 obj
 bin
@@ -10,10 +14,5 @@ _ReSharper.*
 *.suo
 *.cache
 .vs/
-Web/UserFiles/
-Web/files/
-Web/index/
-Web/Web.local.config
 Web.Core/appsettings.local.json
-Web/index-e2e/
 /*.user

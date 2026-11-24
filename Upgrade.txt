@@ -1,6 +1,6 @@
 
 **************************************************************
-From version 1.7.0, Cuyahoga requires the .NET 4.0 Framework.
+Cuyahoga now requires the ASP.NET Core Runtime 10.
 **************************************************************
 
 Upgrading Cuyahoga
@@ -20,6 +20,27 @@ a message that the site is being upgraded while you are the person who is
 going to perform the upgrade.
 
 Don't forget to check your modules for upgrades via the module administration!
+
+*****************************************************************************
+SPECIAL NOTE: THE SITE IS AN ASP.NET CORE SITE (WEB.CORE)
+- The WebForms site (the Web folder) is gone. Replace the old site with a
+  published Cuyahoga.Web.Core (dotnet publish Web.Core -c Release). In IIS: install
+  the ASP.NET Core Hosting Bundle and use an application pool with No Managed Code.
+  If the old site ran next to Web.Core (two applications), only the Web.Core
+  application remains.
+- Settings: the 'Cuyahoga.*' appSettings of Web.config (and Web.local.config) go
+  into the "Cuyahoga" section of appsettings.json or appsettings.local.json,
+  without the prefix ("Cuyahoga.ConnectionString" -> "ConnectionString"), or into
+  CUYAHOGA_* environment variables.
+- Data: copy the files, index and UserFiles folders of the old site into the data
+  folder ("DataPath" in appsettings.json, default App_Data), or point DataPath to a
+  folder that has them. UserFiles is still served at /UserFiles.
+- Templates are Razor layouts now. Custom templates need a layout in
+  Templates/{base path} and their stylesheets and images in
+  wwwroot/Templates/{base path}. Custom modules need an ASP.NET Core project (see
+  Web.Core/README.md).
+- Everyone logs in once more after the upgrade (the login cookie is new).
+- The file manager of the editor doesn't create thumbnails or resize images.
 
 *****************************************************************************
 SPECIAL NOTE: CONFIGURATION MOVED TO WEB.CONFIG

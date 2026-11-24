@@ -7,7 +7,7 @@ using Cuyahoga.Core.Util;
 namespace Cuyahoga.Web.Core.Pages.Admin
 {
 	/// <summary>
-	/// Rebuilds the full-text index of the WebForms site (in its folder, see LegacySitePath) from the content of all
+	/// Rebuilds the full-text index of the site (SearchIndexDir in the data folder) from the content of all
 	/// searchable modules.
 	/// </summary>
 	public class RebuildIndexModel : AdminPageModel

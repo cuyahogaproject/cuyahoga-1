@@ -36,6 +36,8 @@ test('the file manager: folders and files under UserFiles', async ({ page, brows
     expect(files.map((f: { p: string }) => f.p).sort()).toEqual([`${folder}/b - Copy 1.txt`, `${folder}/b.txt`]);
     const download = await page.request.get(`${handler}?a=DOWNLOAD&f=${encodeURIComponent(`${folder}/b.txt`)}`);
     expect(await download.text()).toBe('abc');
+    // The site serves the files (for the pages that link to them).
+    expect(await (await page.request.get(`${folder}/b.txt`)).text()).toBe('abc');
 
     // Not allowed: other extensions, names with a path, paths outside UserFiles, a folder that isn't empty.
     expect((await (await api('RENAMEFILE', { f: `${folder}/b.txt`, n: 'b.aspx' })).json()).res).toBe('error');

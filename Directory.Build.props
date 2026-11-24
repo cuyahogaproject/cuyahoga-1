@@ -1,6 +1,7 @@
 <Project>
-  <!-- Imported by every project in the repository (SDK-style and the legacy Web project). -->
+  <!-- Imported by every project in the repository. -->
   <PropertyGroup>
-    <CuyahogaWebDir>$(MSBuildThisFileDirectory)Web\</CuyahogaWebDir>
+    <!-- The site that the modules deploy their files into (install scripts, e-mail templates, images). -->
+    <CuyahogaSiteDir>$(MSBuildThisFileDirectory)Web.Core\</CuyahogaSiteDir>
   </PropertyGroup>
 </Project>

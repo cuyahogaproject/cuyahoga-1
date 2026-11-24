@@ -3,7 +3,7 @@ See Install-binary.txt if you're just installing the binaries.
 **************************************************************
 
 **************************************************************
-Cuyahoga requires the .NET Framework 4.8.
+Cuyahoga requires .NET 10 (the site, Web.Core) and the .NET SDK 10 to build it.
 **************************************************************
 
 Installing Cuyahoga from source.
@@ -14,81 +14,74 @@ Installing Cuyahoga from source.
     - SQL Server (also Express and LocalDB)
     - PostgreSQL (tested with 16)
     - MySQL (tested with 8.4)
-    See the comment in Web/Web.config for the driver, dialect and connection string of each database.
 
 3. Build and run.
 
-    - Build Cuyahoga.sln with Visual Studio 2022 or newer (with the ASP.NET workload), or from a
-      developer command prompt:
+    - Build Cuyahoga.sln with Visual Studio 2022 or newer, or from a command prompt:
 
-          msbuild Cuyahoga.sln -restore
+          dotnet build Cuyahoga.sln
 
-      NuGet packages are restored automatically. The build deploys everything into the Web folder:
-      module assemblies go to Web/bin and module pages to Web/Modules, so the site runs from Web.
-    - Run the Web folder in IIS Express (Visual Studio does this when you start Cuyahoga.Web) or
-      point an IIS application to the Web folder.
-    - Set the connection string to the database that is created in step 2. Settings are the
-      'Cuyahoga.*' appSettings in Web/Web.config. Put machine-specific values in Web/Web.local.config
-      (git-ignored, optional), which overrides the appSettings of Web.config:
+      NuGet packages are restored automatically. The module projects deploy their files into
+      Web.Core/Modules, so the site runs from the Web.Core folder.
+    - Set the connection string to the database that is created in step 2. The settings are in the
+      "Cuyahoga" section of Web.Core/appsettings.json. Put machine-specific values in
+      Web.Core/appsettings.local.json (git-ignored, optional), which overrides appsettings.json:
 
-          <?xml version="1.0" encoding="utf-8"?>
-          <appSettings>
-            <add key="Cuyahoga.ConnectionString" value="Server=(local);Database=Cuyahoga;User Id=***;Password=***" />
-          </appSettings>
+          {
+            "Cuyahoga": {
+              "ConnectionString": "Server=(local);Database=Cuyahoga;User Id=***;Password=***"
+            }
+          }
 
-          Restart the site after changing Web.local.config.
-          Make sure that the account that connects to the database for the first time has enough
-          permissions to create the database!
+      The driver and dialect of each database:
+        SQL Server: NHibernate.Driver.SqlClientDriver, NHibernate.Dialect.MsSql2005Dialect
+        MySQL:      Cuyahoga.Core.Persistence.MySqlConnectorDriver, Cuyahoga.Core
+                    NHibernate.Dialect.MySQL55Dialect
+                    (add 'Allow User Variables=true' to the connection string)
+        PostgreSQL: NHibernate.Driver.NpgsqlDriver, NHibernate.Dialect.PostgreSQL83Dialect
+      (settings "NHibernateDriver" and "NHibernateDialect"). Environment variables override the
+      settings as well, for example CUYAHOGA_CONNECTIONSTRING.
 
-    Unit tests for Cuyahoga.Core (xUnit v3) live in Tests/Cuyahoga.Core.Tests. Run them with
-    'dotnet test --project Tests/Cuyahoga.Core.Tests/Cuyahoga.Core.Tests.csproj', from Visual Studio,
-    or by running Tests/Cuyahoga.Core.Tests/bin/Debug/net48/Cuyahoga.Core.Tests.exe.
+      Make sure that the account that connects to the database for the first time has enough
+      permissions to create the database!
+    - Start Cuyahoga.Web.Core from Visual Studio, or 'dotnet run --project Web.Core'
+      (http://localhost:5080).
 
-    End-to-end tests (Playwright) live in the e2e folder. Every run creates an empty database,
-    starts the site on port 8081 next to your development site, installs Cuyahoga with the web
-    installer and the sample site, and runs the tests. Build the solution first. From the e2e folder:
-    'npm install', 'npx playwright install chromium', then 'npm test' (SQL Server LocalDB, needs
-    sqlcmd), 'npm run test:mysql', 'npm run test:postgres' or 'npm run test:all' (all three, with one
-    combined report). 'npm run report' opens the report of the last run.
+    Unit tests (xUnit v3) live in Tests/Cuyahoga.Core.Tests and Tests/Cuyahoga.Web.Core.Tests. Run them
+    with 'dotnet test --project Tests/Cuyahoga.Core.Tests/Cuyahoga.Core.Tests.csproj' (and the same for
+    Cuyahoga.Web.Core.Tests), or from Visual Studio.
+
+    End-to-end tests (Playwright) live in the e2e folder. Every run creates an empty database and an
+    empty data folder, starts the site on port 8081 next to your development site, installs Cuyahoga
+    with the web installer and the sample site, and runs the tests. Build the solution first. From the
+    e2e folder: 'npm install', 'npx playwright install chromium', then 'npm test' (SQL Server LocalDB,
+    needs sqlcmd), 'npm run test:mysql', 'npm run test:postgres' or 'npm run test:all' (all three, with
+    one combined report). 'npm run report' opens the report of the last run.
     See e2e/.env.example for the database servers and other settings.
 
-    You are now ready to run the application. At the first visit, the database will be installed automatically, 
-    and you'll be asked to set a password for the administrator (min. 5 characters!). 
-    After that there is a choice to install additional modules and to create a sample site. 
-    When everything is finished you can visit the web site adminstration pages. The url of the 
-    web site administration is http://SERVER_NAME/VIRTUAL_DIRECTORY/Admin/. 
-    If you installed Cuyahoga in the cuyahoga virtual directory on your localhost, this url will be 
-    http://localhost/cuyahoga/Admin/.
+    You are now ready to run the application. At the first visit, the database will be installed automatically,
+    and you'll be asked to set a password for the administrator (min. 5 characters!).
+    After that there is a choice to install additional modules and to create a sample site.
+    When everything is finished you can visit the web site adminstration pages. The url of the
+    web site administration is http://SERVER_NAME/VIRTUAL_DIRECTORY/Admin/.
 
     The following steps are only required when no sample site is installed.
-    
+
     In the web site administration, the first thing to do is creating a site. Make sure that the
     site url that you enter, corresponds with the real site url, including the virtual directory
     (for example, http://localhost/cuyahoga).
-    When a site is created you can start adding pages (nodes) and sections. Just give it a try 
-    and when something isn't clear, check the forums at http://www.cuyahoga-project.org/home/forum.aspx.
-    
+    When a site is created you can start adding pages (nodes) and sections.
+
 Hints and tips:
 - It's possible run the database install scripts manually if the installation fails for some
-  reason. They are located in the /Web/Install/Database directory.
-- The search index has to be in a folder that is writable for the ASP.NET user. You can specify the
-  folder in the web.config:
-
-  <appSettings>
-    ...
-    <add key="Cuyahoga.SearchIndexDir" value="~/index" />
-    <add key="Cuyahoga.InstantIndexing" value="true" /> <!-- true/false -->
-  </appSettings>
-
-  InstantIndexing indicates that when you edit the content of a module that is searchable, the
-  search index will be updated immediately. If you turn this off, you have to manually index the
-  content from the Administration section.
-  
-- You can enable logging to uncomment the <log4net> section in the Web.config. Make sure your
-  ASP.NET user has write access to the path of the logfile.
-- Give the ASP.NET user write access for the Web/UserFiles directory to enable uploading images or
-  other files with the FCKEditor from the StaticHtml and Articles modules.
-- Give the ASP.NET user write access for the Web/files directory to enable uploading files with
-  the Downloads module. You can optionally enter a physical path for the location where the files
-  should be uploaded. With this, it is possible to keep the files out of the web site to prevent 
-  direct downloading.
+  reason. They are located in the Web.Core/Install/Core/Database directory.
+- The data of the site goes into the data folder ("DataPath" in appsettings.json, default
+  App_Data): the files of the Downloads module (files), the search index (index) and the
+  files that are uploaded with the editor (UserFiles). The site needs write access to it.
+  The search index folder can be changed with the setting "SearchIndexDir" (default ~/index).
+  "InstantIndexing" (true/false) indicates that when you edit the content of a module that is
+  searchable, the search index will be updated immediately. If you turn this off, you have to
+  manually index the content from the Administration section.
+- The template stylesheets (wwwroot/Templates) can be edited in the site administration; give the
+  site write access to that folder for this.
+- See Web.Core/README.md for how the site works.
